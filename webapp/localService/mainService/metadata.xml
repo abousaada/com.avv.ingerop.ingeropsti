@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="./sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZSTI_SRV" xml:lang="fr" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="I_BusinessPartnerType" sap:label="Partenaire" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="BusinessPartner"/>
+                </Key>
+                <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="BusinessPartnerName" sap:label="Partenaire" sap:quickinfo="Numéro de partenaire"/>
+                <Property Name="BusinessPartnerCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Catégorie partenaire" sap:quickinfo="Catégorie de partenaire"/>
+                <Property Name="AuthorizationGroup" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Groupe autorisations" sap:quickinfo="Groupe d'autorisations"/>
+                <Property Name="BusinessPartnerUUID" Type="Edm.Guid" sap:label="GUID partenaire" sap:quickinfo="GUID d'un partenaire"/>
+                <Property Name="PersonNumber" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Nº de personne"/>
+                <Property Name="ETag" Type="Edm.String" MaxLength="26"/>
+                <Property Name="BusinessPartnerName" Type="Edm.String" MaxLength="81" sap:label="Nom du partenaire" sap:quickinfo="NOM DU PARTENAIRE"/>
+                <Property Name="BusinessPartnerFullName" Type="Edm.String" MaxLength="81" sap:label="Nom complet du partenaire"/>
+                <Property Name="CreatedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Créé par" sap:quickinfo="Utilisateur ayant créé l'objet"/>
+                <Property Name="CreationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Créé le" sap:quickinfo="Date de création de l'objet"/>
+                <Property Name="CreationTime" Type="Edm.Time" Precision="0" sap:label="Créé(e) à" sap:quickinfo="Heure à laquelle l'objet a été créé"/>
+                <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Auteur modification" sap:quickinfo="Utilisateur ayant effectué la dernière modif. de l'objet"/>
+                <Property Name="LastChangeDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Modifié le" sap:quickinfo="Date de la dernière modification de l'objet"/>
+                <Property Name="LastChangeTime" Type="Edm.Time" Precision="0" sap:label="Modifié à" sap:quickinfo="Heure de la dernière modification de l'objet"/>
+                <Property Name="BusinessPartnerIsBlocked" Type="Edm.Boolean" sap:label="Blocage central" sap:quickinfo="Blocage central pour le partenaire"/>
+                <Property Name="IsBusinessPurposeCompleted" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="C.Motif opér. traité" sap:quickinfo="Code indiquant que le motif de l'opération est traité."/>
+                <Property Name="FirstName" Type="Edm.String" MaxLength="40" sap:label="Prénom" sap:quickinfo="Prénom du partenaire (personne)"/>
+                <Property Name="LastName" Type="Edm.String" MaxLength="40" sap:label="Nom" sap:quickinfo="Nom du partenaire (personne)"/>
+                <Property Name="PersonFullName" Type="Edm.String" MaxLength="80" sap:label="Nom complet"/>
+                <Property Name="OrganizationBPName1" Type="Edm.String" MaxLength="40" sap:label="Nom de l'organisation 1" sap:quickinfo="Nom 1 de l'organisation"/>
+                <Property Name="OrganizationBPName2" Type="Edm.String" MaxLength="40" sap:label="Nom de l'organisation 2" sap:quickinfo="Nom 2 de l'organisation"/>
+                <Property Name="OrganizationBPName3" Type="Edm.String" MaxLength="40" sap:label="Nom de l'organisation 3" sap:quickinfo="Nom 3 de l'organisation"/>
+                <Property Name="OrganizationBPName4" Type="Edm.String" MaxLength="40" sap:label="Nom de l'organisation 4" sap:quickinfo="Nom 4 de l'organisation"/>
+                <Property Name="InternationalLocationNumber1" Type="Edm.String" MaxLength="7" sap:display-format="NonNegative" sap:label="Code lieu-fct. int.1" sap:quickinfo="Numéro de site international (partie 1)"/>
+                <Property Name="InternationalLocationNumber2" Type="Edm.String" MaxLength="5" sap:display-format="NonNegative" sap:label="Code lieu-fct. int.2" sap:quickinfo="Code lieu-fonction international (partie 2)"/>
+                <Property Name="InternationalLocationNumber3" Type="Edm.String" MaxLength="1" sap:display-format="NonNegative" sap:label="Chiffre de contrôle" sap:quickinfo="Chiffre de contrôle du code lieu-fonction international"/>
+                <Property Name="LegalForm" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Forme juridique" sap:quickinfo="PC : statut juridique de l'organisation"/>
+                <Property Name="OrganizationFoundationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date de création" sap:quickinfo="Date de création de l'organisation"/>
+                <Property Name="OrganizationLiquidationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date de liquidation" sap:quickinfo="Date de liquidation de l'organisation"/>
+                <Property Name="Industry" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Branche"/>
+                <Property Name="IsNaturalPerson" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Personne physique" sap:quickinfo="Fiscalement, le partenaire est une personne physique."/>
+                <Property Name="IsFemale" Type="Edm.Boolean" sap:label="Féminin" sap:quickinfo="Sélection : le partenaire commercial est féminin"/>
+                <Property Name="IsMale" Type="Edm.Boolean" sap:label="Masculin" sap:quickinfo="Sélection : le partenaire commercial est masculin"/>
+                <Property Name="IsSexUnknown" Type="Edm.Boolean" sap:label="Inconnu" sap:quickinfo="Sélection : le sexe du partenaire commercial est inconnu"/>
+                <Property Name="FormOfAddress" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Clé titre civilité" sap:quickinfo="Clé de qualité"/>
+                <Property Name="AcademicTitle" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:text="AcademicTitle_Text" sap:label="Titre univ. 1" sap:quickinfo="Titre universitaire : clé"/>
+                <Property Name="AcademicTitle_Text" Type="Edm.String" MaxLength="40" sap:label="Titre univ. : descr." sap:quickinfo="Description du titre académique" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="AcademicTitle2" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="2e titre académique" sap:quickinfo="Deuxième titre académique (clé)"/>
+                <Property Name="NameFormat" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Format de noms" sap:quickinfo="Format pour la mise en forme de noms"/>
+                <Property Name="NameCountry" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Pays/rég. d'édition" sap:quickinfo="Pays/région pour les règles d'édition de noms"/>
+                <Property Name="BusinessPartnerGrouping" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Regroupement" sap:quickinfo="Regroupement de partenaires"/>
+                <Property Name="BusinessPartnerType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Type de partenaire"/>
+                <Property Name="MiddleName" Type="Edm.String" MaxLength="40" sap:label="Deuxième prénom" sap:quickinfo="Deuxième prénom de la personne"/>
+                <Property Name="AdditionalLastName" Type="Edm.String" MaxLength="40" sap:label="Deuxième nom" sap:quickinfo="Deuxième nom de la personne"/>
+                <Property Name="GroupBusinessPartnerName1" Type="Edm.String" MaxLength="40" sap:label="Nom du groupe 1" sap:quickinfo="Nom 1 (groupe)"/>
+                <Property Name="GroupBusinessPartnerName2" Type="Edm.String" MaxLength="40" sap:label="Nom du groupe 2" sap:quickinfo="Nom 2 (groupe)"/>
+                <Property Name="CorrespondenceLanguage" Type="Edm.String" MaxLength="2" sap:label="Langue correspond." sap:quickinfo="Partenaire : langue de la correspondance"/>
+                <Property Name="Language" Type="Edm.String" MaxLength="2" sap:label="Langue" sap:quickinfo="Partenaire : langue"/>
+                <Property Name="SearchTerm1" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Critère recherche 1" sap:quickinfo="Critère de recherche 1 du partenaire"/>
+                <Property Name="SearchTerm2" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Critère recherche 2" sap:quickinfo="Critère de recherche 2 du partenaire"/>
+                <Property Name="BPLastNameSearchHelp" Type="Edm.String" MaxLength="35" sap:display-format="UpperCase" sap:label="Nom 1/nom de famille" sap:quickinfo="Zone d'aide à la recherche 1 (nom 1/nom de famille)"/>
+                <Property Name="BPFirstNameSearchHelp" Type="Edm.String" MaxLength="35" sap:display-format="UpperCase" sap:label="Nom2/Prénom" sap:quickinfo="Zone d'aide à la recherche 2 (nom 2/prénom)"/>
+                <Property Name="BusinessPartnerNicknameLabel" Type="Edm.String" MaxLength="40" sap:label="Prénom usuel" sap:quickinfo="Prénom usuel du partenaire (personne)"/>
+                <Property Name="IndependentAddressID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Nº d'adresse" sap:quickinfo="Numéro d'adresse"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" sap:label="Est actif" sap:quickinfo="Version préliminaire - Code - Est un document actif"/>
+                <Property Name="BirthDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date de naissance" sap:quickinfo="Date de naissance du partenaire"/>
+                <Property Name="IsMarkedForArchiving" Type="Edm.Boolean" sap:label="Témoin d'archivage" sap:quickinfo="Témoin d'archivage central"/>
+                <Property Name="ContactPermission" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Contact" sap:quickinfo="Partenaire : autorisation de contact"/>
+                <Property Name="BusinessPartnerIDByExtSystem" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nº ext. partenaire" sap:quickinfo="Numéro partenaire dans le système externe"/>
+                <Property Name="LegalEntityOfOrganization" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Entité juridique" sap:quickinfo="Entité juridique de l'organisation"/>
+                <Property Name="BusinessPartnerPrintFormat" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Format d'impression" sap:quickinfo="Format d'impression partenaire"/>
+                <Property Name="BusinessPartnerDataOriginType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Origine des données" sap:quickinfo="Types d'origine des données"/>
+                <Property Name="BusinessPartnerIsNotReleased" Type="Edm.Boolean" sap:label="Non validé" sap:quickinfo="Code : non validé"/>
+                <Property Name="IsNotContractuallyCapable" Type="Edm.Boolean" sap:label="Non compétent légal." sap:quickinfo="Code : non compétent légalement"/>
+                <Property Name="BusinessPartnerOccupation" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Profession" sap:quickinfo="Profession du partenaire"/>
+                <Property Name="BusPartMaritalStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Situation de famille" sap:quickinfo="Situation de famille du partenaire"/>
+                <Property Name="BusPartNationality" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Nationalité" sap:quickinfo="Nationalité du partenaire"/>
+                <Property Name="NonResidentCompanyOriginCntry" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Pays/rég. d'origine" sap:quickinfo="Pays/région d'origine pour non-résidents"/>
+                <Property Name="BusinessPartnerSalutation" Type="Edm.String" MaxLength="50" sap:label="Formule d'appel"/>
+                <Property Name="BusinessPartnerBirthName" Type="Edm.String" MaxLength="40" sap:label="Nom de naissance" sap:quickinfo="Nom de naissance du partenaire commercial"/>
+                <Property Name="BusinessPartnerSupplementName" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Complément de nom" sap:quickinfo="Complément de nom, titre de noblesse par exemple (clé)"/>
+                <Property Name="BusinessPartnerBirthplaceName" Type="Edm.String" MaxLength="40" sap:label="Lieu de naissance" sap:quickinfo="Lieu de naissance du partenaire commercial"/>
+                <Property Name="NaturalPersonEmployerName" Type="Edm.String" MaxLength="35" sap:label="Employeur" sap:quickinfo="Nom de l'employeur d'une personne physique"/>
+                <Property Name="BusinessPartnerDeathDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date de décès" sap:quickinfo="Date du décès du partenaire"/>
+                <Property Name="BusinessPartnerBirthDateStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Statut date naiss." sap:quickinfo="Date de naissance : statut"/>
+                <Property Name="BusinessPartnerGroupType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Type grpe partenaire" sap:quickinfo="Type de groupe"/>
+                <Property Name="LastNamePrefix" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Clé préfixe" sap:quickinfo="Particule du nom (clé)"/>
+                <Property Name="LastNameSecondPrefix" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="2e particule" sap:quickinfo="2e particule du nom (clé)"/>
+                <Property Name="Initials" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Initiales" sap:quickinfo="&quot;Deuxième initiale&quot; ou initiales de la personne"/>
+                <Property Name="GenderCodeName" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Sexe" sap:quickinfo="Sexe du partenaire (personne)"/>
+                <Property Name="BPDataControllerIsNotRequired" Type="Edm.Boolean" sap:label="RT non obligatoire" sap:quickinfo="Partenaire : responsable du traitement non obligatoire"/>
+                <Property Name="TrdCmplncLicenseIsMilitarySctr" Type="Edm.Boolean" sap:label="Util. militaire" sap:quickinfo="Code: utilisation militaire prédominante"/>
+                <Property Name="TrdCmplncLicenseIsNuclearSctr" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Secteur nucléaire" sap:quickinfo="Secteur nucléaire (code)"/>
+            </EntityType>
+            <EntityType Name="I_CompanyCodeType" sap:label="Société" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CompanyCode"/>
+                </Key>
+                <Property Name="CompanyCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:text="CompanyCodeName" sap:label="Société"/>
+                <Property Name="CompanyCodeName" Type="Edm.String" MaxLength="25" sap:label="Nom de la société" sap:quickinfo="Désignation de la société ou de l'entreprise"/>
+                <Property Name="CityName" Type="Edm.String" MaxLength="25" sap:label="Ville"/>
+                <Property Name="Country" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Clé de pays/région"/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="Devise" sap:quickinfo="Clé de devise" sap:semantics="currency-code"/>
+                <Property Name="Language" Type="Edm.String" MaxLength="2" sap:label="Code langue"/>
+                <Property Name="ChartOfAccounts" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Plan comptable"/>
+                <Property Name="FiscalYearVariant" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Version d'exercice"/>
+                <Property Name="Company" Type="Edm.String" MaxLength="6" sap:display-format="UpperCase" sap:label="Société"/>
+                <Property Name="CreditControlArea" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:text="CreditControlArea_Text" sap:label="Dom.contrôle crédits" sap:quickinfo="Domaine de contrôle des crédits"/>
+                <Property Name="CreditControlArea_Text" Type="Edm.String" MaxLength="35" sap:label="Désignation" sap:quickinfo="Désignation du domaine de contrôle des crédits" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CountryChartOfAccounts" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Plan compt. altern." sap:quickinfo="Plan comptable alternatif"/>
+                <Property Name="FinancialManagementArea" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Périm.financier" sap:quickinfo="Périm. financier"/>
+                <Property Name="AddressID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Adresse"/>
+                <Property Name="TaxableEntity" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Périmètre TVA sur CA"/>
+                <Property Name="VATRegistration" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nº ident. TVA sur CA" sap:quickinfo="Numéro d'identification de la TVA sur le chiffre d'affaires"/>
+                <Property Name="ExtendedWhldgTaxIsActive" Type="Edm.Boolean" sap:label="Décl. honor. étendue" sap:quickinfo="Code : traitement étendu de la déclaration d'honoraire actif"/>
+                <Property Name="ControllingArea" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:text="ControllingArea_Text" sap:label="Périmètre analytique"/>
+                <Property Name="ControllingArea_Text" Type="Edm.String" MaxLength="25" sap:label="Nom du périmètre analytique" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="FieldStatusVariant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Variante statut zone" sap:quickinfo="Variante de statut de zone"/>
+                <Property Name="NonTaxableTransactionTaxCode" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Code TVA coll." sap:quickinfo="Code TVA opération non imposable TVA collectée"/>
+                <Property Name="DocDateIsUsedForTaxDetn" Type="Edm.Boolean" sap:label="Déter. taxe avec date pce" sap:quickinfo="Code : date pièce comme base de la détermination de la taxe"/>
+                <Property Name="TaxRptgDateIsActive" Type="Edm.Boolean" sap:label="Date taxe" sap:quickinfo="Date de déclaration de la taxe active dans les pièces"/>
+                <Property Name="CashDiscountBaseAmtIsNetAmt" Type="Edm.Boolean" sap:label="Base escompte nette" sap:quickinfo="Code : montant de base de l'escompte est la valeur nette"/>
+            </EntityType>
+            <EntityType Name="I_ProfitCenterType" sap:label="Centre de profit" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ControllingArea"/>
+                    <PropertyRef Name="ProfitCenter"/>
+                </Key>
+                <Property Name="ControllingArea" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:text="ControllingArea_Text" sap:label="Périmètre analytique"/>
+                <Property Name="ControllingArea_Text" Type="Edm.String" MaxLength="25" sap:label="Nom du périmètre analytique" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="ProfitCenter" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="ProfitCenter_Text" sap:label="Centre de profit"/>
+                <Property Name="ProfitCenter_Text" Type="Edm.String" MaxLength="20" sap:label="Nom centre de profit" sap:quickinfo="Description du centre de profit" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="ValidityEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Fin de validité" sap:quickinfo="Date de fin de validité"/>
+                <Property Name="ProfitCtrResponsiblePersonName" Type="Edm.String" MaxLength="20" sap:label="Resp. centre profit" sap:quickinfo="Responsable du centre de profit"/>
+                <Property Name="CompanyCode" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Société"/>
+                <Property Name="ProfitCtrResponsibleUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Utilis. respons." sap:quickinfo="Utilisateur responsable du centre de profit"/>
+                <Property Name="ValidityStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Début de validité" sap:quickinfo="Date de début de validité"/>
+                <Property Name="Department" Type="Edm.String" MaxLength="12" sap:label="Département"/>
+                <Property Name="ProfitCenterStandardHierarchy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Domaine hiérarchie" sap:quickinfo="Domaine de centres de profit"/>
+                <Property Name="Segment" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:text="Segment_Text" sap:label="Segment" sap:quickinfo="Segment pour reporting sectoriel"/>
+                <Property Name="Segment_Text" Type="Edm.String" MaxLength="50" sap:label="Nom du segment" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="ProfitCenterIsBlocked" Type="Edm.String" MaxLength="1" sap:label="Code de blocage"/>
+                <Property Name="FormulaPlanningTemplate" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Modèle p-bdg.formule" sap:quickinfo="Modèle pour pré-budgétis. par formule dans centres de profit"/>
+                <Property Name="FormOfAddress" Type="Edm.String" MaxLength="15" sap:label="Titre de civilité"/>
+                <Property Name="AddressName" Type="Edm.String" MaxLength="35" sap:label="Nom" sap:quickinfo="Nom 1"/>
+                <Property Name="AdditionalName" Type="Edm.String" MaxLength="35" sap:label="Nom 2"/>
+                <Property Name="ProfitCenterAddrName3" Type="Edm.String" MaxLength="35" sap:label="Nom 3"/>
+                <Property Name="ProfitCenterAddrName4" Type="Edm.String" MaxLength="35" sap:label="Nom 4"/>
+                <Property Name="StreetAddressName" Type="Edm.String" MaxLength="35" sap:label="Rue" sap:quickinfo="Rue et numéro de rue"/>
+                <Property Name="POBox" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Boîte postale"/>
+                <Property Name="CityName" Type="Edm.String" MaxLength="35" sap:label="Ville"/>
+                <Property Name="PostalCode" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Code postal"/>
+                <Property Name="POBoxPostalCode" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Code postal de B.P." sap:quickinfo="Code postal de la boîte postale"/>
+                <Property Name="District" Type="Edm.String" MaxLength="35" sap:label="Arrondissement"/>
+                <Property Name="Country" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Clé de pays/région"/>
+                <Property Name="Region" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Région" sap:quickinfo="Région (État, état fédéral, province, comté, etc.)"/>
+                <Property Name="TaxJurisdiction" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label="Juridiction fiscale"/>
+                <Property Name="Language" Type="Edm.String" MaxLength="2" sap:label="Code langue"/>
+                <Property Name="PhoneNumber1" Type="Edm.String" MaxLength="16" sap:label="Téléphone 1" sap:quickinfo="1er numéro de téléphone"/>
+                <Property Name="PhoneNumber2" Type="Edm.String" MaxLength="16" sap:label="Téléphone 2" sap:quickinfo="2ème numéro de téléphone"/>
+                <Property Name="TeleboxNumber" Type="Edm.String" MaxLength="15" sap:label="Numéro boîte électr." sap:quickinfo="Numéro de boîte électronique"/>
+                <Property Name="TelexNumber" Type="Edm.String" MaxLength="30" sap:label="Numéro de télex"/>
+                <Property Name="FaxNumber" Type="Edm.String" MaxLength="31" sap:label="Numéro de télécopie"/>
+                <Property Name="TeletexNumber" Type="Edm.String" MaxLength="30" sap:label="Numéro de télétex"/>
+                <Property Name="DataCommunicationPhoneNumber" Type="Edm.String" MaxLength="14" sap:label="Ligne transmission" sap:quickinfo="Numéro de ligne de transmission de données"/>
+                <Property Name="ProfitCenterPrinterName" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Nom imprimante" sap:quickinfo="Nom d'imprimante pour centre de profit"/>
+                <Property Name="ProfitCenterCreatedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Saisi par" sap:quickinfo="Auteur de la saisie"/>
+                <Property Name="ProfitCenterCreationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Saisi le" sap:quickinfo="Date de saisie"/>
+            </EntityType>
+            <EntityType Name="ZC_STIType" sap:label="STI" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="business_no_e"/>
+                    <PropertyRef Name="id_formulaire"/>
+                </Key>
+                <Property Name="business_no_e" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Entity Business Number" sap:quickinfo="Zone de caractères de longueur 24" sap:value-list="standard"/>
+                <Property Name="id_formulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Form ID" sap:quickinfo="ID FORM STI"/>
+                <Property Name="proprio_sti" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="STI Owner" sap:quickinfo="PROPRIO STI"/>
+                <Property Name="stidescr" Type="Edm.String" MaxLength="50" sap:display-format="UpperCase" sap:label="STI Description" sap:quickinfo="DESCRIPTION STI"/>
+                <Property Name="company_p" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Partner Company" sap:quickinfo="Société partenaire" sap:value-list="standard"/>
+                <Property Name="ufo_name_p" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Partner UFO" sap:quickinfo="Zone de 10 caractères" sap:value-list="standard"/>
+                <Property Name="profit_center_p" Type="Edm.String" MaxLength="50" sap:label="Profit Center" sap:quickinfo="Zone de texte"/>
+                <Property Name="business_manager_p" Type="Edm.String" MaxLength="50" sap:label="Business Manager" sap:quickinfo="Zone de texte"/>
+            </EntityType>
+            <EntityContainer Name="ZSTI_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="I_BusinessPartner" EntityType="ZSTI_SRV.I_BusinessPartnerType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="I_CompanyCode" EntityType="ZSTI_SRV.I_CompanyCodeType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_ProfitCenter" EntityType="ZSTI_SRV.I_ProfitCenterType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="ZC_STI" EntityType="ZSTI_SRV.ZC_STIType" sap:searchable="true" sap:content-version="1"/>
+            </EntityContainer>
+            <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/business_no_e" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Business Partner"/>
+                        <PropertyValue Property="CollectionPath" String="I_BusinessPartner"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_no_e"/>
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartner"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerCategory"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="AuthorizationGroup"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerUUID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="PersonNumber"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ETag"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerFullName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CreatedByUser"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CreationDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CreationTime"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LastChangedByUser"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LastChangeDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LastChangeTime"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerIsBlocked"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IsBusinessPurposeCompleted"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FirstName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LastName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="PersonFullName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="OrganizationBPName1"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="OrganizationBPName2"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="OrganizationBPName3"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="OrganizationBPName4"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="InternationalLocationNumber1"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="InternationalLocationNumber2"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="InternationalLocationNumber3"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LegalForm"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="OrganizationFoundationDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="OrganizationLiquidationDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Industry"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IsNaturalPerson"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IsFemale"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IsMale"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IsSexUnknown"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FormOfAddress"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="AcademicTitle"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="AcademicTitle_Text"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="AcademicTitle2"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="NameFormat"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="NameCountry"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerGrouping"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MiddleName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="AdditionalLastName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="GroupBusinessPartnerName1"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="GroupBusinessPartnerName2"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CorrespondenceLanguage"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Language"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="SearchTerm1"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="SearchTerm2"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BPLastNameSearchHelp"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BPFirstNameSearchHelp"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerNicknameLabel"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IndependentAddressID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IsActiveEntity"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BirthDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IsMarkedForArchiving"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ContactPermission"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerIDByExtSystem"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LegalEntityOfOrganization"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerPrintFormat"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerDataOriginType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerIsNotReleased"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IsNotContractuallyCapable"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerOccupation"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusPartMaritalStatus"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusPartNationality"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="NonResidentCompanyOriginCntry"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerSalutation"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerBirthName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerSupplementName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerBirthplaceName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="NaturalPersonEmployerName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerDeathDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerBirthDateStatus"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessPartnerGroupType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LastNamePrefix"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LastNameSecondPrefix"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Initials"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="GenderCodeName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BPDataControllerIsNotRequired"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TrdCmplncLicenseIsMilitarySctr"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TrdCmplncLicenseIsNuclearSctr"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/company_p" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Company Code"/>
+                        <PropertyValue Property="CollectionPath" String="I_CompanyCode"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="company_p"/>
+                                    <PropertyValue Property="ValueListProperty" String="CompanyCode"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CompanyCodeName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CityName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Country"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Currency"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Language"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ChartOfAccounts"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FiscalYearVariant"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Company"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CreditControlArea"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CreditControlArea_Text"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CountryChartOfAccounts"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FinancialManagementArea"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="AddressID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TaxableEntity"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="VATRegistration"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ExtendedWhldgTaxIsActive"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ControllingArea"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ControllingArea_Text"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FieldStatusVariant"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="NonTaxableTransactionTaxCode"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="DocDateIsUsedForTaxDetn"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TaxRptgDateIsActive"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CashDiscountBaseAmtIsNetAmt"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/ufo_name_p" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Profit Center"/>
+                        <PropertyValue Property="CollectionPath" String="I_ProfitCenter"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="ufo_name_p"/>
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCenter"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ControllingArea"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ControllingArea_Text"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCenter_Text"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ValidityEndDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCtrResponsiblePersonName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CompanyCode"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCtrResponsibleUser"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ValidityStartDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Department"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCenterStandardHierarchy"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Segment"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Segment_Text"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCenterIsBlocked"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FormulaPlanningTemplate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FormOfAddress"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="AddressName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="AdditionalName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCenterAddrName3"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCenterAddrName4"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="StreetAddressName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="POBox"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CityName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="PostalCode"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="POBoxPostalCode"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="District"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Country"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Region"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TaxJurisdiction"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Language"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="PhoneNumber1"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="PhoneNumber2"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TeleboxNumber"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TelexNumber"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FaxNumber"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="TeletexNumber"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="DataCommunicationPhoneNumber"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCenterPrinterName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCenterCreatedByUser"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProfitCenterCreationDate"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZSTI_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_CompanyCodeType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.SAPObjectNodeType">
+                    <Record>
+                        <PropertyValue Property="Name" String="CompanyCode"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <atom:link rel="self" href="https://vhnrpds4ci.sap.ingerop.com:44300/sap/opu/odata/sap/ZSTI_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="https://vhnrpds4ci.sap.ingerop.com:44300/sap/opu/odata/sap/ZSTI_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
