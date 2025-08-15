@@ -48,11 +48,17 @@ sap.ui.define(
                     // Set the value in the model
                     oModel.setProperty(sPath + "/id_formulaire", sNewFormulaireId);
 
+                    // Set the current SAP 
+                    let sUserId = "";
+                    if (sap.ushell && sap.ushell.Container && sap.ushell.Container.getUser) {
+                        sUserId = sap.ushell.Container.getUser().getId();
+                    }
+                    oModel.setProperty(sPath + "/proprio_sti", sUserId);
                 }
             },
 
             _calculateFormulaireId: function () {
-                
+
                 const now = new Date();
                 return "F" + now.getFullYear() +
                     (now.getMonth() + 1).toString().padStart(2, '0') +
@@ -61,7 +67,7 @@ sap.ui.define(
                     now.getMinutes().toString().padStart(2, '0');
             },
 
-            
+
         });
     }
 );
