@@ -113,9 +113,6 @@
                         <PropertyValue Property="Data">
                             <Collection>
                                 <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="id_formulaire"/>
-                                </Record>
-                                <Record Type="UI.DataField">
                                     <PropertyValue Property="Value" Path="business_no_e"/>
                                 </Record>
                                 <Record Type="UI.DataField">
