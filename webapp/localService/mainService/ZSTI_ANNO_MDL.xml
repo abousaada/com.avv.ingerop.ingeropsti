@@ -52,12 +52,30 @@
                                 </Collection>
                             </PropertyValue>
                         </Record>
-                        <Record Type="UI.CollectionFacet">
+                        <Record Type="UI.ReferenceFacet">
                             <PropertyValue Property="Label" String=""/>
-                            <PropertyValue Property="ID" String="PartnerInfo"/>
-                            <PropertyValue Property="Facets">
-                                <Collection/>
-                            </PropertyValue>
+                            <PropertyValue Property="ID" String="EtatFacet"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#EtatFacet"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String=""/>
+                            <PropertyValue Property="ID" String="MissionFacet"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#MissionFacet"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String=""/>
+                            <PropertyValue Property="ID" String="DescriptionFacet"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#DescriptionFacet"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String=""/>
+                            <PropertyValue Property="ID" String="WorkflowFacet"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#WorkflowFacet"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String=""/>
+                            <PropertyValue Property="ID" String="LienFacet"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#LienFacet"/>
                         </Record>
                     </Collection>
                 </Annotation>
@@ -95,10 +113,16 @@
                         <PropertyValue Property="Data">
                             <Collection>
                                 <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="id_formulaire"/>
+                                </Record>
+                                <Record Type="UI.DataField">
                                     <PropertyValue Property="Value" Path="business_no_e"/>
                                 </Record>
                                 <Record Type="UI.DataField">
                                     <PropertyValue Property="Value" Path="business_no_e_t"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="proprio_sti"/>
                                 </Record>
                                 <Record Type="UI.DataField">
                                     <PropertyValue Property="Value" Path="business_e_clt"/>
@@ -114,6 +138,9 @@
                                 </Record>
                                 <Record Type="UI.DataField">
                                     <PropertyValue Property="Value" Path="business_e_cmp"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="stidescr"/>
                                 </Record>
                             </Collection>
                         </PropertyValue>
@@ -140,17 +167,7 @@
                         </PropertyValue>
                         <PropertyValue Property="Description">
                             <Record Type="UI.DataField">
-                                <PropertyValue Property="Value" String="">
-                                    <Annotation Term="Core.Messages">
-                                        <Collection>
-                                            <Record>
-                                                <PropertyValue Property="code" String="SADL_GW_EXP_VOCAN-001"/>
-                                                <PropertyValue Property="message" String="Property 'stidescr' of annotation 'UI.HEADERINFO.DESCRIPTION' in proj./view 'ZC_STI' not found"/>
-                                                <PropertyValue Property="severity" String="error"/>
-                                            </Record>
-                                        </Collection>
-                                    </Annotation>
-                                </PropertyValue>
+                                <PropertyValue Property="Value" Path="stidescr"/>
                             </Record>
                         </PropertyValue>
                     </Record>
@@ -158,7 +175,16 @@
                 <Annotation Term="UI.Identification" Qualifier="FormulaireFacetFields">
                     <Collection>
                         <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="id_formulaire"/>
+                        </Record>
+                        <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_e"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="proprio_sti"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="stidescr"/>
                         </Record>
                     </Collection>
                 </Annotation>
@@ -166,9 +192,6 @@
                     <Collection>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_p"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_no_e"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_p_t"/>
@@ -212,6 +235,15 @@
                     <Collection>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_p"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="stidescr"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="proprio_sti"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="id_formulaire"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_e"/>
@@ -273,6 +305,9 @@
                         <PropertyPath>business_p_cdp</PropertyPath>
                         <PropertyPath>business_p_bm</PropertyPath>
                         <PropertyPath>business_p_mis</PropertyPath>
+                        <PropertyPath>id_formulaire</PropertyPath>
+                        <PropertyPath>proprio_sti</PropertyPath>
+                        <PropertyPath>stidescr</PropertyPath>
                     </Collection>
                 </Annotation>
             </Annotations>

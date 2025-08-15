@@ -202,6 +202,8 @@
                 </Key>
                 <Property Name="business_no_e" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:heading="" sap:quickinfo="Character field length 24"/>
                 <Property Name="id_formulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label=""/>
+                <Property Name="proprio_sti" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label=""/>
+                <Property Name="stidescr" Type="Edm.String" MaxLength="50" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="business_no_e_t" Type="Edm.String" MaxLength="7" sap:label=""/>
                 <Property Name="business_e_cmp" Type="Edm.String" MaxLength="7" sap:label=""/>
                 <Property Name="business_e_ufo" Type="Edm.String" MaxLength="3" sap:label=""/>
