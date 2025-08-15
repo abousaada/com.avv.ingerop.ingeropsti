@@ -290,8 +290,6 @@
                         <PropertyPath>business_p_cdp</PropertyPath>
                         <PropertyPath>business_p_bm</PropertyPath>
                         <PropertyPath>business_p_mis</PropertyPath>
-                        <PropertyPath>id_formulaire</PropertyPath>
-                        <PropertyPath>proprio_sti</PropertyPath>
                         <PropertyPath>stidescr</PropertyPath>
                     </Collection>
                 </Annotation>
