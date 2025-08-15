@@ -112,6 +112,19 @@
     },
     "extends": {
       "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.suite.ui.generic.template.ListReport.view.ListReport": {
+            "controllerName": "com.avv.ingerop.ingeropsti.ext.controller.extendLR",
+            "sap.ui.generic.app": {
+              "ZC_STI": {
+                "EntitySet": "ZC_STI"
+              }
+            }
+          },
+          "sap.suite.ui.generic.template.ObjectPage.view.Details": {
+            "controllerName": "com.avv.ingerop.ingeropsti.ext.controller.extendOP"
+          }
+        },
         "sap.ui.viewExtensions": {
           "sap.suite.ui.generic.template.ObjectPage.view.Details": {}
         }
