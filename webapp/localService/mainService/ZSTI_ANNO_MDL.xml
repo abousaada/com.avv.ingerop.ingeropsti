@@ -152,17 +152,7 @@
                         <PropertyValue Property="TypeNamePlural" String=""/>
                         <PropertyValue Property="Title">
                             <Record Type="UI.DataField">
-                                <PropertyValue Property="Value" String="">
-                                    <Annotation Term="Core.Messages">
-                                        <Collection>
-                                            <Record>
-                                                <PropertyValue Property="code" String="SADL_GW_EXP_VOCAN-001"/>
-                                                <PropertyValue Property="message" String="Property 'business_name_p' of annotation 'UI.HEADERINFO.TITLE' in proj./view 'ZC_STI' not found"/>
-                                                <PropertyValue Property="severity" String="error"/>
-                                            </Record>
-                                        </Collection>
-                                    </Annotation>
-                                </PropertyValue>
+                                <PropertyValue Property="Value" Path="id_formulaire"/>
                             </Record>
                         </PropertyValue>
                         <PropertyValue Property="Description">
