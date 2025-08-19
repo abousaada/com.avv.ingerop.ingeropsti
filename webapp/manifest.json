@@ -7,8 +7,8 @@
     "applicationVersion": {
       "version": "0.0.1"
     },
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
+    "title": "STI",
+    "description": "Applicatioon STI",
     "resources": "resources.json",
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
@@ -155,7 +155,11 @@
               }
             },
             "tableSettings": {
-              "type": "ResponsiveTable"
+              "type": "ResponsiveTable",
+              "multiSelect": false
+            },
+            "dataLoadSettings": {
+              "loadDataOnAppLaunch": "always"
             }
           }
         },
