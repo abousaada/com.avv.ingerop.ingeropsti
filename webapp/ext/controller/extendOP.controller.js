@@ -157,9 +157,16 @@ sap.ui.define(
                 const sPath = oContext.getPath();
                 var oModel = this.getView().getModel();
 
+                var sBusinessUfo = oModel.getProperty(sPath + "/business_p_ufo");
+
+                if (!sBusinessUfo) {
+                    sap.m.MessageBox.error("Business UFO field is empty");
+                    return;
+                }
+
                 var mParams = {
-                    Param1: "value1",
-                    Param2: "value2"
+                    IV_PROJECT_TYPE: "PO",
+                    IV_UFO: sBusinessUfo
                 };
 
                 oModel.callFunction("/ZGENERATE_IDS", {
