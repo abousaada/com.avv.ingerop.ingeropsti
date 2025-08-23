@@ -23,22 +23,7 @@ sap.ui.define(
                 */
 
                 onInit: function () {
-                    // you can access the Fiori elements extensionAPI via this.base.getExtensionAPI
 
-                    // this.base.getView().byId("addEntry").bindProperty("enabled", {
-                    //     path: "utilities>/year",
-                    //     formatter: this.getInterface().isYearEmpty
-                    // });
-                },
-
-                onInitSmartFilterBarExtension: function (oEvent) {
-                    //set Year Data on List Report Page
-                    oEvent.getSource().attachFilterChange(function (event) {
-                        if (event.getParameters().getParameter("id").includes("p_period")) {
-                            const period = event.getParameters().getParameter("newValue");
-                            this.getModel("utilities").setYearByPeriod(period);
-                        }
-                    });
                 },
 
 

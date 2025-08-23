@@ -26,326 +26,147 @@
     </edmx:Reference>
     <edmx:DataServices>
         <Schema Namespace="zsti_anno_mdl.v1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-            <Annotations Target="ZSTI_SRV.ZC_FGAType/CompanyCountry">
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/BusinessPartnerName">
+                <Annotation Term="UI.HiddenFilter"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/FormOfAddress">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_FGAType/p_period">
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/AuthorizationGroup">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_FGAType">
-                <Annotation Term="UI.Facets">
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/IsBusinessPurposeCompleted">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataControllerSet">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController1">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController2">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController3">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController4">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController5">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController6">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController7">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController8">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController9">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType/DataController10">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_BusinessPartnerVHType">
+                <Annotation Term="UI.LineItem">
                     <Collection>
-                        <Record Type="UI.ReferenceFacet">
-                            <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#BusinessNo"/>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="BusinessPartner"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
                         </Record>
-                        <Record Type="UI.CollectionFacet">
-                            <PropertyValue Property="Label" String="General Informations"/>
-                            <PropertyValue Property="ID" String="GeneralInfo"/>
-                            <PropertyValue Property="Facets">
-                                <Collection>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="General"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Identification"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Identification"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Facturation"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Facturation"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Customer"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Client"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Garanty"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Garantie"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Contract"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Contrat"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Price"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Prix"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Travaux"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Travaux"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Info"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Info"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Duration"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Duree"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Quality"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Qualite"/>
-                                    </Record>
-                                </Collection>
-                            </PropertyValue>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="FormOfAddressName"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
                         </Record>
-                        <Record Type="UI.CollectionFacet">
-                            <PropertyValue Property="Label" String="Budgets"/>
-                            <PropertyValue Property="ID" String="TableInfo"/>
-                            <PropertyValue Property="Facets">
-                                <Collection>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Budget"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
-                                    </Record>
-                                    <Record Type="UI.ReferenceFacet">
-                                        <PropertyValue Property="Label" String="Budget"/>
-                                        <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Table"/>
-                                    </Record>
-                                </Collection>
-                            </PropertyValue>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="BusinessPartnerName"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="BusinessPartnerCategory"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="BusinessPartnerIDByExtSystem"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="FirstName"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="LastName"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="OrganizationBPName1"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="GroupBusinessPartnerName1"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="BirthDate"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
                         </Record>
                     </Collection>
                 </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Client">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="NClient"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="CustomerName"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Scclt"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Siret"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Country"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.I_ProfitCenterStdVHType">
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="ProfitCenter"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="ControllingArea"/>
+                        </Record>
+                    </Collection>
                 </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Contrat">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Mission"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="GroupM"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="membreGroupement"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="isMandataire"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Mandata"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Business"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="eligibleCir"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType/Regroupement">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType/statutmission">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType/description">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType">
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MissionCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="StartDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="EndDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="ExternalRevenue"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="LaborBudget"/>
+                        </Record>
+                    </Collection>
                 </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Duree">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="StartDate"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="EndDate"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="NbOfMonth"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="RemainingMonth"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Facturation">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Modalr"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Avance"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="plateformDemat"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Rtgart"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="VAT"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Currency"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="CurrencyHedging"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Garantie">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Assurance"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Identification">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="BusinessNo"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Type"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="BusinessName"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="UFOName"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="CDG"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="CompanyCode"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Activity"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Branche"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Soufam"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="PROJM"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Site"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="International"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Rgfact"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="AncienNumero"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Reflet"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="BusinessStatus"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Info">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Period"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Prix">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Mtctr"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="nonAcquis"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Paring"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="depenseCommercial"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Qualite">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="UrlCup"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.FieldGroup" Qualifier="Travaux">
-                    <Record>
-                        <PropertyValue Property="Data">
-                            <Collection>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Mttrvx"/>
-                                </Record>
-                                <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="Ingtrvx"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_VHType/CompanyCountry">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_VHType">
                 <Annotation Term="UI.HeaderInfo">
                     <Record>
                         <PropertyValue Property="TypeName" String="FGA"/>
                         <PropertyValue Property="TypeNamePlural" String="FGAs"/>
-                        <PropertyValue Property="Title">
-                            <Record Type="UI.DataField">
-                                <PropertyValue Property="Value" Path="BusinessName"/>
-                            </Record>
-                        </PropertyValue>
-                        <PropertyValue Property="Description">
-                            <Record Type="UI.DataField">
-                                <PropertyValue Property="Value" Path="HeaderDescription"/>
-                            </Record>
-                        </PropertyValue>
                     </Record>
                 </Annotation>
                 <Annotation Term="UI.LineItem">
@@ -360,10 +181,10 @@
                             <PropertyValue Property="Value" Path="CompanyCode"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="ProfitCenter"/>
+                            <PropertyValue Property="Value" Path="UFOName"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="UFOName"/>
+                            <PropertyValue Property="Value" Path="ProfitCenter"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="PROJM"/>
@@ -388,7 +209,6 @@
                         <PropertyPath>BusinessNo</PropertyPath>
                         <PropertyPath>BusinessName</PropertyPath>
                         <PropertyPath>CompanyCode</PropertyPath>
-                        <PropertyPath>BusinessManager</PropertyPath>
                         <PropertyPath>UFOName</PropertyPath>
                         <PropertyPath>ProfitCenter</PropertyPath>
                         <PropertyPath>PROJM</PropertyPath>
@@ -422,15 +242,19 @@
                                 </Collection>
                             </PropertyValue>
                         </Record>
-                        <Record Type="UI.ReferenceFacet">
+                        <Record Type="UI.CollectionFacet">
                             <PropertyValue Property="Label" String=""/>
                             <PropertyValue Property="ID" String="EtatFacet"/>
-                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#EtatFacet"/>
+                            <PropertyValue Property="Facets">
+                                <Collection/>
+                            </PropertyValue>
                         </Record>
-                        <Record Type="UI.ReferenceFacet">
+                        <Record Type="UI.CollectionFacet">
                             <PropertyValue Property="Label" String=""/>
                             <PropertyValue Property="ID" String="MissionFacet"/>
-                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#MissionFacet"/>
+                            <PropertyValue Property="Facets">
+                                <Collection/>
+                            </PropertyValue>
                         </Record>
                         <Record Type="UI.ReferenceFacet">
                             <PropertyValue Property="Label" String=""/>
@@ -589,19 +413,19 @@
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_no_p"/>
-                        </Record>
-                        <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="stidescr"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="proprio_sti"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="id_formulaire"/>
+                            <PropertyValue Property="Value" Path="business_no_p"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_e"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="id_formulaire"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_p_t"/>
@@ -655,6 +479,7 @@
                 </Annotation>
                 <Annotation Term="UI.SelectionFields">
                     <Collection>
+                        <PropertyPath>id_formulaire</PropertyPath>
                         <PropertyPath>business_no_e</PropertyPath>
                         <PropertyPath>business_no_e_t</PropertyPath>
                         <PropertyPath>business_e_cmp</PropertyPath>
@@ -669,9 +494,86 @@
                         <PropertyPath>business_p_cdp</PropertyPath>
                         <PropertyPath>business_p_bm</PropertyPath>
                         <PropertyPath>business_p_mis</PropertyPath>
-                        <PropertyPath>stidescr</PropertyPath>
                     </Collection>
                 </Annotation>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STI_MISSIONType/Regroupement">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STI_MISSIONType/statutmission">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STI_MISSIONType/description">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STI_MISSIONType">
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MissionCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="StartDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="EndDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="ExternalRevenue"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="LaborBudget"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_ACTIVITY_VHType/Spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_ASSUR_VHType/Spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_BOOLEAN_VHType/Spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_BRANCHE_VHType/Spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_BUSINESS_VHType/spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_GROUPM_VHType/spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_MISSION_VHType/spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_MODALR_VHType/Spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_NATIONAL_VHType/Spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_SCCLT_VHType/istype">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_SCCLT_VHType/Spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_SITE_VHType/Land">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_SOUFAM_VHType/Spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_SOUFAM_VHType/Activity">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_STATUS_VHType/Spras">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_FGA_TYPE_VHType/spras">
+                <Annotation Term="UI.Hidden"/>
             </Annotations>
         </Schema>
     </edmx:DataServices>

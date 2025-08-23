@@ -61,7 +61,7 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": true,
+    "flexEnabled": false,
     "dependencies": {
       "minUI5Version": "1.120.14",
       "libs": {
@@ -126,7 +126,24 @@
           }
         },
         "sap.ui.viewExtensions": {
-          "sap.suite.ui.generic.template.ObjectPage.view.Details": {}
+          "sap.suite.ui.generic.template.ObjectPage.view.Details": {
+            "AfterFacet|ZC_STI|EtatFacet": {
+              "className": "sap.ui.core.Fragment",
+              "fragmentName": "com.avv.ingerop.ingeropsti.ext.fragment.Mission",
+              "type": "XML",
+              "sap.ui.generic.app": {
+                "title": "Missions"
+              }
+            },
+            "AfterFacet|ZC_STI|MissionFacet": {
+              "className": "sap.ui.core.mvc.View",
+              "viewName": "com.avv.ingerop.ingeropsti.ext.view.Budget",
+              "type": "XML",
+              "sap.ui.generic.app": {
+                "title": "Budget"
+              }
+            }
+          }
         }
       }
     }

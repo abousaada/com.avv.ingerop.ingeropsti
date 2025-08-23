@@ -1,0 +1,53 @@
+<mvc:View
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:layout="sap.ui.layout"
+    controllerName="com.avv.ingerop.ingeropsti.ext.controller.Budget">
+
+    <layout:VerticalLayout width="100%">
+
+        <Toolbar>
+            <content>
+                <ToolbarSpacer/>
+                <Button
+                    id="addLineBtn"
+                    icon="sap-icon://add"
+                    text="Add Line"
+                    press="onAddBudgetLine"
+                    type="Emphasized"
+                />
+            </content>
+        </Toolbar>
+
+        <Table
+            id="budgetTable"
+            inset="false"
+            growing="true"
+            growingScrollToLoad="true"
+            mode="None"
+            items="{budget>/results}">
+
+            <columns>
+                <Column><Text text="Mission"/></Column>
+                <Column><Text text="Business No P"/></Column>
+                <Column><Text text="Budget Alloué"/></Column>
+                <Column><Text text="Budget STi Cumulé"/></Column>
+            </columns>
+
+            <items>
+                <ColumnListItem>
+                    <cells>
+                        <Input value="{budget>Mission}" placeholder="Mission"/>
+                        <Input value="{budget>BusinessNoP}" placeholder="Business No P"/>
+                        <Input value="{budget>BudgetAlloue}" type="Number" placeholder="0.00"/>
+                        <Input value="{budget>BudgetStiCumu}" type="Number" placeholder="0.00"/>
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+
+    </layout:VerticalLayout>
+
+</mvc:View>

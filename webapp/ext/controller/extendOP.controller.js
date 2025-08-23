@@ -1,9 +1,10 @@
 sap.ui.define(
     [
-        "sap/ui/core/mvc/ControllerExtension"
+        "sap/ui/core/mvc/ControllerExtension",
+        "sap/ui/core/mvc/OverrideExecution"
     ],
     function (
-        ControllerExtension,
+        ControllerExtension, OverrideExecution
     ) {
         "use strict";
 
@@ -21,6 +22,8 @@ sap.ui.define(
                     try {
                         const oView = this.base.getView();
                         const oContext = oView.getBindingContext();
+                        const oModel = oContext.getModel();
+                        const sPath = oContext.getPath();
 
                         if (!oContext) {
                             sap.m.MessageBox.error("Context Error");
@@ -29,11 +32,27 @@ sap.ui.define(
 
                         const oPayload = oContext.getObject();
 
-                        try {
-                            const updatedFGA = await this.deepUpsertSTI(oPayload);
+                        var business_no_p = oModel.getProperty(sPath + "/business_no_p");
+                        if (!business_no_p) {
+                            await this.onGenerateId();
+                            business_no_p = oModel.getProperty(sPath + "/business_no_p");
+                            oPayload.business_no_p = business_no_p;
+                        }
 
-                            if (updatedFGA) {
-                                sap.m.MessageToast.show("STI created: " + updatedFGA.IdFormulaire);
+                        try {
+                            const updatedSTI = await this.deepUpsertSTI(oPayload);
+
+                            if (updatedSTI) {
+                                sap.m.MessageBox.show("STI created successfully: " + updatedSTI.id_formulaire, {
+                                    icon: sap.m.MessageBox.Icon.SUCCESS,
+                                    title: "Success",
+                                    actions: [sap.m.MessageBox.Action.OK],
+                                    onClose: function () {
+                                        oView.getModel().refresh(true);
+                                        const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                                        oRouter.navTo("ListReport");
+                                    }
+                                });
                             }
 
                         } catch (error) {
@@ -50,8 +69,6 @@ sap.ui.define(
                         return Promise.reject(error);
                     }
                 },
-
-
 
             },
 
@@ -108,24 +125,68 @@ sap.ui.define(
                     oModel.setProperty(sPath + "/proprio_sti", sUserId);
                 }
 
-                //this.onGenerateId();
+                var missions = await this.getMissions();
+                var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
+                this.getView().setModel(oMissionsModel, "missions");
 
+                var budget = await this.getBudget();
+                var oBudgetModel = new sap.ui.model.json.JSONModel({ results: budget });
+                this.getView().setModel(oBudgetModel, "budget");
             },
 
             _calculateFormulaireId: function () {
+                try {
+                    const oModel = this.getView().getModel();
+                    //const oData = oModel.getData();
+                    const oData = oModel.getProperty("/");
 
-                return Math.random().toString(36).substr(2, 10);
+                    const existingIds = this._extractAllFormulaireIds(oData);
 
+                    if (existingIds.length === 0) {
+                        return "0000000001";
+                    }
+
+                    const numericIds = existingIds.map(id => {
+                        const num = parseInt(id.replace(/^0+/, ''), 10);
+                        return isNaN(num) ? 0 : num;
+                    });
+
+                    const maxId = Math.max(...numericIds);
+                    const nextId = maxId + 1;
+
+                    return nextId.toString().padStart(10, '0');
+
+                } catch (error) {
+                    console.error("Error calculating formulaire ID:", error);
+                    // Fallback to random ID but ensure 10 characters
+                    return Math.random().toString(36).substr(2, 10);
+                }
             },
+
+            _extractAllFormulaireIds: function (data, ids = []) {
+                if (Array.isArray(data)) {
+                    data.forEach(item => this._extractAllFormulaireIds(item, ids));
+                } else if (typeof data === 'object' && data !== null) {
+                    if (data.id_formulaire && typeof data.id_formulaire === 'string') {
+                        ids.push(data.id_formulaire);
+                    }
+                    Object.values(data).forEach(value => {
+                        if (typeof value === 'object' && value !== null) {
+                            this._extractAllFormulaireIds(value, ids);
+                        }
+                    });
+                }
+                return ids;
+            },
+
 
             async deepUpsertSTI(data) {
                 try {
 
-
                     data.to_BUDG = [
                         {
-                            BUSINESS_NO_E: data.business_no_e || "TEST005",
-                            IdFormulaire: data.id_formulaire || "FORM002",
+                            BUSINESS_NO_E: data.business_no_e,
+                            IdFormulaire: data.id_formulaire,
                             Mission: "MISSION_001",
                             BusinessNoP: "PARTNER001"
                         }
@@ -153,46 +214,118 @@ sap.ui.define(
             },
 
             onGenerateId: function () {
-                const oContext = this._getController().getView().getBindingContext();
-                const sPath = oContext.getPath();
-                var oModel = this.getView().getModel();
+                return new Promise((resolve, reject) => {
 
-                var sBusinessUfo = oModel.getProperty(sPath + "/business_p_ufo");
+                    const oContext = this._getController().getView().getBindingContext();
+                    const sPath = oContext.getPath();
+                    var oModel = this.getView().getModel();
 
-                if (!sBusinessUfo) {
-                    sap.m.MessageBox.error("Business UFO field is empty");
-                    return;
-                }
+                    var sBusinessUfo = oModel.getProperty(sPath + "/business_p_ufo");
 
-                var mParams = {
-                    IV_PROJECT_TYPE: "PO",
-                    IV_UFO: sBusinessUfo
-                };
-
-                oModel.callFunction("/ZGENERATE_IDS", {
-                    method: "POST",
-                    urlParameters: mParams,
-                    success: function (oData) {
-
-                        var sGeneratedId = oData.ZGENERATE_IDS.Id;
-
-                        oModel.setProperty(sPath + "/business_no_p", sGeneratedId);
-
-                        sap.m.MessageToast.show("Generated ID: " + sGeneratedId);
-                    },
-                    error: function (oError) {
-                        sap.m.MessageBox.error("Error: " + oError.message);
+                    if (!sBusinessUfo) {
+                        sap.m.MessageBox.error("Business UFO field is empty");
+                        return;
                     }
+
+                    var mParams = {
+                        IV_PROJECT_TYPE: "PO",
+                        IV_UFO: sBusinessUfo
+                    };
+
+                    oModel.callFunction("/ZGENERATE_IDS", {
+                        method: "POST",
+                        urlParameters: mParams,
+
+                        success: function (oData) {
+                            var sGeneratedId = oData.ZGENERATE_IDS.Id;
+                            oModel.setProperty(sPath + "/business_no_p", sGeneratedId);
+                            resolve(sGeneratedId); // Resolve with the generated ID
+                        },
+                        error: function (oError) {
+                            sap.m.MessageBox.error("Error: " + oError.message);
+                            reject(oError);
+                        }
+
+                    });
                 });
             },
 
-            onSubmit: function (oEvent) {
-                if (oEvent.getParameter("enterPressed")) {
-                    this.callGenerateIdsAction();
+            async getMissions1() {
+                try {
+                    const oContext = this._getController().getView().getBindingContext();
+                    var oPath = oContext.getPath();
+                    var oModel = this.getView().getModel();
+
+                    const id_formulaire = oModel.getProperty(oPath + "/id_formulaire");
+                    const business_no_e = oModel.getProperty(oPath + "/business_no_e");
+
+                    const urlformulaire = encodeURIComponent(id_formulaire);
+                    const urlbusinessno = encodeURIComponent(business_no_e);
+
+                    const sPath = `/ZC_STI(id_formulaire='${urlformulaire}',business_no_e='${urlbusinessno}')/to_Missions`;
+
+                    const missions = await oModel.read(sPath);
+
+                    return missions?.results || [];
+
+                } catch (error) {
+                    console.log(error);
                 }
             },
 
+            async getMissions() {
+                function escapeODataKey(val) {
+                    return String(val).replace(/'/g, "''"); // OData rule: double quotes inside keys
+                }
 
+                try {
+                    const oContext = this._getController().getView().getBindingContext();
+                    const oModel = this.getView().getModel();
+
+                    const id_formulaire = escapeODataKey(oModel.getProperty(oContext.getPath() + "/id_formulaire"));
+                    const business_no_e = escapeODataKey(oModel.getProperty(oContext.getPath() + "/business_no_e"));
+
+                    const sPath = `/ZC_STI(id_formulaire='${id_formulaire}',business_no_e='${business_no_e}')/to_Missions`;
+
+                    return new Promise((resolve, reject) => {
+                        oModel.read(sPath, {
+                            success: (oData) => resolve(oData?.results || []),
+                            error: (oError) => reject(oError)
+                        });
+                    });
+
+                } catch (error) {
+                    console.error(error);
+                    return [];
+                }
+            },
+
+            async getBudget() {
+                function escapeODataKey(val) {
+                    return String(val).replace(/'/g, "''"); // OData rule: double quotes inside keys
+                }
+
+                try {
+                    const oContext = this._getController().getView().getBindingContext();
+                    const oModel = this.getView().getModel();
+
+                    const id_formulaire = escapeODataKey(oModel.getProperty(oContext.getPath() + "/id_formulaire"));
+                    const business_no_e = escapeODataKey(oModel.getProperty(oContext.getPath() + "/business_no_e"));
+
+                    const sPath = `/ZC_STI(id_formulaire='${id_formulaire}',business_no_e='${business_no_e}')/to_BUDG`;
+
+                    return new Promise((resolve, reject) => {
+                        oModel.read(sPath, {
+                            success: (oData) => resolve(oData?.results || []),
+                            error: (oError) => reject(oError)
+                        });
+                    });
+
+                } catch (error) {
+                    console.error(error);
+                    return [];
+                }
+            }
 
         });
     }
