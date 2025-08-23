@@ -39,8 +39,15 @@
             <items>
                 <ColumnListItem>
                     <cells>
-                        <Input value="{budget>Mission}" placeholder="Mission"/>
-                        <Input value="{budget>BusinessNoP}" placeholder="Business No P"/>
+                        <Select
+                            items="{
+                                path: 'missions>/results',
+                                templateShareable: false
+                            }"
+                            selectedKey="{budget>Mission}">
+                            <core:Item key="{missions>MissionId}" text="{missions>MissionCode}" />
+                        </Select>
+                        <Input value="{budget>BusinessNoP}" placeholder="Business"/>
                         <Input value="{budget>BudgetAlloue}" type="Number" placeholder="0.00"/>
                         <Input value="{budget>BudgetStiCumu}" type="Number" placeholder="0.00"/>
                     </cells>
