@@ -42,12 +42,12 @@
             <items>
                 <ColumnListItem>
                     <cells>
+                        <Text text="{missions>MissionId}" />
                         <Text text="{missions>MissionCode}" />
-                        <Text text="{missions>zstatutmission}" />
-                        <Text text="{missions>zdescription}" />
-                        <Text text="{missions>LaborBudget}" />
-                        <Text text="{missions>LaborBudget}" />
-                        <Text text="{missions>LaborBudget}" />
+                        <Text text="{missions>GlobalBudget}" />
+                        <Text text="{missions>BudgetInSTI}" />
+                        <Text text="{missions>AvailableBudget}" />
+                        <Text text="{missions>SubcontractedBudgetPercentage}" />
                     </cells>
                 </ColumnListItem>
             </items>

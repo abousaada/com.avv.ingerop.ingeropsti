@@ -4,19 +4,19 @@
     xmlns="sap.m"
     xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:layout="sap.ui.layout"
-    controllerName="com.avv.ingerop.ingeropsti.ext.controller.Budget">
-
+    controllerName="com.avv.ingerop.ingeropsti.ext.controller.Budget"
+>
     <layout:VerticalLayout width="100%">
-
         <Toolbar>
             <content>
-                <ToolbarSpacer/>
+                <ToolbarSpacer />
                 <Button
                     id="addLineBtn"
                     icon="sap-icon://add"
                     text="Add Line"
                     press="onAddBudgetLine"
                     type="Emphasized"
+                    enabled="{ui>/editable}"
                 />
             </content>
         </Toolbar>
@@ -27,13 +27,27 @@
             growing="true"
             growingScrollToLoad="true"
             mode="None"
-            items="{budget>/results}">
-
+            items="{budget>/results}"
+        >
             <columns>
-                <Column><Text text="Mission"/></Column>
-                <Column><Text text="Business No P"/></Column>
-                <Column><Text text="Budget Alloué"/></Column>
-                <Column><Text text="Budget STi Cumulé"/></Column>
+                <Column>
+                    <Text text="Mission" />
+                </Column>
+                <Column>
+                    <Text text="Libellé" />
+                </Column>
+                <Column>
+                    <Text text="Date de début" />
+                </Column>
+                <Column>
+                    <Text text="Date de fin" />
+                </Column>
+                <Column>
+                    <Text text="Budget sous-traité (recette)" />
+                </Column>
+                <Column>
+                    <Text text="Devise" />
+                </Column>
             </columns>
 
             <items>
@@ -44,17 +58,53 @@
                                 path: 'missions>/results',
                                 templateShareable: false
                             }"
-                            selectedKey="{budget>Mission}">
-                            <core:Item key="{missions>MissionId}" text="{missions>MissionCode}" />
+                            editable="{ui>/editable}"
+                            selectedKey="{budget>Mission}"
+                        >
+                            <core:Item
+                                key="{missions>MissionId}"
+                                text="{missions>MissionId}"
+                            />
                         </Select>
-                        <Input value="{budget>BusinessNoP}" placeholder="Business"/>
-                        <Input value="{budget>BudgetAlloue}" type="Number" placeholder="0.00"/>
-                        <Input value="{budget>BudgetStiCumu}" type="Number" placeholder="0.00"/>
+                        <Input value="{budget>Libelle}" editable="{ui>/editable}" />
+                        <DatePicker
+                            value="{path: 'missions>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
+                            displayFormat="short"
+                            editable="{ui>/editable}"
+                            width="100%"
+                            required="true"
+                        />
+
+                        <DatePicker
+                            value="{path: 'utilities>EndDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
+                            displayFormat="short"
+                            editable="{ui>/editable}"
+                            width="100%"
+                            required="true"
+                        />
+                        
+                        <Input
+                            value="{budget>BudgetAlloue}"
+                            editable="{ui>/editable}"
+                            type="Number"
+                            placeholder="0.00"
+                        />
+                        <Select
+                            items="{
+                                path: 'missions>/results',
+                                templateShareable: false
+                            }"
+                            editable="{ui>/editable}"
+                            selectedKey="{budget>Mission}"
+                        >
+                            <core:Item
+                                key="{missions>MissionId}"
+                                text="{missions>MissionId}"
+                            />
+                        </Select>
                     </cells>
                 </ColumnListItem>
             </items>
         </Table>
-
     </layout:VerticalLayout>
-
 </mvc:View>

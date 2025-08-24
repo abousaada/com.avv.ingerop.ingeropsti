@@ -306,22 +306,6 @@
                 <Property Name="Segment" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Segment_Text" sap:label="Segment" sap:quickinfo="Segment for Segmental Reporting"/>
                 <Property Name="Segment_Text" Type="Edm.String" MaxLength="50" sap:label="Segment Name" sap:creatable="false" sap:updatable="false"/>
             </EntityType>
-            <EntityType Name="ZC_FGA_MISSIONType" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="MissionId"/>
-                    <PropertyRef Name="BusinessNo"/>
-                </Key>
-                <Property Name="MissionId" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
-                <Property Name="BusinessNo" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label=""/>
-                <Property Name="MissionCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="3-Byte field" sap:heading=""/>
-                <Property Name="StartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:heading="" sap:quickinfo="Field of type DATS"/>
-                <Property Name="EndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:heading="" sap:quickinfo="Field of type DATS"/>
-                <Property Name="ExternalRevenue" Type="Edm.Decimal" Precision="14" Scale="3" sap:label=""/>
-                <Property Name="LaborBudget" Type="Edm.Decimal" Precision="14" Scale="3" sap:label=""/>
-                <Property Name="Regroupement" Type="Edm.String" MaxLength="40" sap:label="Regroupement mission"/>
-                <Property Name="statutmission" Type="Edm.String" MaxLength="1" sap:label="Statut mission"/>
-                <Property Name="description" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
-            </EntityType>
             <EntityType Name="ZC_FGA_VHType" sap:value-list="true" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="BusinessNo"/>
@@ -445,9 +429,10 @@
                 <Property Name="BUSINESS_NO_E" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
                 <Property Name="IdFormulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="Mission" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
-                <Property Name="BusinessNoP" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
+                <Property Name="StartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
+                <Property Name="EndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
                 <Property Name="BudgetAlloue" Type="Edm.Int64" sap:label=""/>
-                <Property Name="BudgetStiCumu" Type="Edm.Int64" sap:label=""/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:semantics="currency-code"/>
                 <NavigationProperty Name="to_STI" Relationship="ZSTI_SRV.assoc_333E6DC35A0196A751DFF12F791D6481" FromRole="FromRole_assoc_333E6DC35A0196A751DFF12F791D6481" ToRole="ToRole_assoc_333E6DC35A0196A751DFF12F791D6481"/>
             </EntityType>
             <EntityType Name="ZC_STI_MISSIONType" sap:content-version="1">
@@ -460,100 +445,13 @@
                 <Property Name="MissionCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="3-Byte field" sap:heading=""/>
                 <Property Name="StartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:heading="" sap:quickinfo="Field of type DATS"/>
                 <Property Name="EndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:heading="" sap:quickinfo="Field of type DATS"/>
-                <Property Name="ExternalRevenue" Type="Edm.Decimal" Precision="14" Scale="3" sap:label=""/>
-                <Property Name="LaborBudget" Type="Edm.Decimal" Precision="14" Scale="3" sap:label=""/>
+                <Property Name="GlobalBudget" Type="Edm.Decimal" Precision="15" Scale="2" sap:label=""/>
+                <Property Name="BudgetInSTI" Type="Edm.Decimal" Precision="15" Scale="2" sap:label=""/>
+                <Property Name="AvailableBudget" Type="Edm.Decimal" Precision="15" Scale="2" sap:label=""/>
+                <Property Name="SubcontractedBudgetPercentage" Type="Edm.Decimal" Precision="5" Scale="2" sap:label=""/>
                 <Property Name="Regroupement" Type="Edm.String" MaxLength="40" sap:label="Regroupement mission"/>
                 <Property Name="statutmission" Type="Edm.String" MaxLength="1" sap:label="Statut mission"/>
                 <Property Name="description" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_ACTIVITY_VHType" sap:label="Aide à la recherche Activity" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Activity"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="Activity" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:text="description" sap:label=""/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
-                <Property Name="description" Type="Edm.String" MaxLength="80" sap:display-format="UpperCase" sap:label=""/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_ASSUR_VHType" sap:label="Aide à la recherche Assur" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Assur"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="Assur" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="UpperCase" sap:text="description" sap:label="char8" sap:quickinfo="Character field, 8 characters long"/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="50" sap:label="c" sap:quickinfo="Comment"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_AVANCE_VHType" sap:label="Aide à la recherche Avance" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Avance"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="Avance" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:text="description" sap:label="Single-Character Flag" sap:heading=""/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Character Field with Length 10" sap:heading=""/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_BOOLEAN_VHType" sap:label="Aide à la recherche Oui/Non" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Bool"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="Bool" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="UpperCase" sap:text="description" sap:label="3-Byte field" sap:heading=""/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="30 Characters" sap:heading=""/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_BRANCHE_VHType" sap:label="Aide à la recherche Branche" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Branche"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="Branche" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="description" sap:label=""/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
-                <Property Name="description" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="30 Characters" sap:heading=""/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_BUSINESS_VHType" sap:label="Aide à la recherche Business" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Business"/>
-                    <PropertyRef Name="spras"/>
-                </Key>
-                <Property Name="Business" Type="Edm.String" Nullable="false" MaxLength="2" sap:display-format="UpperCase" sap:text="description" sap:label="Component of the Version Number" sap:heading=""/>
-                <Property Name="spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="80" sap:display-format="UpperCase" sap:label="Char80" sap:quickinfo="Char 80"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_GROUPM_VHType" sap:label="Aide à la recherche GroupM" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="GroupM"/>
-                    <PropertyRef Name="spras"/>
-                </Key>
-                <Property Name="GroupM" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:text="description" sap:label="Single-Character Flag" sap:heading=""/>
-                <Property Name="spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="R/2 table"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_MISSION_VHType" sap:label="Aide à la recherche Missionr" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Mission"/>
-                </Key>
-                <Property Name="Mission" Type="Edm.String" Nullable="false" MaxLength="5" sap:display-format="UpperCase" sap:text="description" sap:label="R/2 table"/>
-                <Property Name="spras" Type="Edm.String" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="80" sap:display-format="UpperCase" sap:label="Char80" sap:quickinfo="Char 80"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_MODALR_VHType" sap:label="Aide à la recherche ModalR" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Modalr"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="Modalr" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:text="description" sap:label="Single-Character Flag" sap:heading=""/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="50" sap:label="c" sap:quickinfo="Comment"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_NATIONAL_VHType" sap:label="Aide à la recherche is National" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="IsNational"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="IsNational" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:text="description" sap:label="Single-Character Flag" sap:heading=""/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="30 Characters" sap:heading=""/>
             </EntityType>
             <EntityType Name="ZI_FGA_PROFITCENTER_VHType" sap:label="Aide à la recherche Centre de profit" sap:value-list="true" sap:content-version="1">
                 <Key>
@@ -562,61 +460,6 @@
                 <Property Name="ProfitCenter" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Centre de profit" sap:quickinfo="From Value"/>
                 <Property Name="UFO" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="UFO Délégué" sap:quickinfo="Set Name"/>
                 <Property Name="description" Type="Edm.String" MaxLength="40" sap:label="Centre de profit Description" sap:quickinfo="Short Description of a Set"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_PROJM_VHType" sap:label="Value Help for Project Manager" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="UsrId"/>
-                </Key>
-                <Property Name="UsrId" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="NonNegative" sap:text="description" sap:label="Personnel Number"/>
-                <Property Name="description" Type="Edm.String" MaxLength="81"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_SCCLT_VHType" sap:label="Aide à la recherche Scclt" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Scclt"/>
-                    <PropertyRef Name="istype"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="Scclt" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="description" sap:label="Industry"/>
-                <Property Name="istype" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Industry System"/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
-                <Property Name="description" Type="Edm.String" MaxLength="100" sap:label="Description"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_SITE_VHType" sap:label="Aide à la recherche SITE" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Site"/>
-                    <PropertyRef Name="Land"/>
-                </Key>
-                <Property Name="Site" Type="Edm.String" Nullable="false" MaxLength="80" sap:display-format="UpperCase" sap:text="description" sap:label=""/>
-                <Property Name="Land" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
-                <Property Name="description" Type="Edm.String" MaxLength="80" sap:display-format="UpperCase" sap:label="Char80" sap:quickinfo="Char 80"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_SOUFAM_VHType" sap:label="Aide à la recherche Soufam" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Soufam"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="Soufam" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="UpperCase" sap:text="description" sap:label="3-Byte field" sap:heading=""/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
-                <Property Name="Activity" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label=""/>
-                <Property Name="description" Type="Edm.String" MaxLength="80" sap:display-format="UpperCase" sap:label="Char80" sap:quickinfo="Char 80"/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_STATUS_VHType" sap:label="Aide à la recherche Status" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Status"/>
-                    <PropertyRef Name="Spras"/>
-                </Key>
-                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:text="description" sap:label="Single-Character Flag" sap:heading=""/>
-                <Property Name="Spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Character Field with Length 10" sap:heading=""/>
-            </EntityType>
-            <EntityType Name="ZI_FGA_TYPE_VHType" sap:label="Aide à la recherche Type d'affaire" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="Type"/>
-                    <PropertyRef Name="spras"/>
-                </Key>
-                <Property Name="Type" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="UpperCase" sap:text="description" sap:label="3-Byte field" sap:heading=""/>
-                <Property Name="spras" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language ID"/>
-                <Property Name="description" Type="Edm.String" MaxLength="80" sap:display-format="UpperCase" sap:label="Char80" sap:quickinfo="Char 80"/>
             </EntityType>
             <EntityType Name="ZI_FGA_UFO_VHType" sap:label="Aide à la recherche d'UFO Délégué" sap:value-list="true" sap:content-version="1">
                 <Key>
@@ -634,7 +477,7 @@
             </Association>
             <Association Name="assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" sap:content-version="1">
                 <End Type="ZSTI_SRV.ZC_STIType" Multiplicity="1" Role="FromRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
-                <End Type="ZSTI_SRV.ZC_FGA_MISSIONType" Multiplicity="*" Role="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
+                <End Type="ZSTI_SRV.ZC_STI_MISSIONType" Multiplicity="*" Role="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
             </Association>
             <Association Name="assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" sap:content-version="1">
                 <End Type="ZSTI_SRV.ZC_STIType" Multiplicity="1" Role="FromRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
@@ -652,28 +495,11 @@
                 <EntitySet Name="I_ProfitCenter" EntityType="ZSTI_SRV.I_ProfitCenterType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="I_ProfitCenterStdVH" EntityType="ZSTI_SRV.I_ProfitCenterStdVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="I_SegmentStdVH" EntityType="ZSTI_SRV.I_SegmentStdVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZC_FGA_MISSION" EntityType="ZSTI_SRV.ZC_FGA_MISSIONType" sap:content-version="1"/>
                 <EntitySet Name="ZC_FGA_VH" EntityType="ZSTI_SRV.ZC_FGA_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI" EntityType="ZSTI_SRV.ZC_STIType" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_BUDG" EntityType="ZSTI_SRV.ZC_STI_BUDGType" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_MISSION" EntityType="ZSTI_SRV.ZC_STI_MISSIONType" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_ACTIVITY_VH" EntityType="ZSTI_SRV.ZI_FGA_ACTIVITY_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_ASSUR_VH" EntityType="ZSTI_SRV.ZI_FGA_ASSUR_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_AVANCE_VH" EntityType="ZSTI_SRV.ZI_FGA_AVANCE_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_BOOLEAN_VH" EntityType="ZSTI_SRV.ZI_FGA_BOOLEAN_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_BRANCHE_VH" EntityType="ZSTI_SRV.ZI_FGA_BRANCHE_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_BUSINESS_VH" EntityType="ZSTI_SRV.ZI_FGA_BUSINESS_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_GROUPM_VH" EntityType="ZSTI_SRV.ZI_FGA_GROUPM_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_MISSION_VH" EntityType="ZSTI_SRV.ZI_FGA_MISSION_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_MODALR_VH" EntityType="ZSTI_SRV.ZI_FGA_MODALR_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_NATIONAL_VH" EntityType="ZSTI_SRV.ZI_FGA_NATIONAL_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZI_FGA_PROFITCENTER_VH" EntityType="ZSTI_SRV.ZI_FGA_PROFITCENTER_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_PROJM_VH" EntityType="ZSTI_SRV.ZI_FGA_PROJM_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_SCCLT_VH" EntityType="ZSTI_SRV.ZI_FGA_SCCLT_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_SITE_VH" EntityType="ZSTI_SRV.ZI_FGA_SITE_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_SOUFAM_VH" EntityType="ZSTI_SRV.ZI_FGA_SOUFAM_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_STATUS_VH" EntityType="ZSTI_SRV.ZI_FGA_STATUS_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZI_FGA_TYPE_VH" EntityType="ZSTI_SRV.ZI_FGA_TYPE_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZI_FGA_UFO_VH" EntityType="ZSTI_SRV.ZI_FGA_UFO_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <AssociationSet Name="assoc_333E6DC35A0196A751DFF12F791D6481" Association="ZSTI_SRV.assoc_333E6DC35A0196A751DFF12F791D6481" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="ZC_STI_BUDG" Role="FromRole_assoc_333E6DC35A0196A751DFF12F791D6481"/>
@@ -681,7 +507,7 @@
                 </AssociationSet>
                 <AssociationSet Name="assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" Association="ZSTI_SRV.assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="ZC_STI" Role="FromRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
-                    <End EntitySet="ZC_FGA_MISSION" Role="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
+                    <End EntitySet="ZC_STI_MISSION" Role="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
                 </AssociationSet>
                 <AssociationSet Name="assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" Association="ZSTI_SRV.assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="ZC_STI" Role="FromRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>

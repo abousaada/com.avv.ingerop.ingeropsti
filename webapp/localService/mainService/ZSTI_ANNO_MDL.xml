@@ -129,36 +129,6 @@
                     </Collection>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType/Regroupement">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType/statutmission">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType/description">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType">
-                <Annotation Term="UI.LineItem">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="MissionCode"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="StartDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="EndDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="ExternalRevenue"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="LaborBudget"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_FGA_VHType/CompanyCountry">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
@@ -519,61 +489,19 @@
                             <PropertyValue Property="Value" Path="EndDate"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="ExternalRevenue"/>
+                            <PropertyValue Property="Value" Path="GlobalBudget"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="LaborBudget"/>
+                            <PropertyValue Property="Value" Path="BudgetInSTI"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="AvailableBudget"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="SubcontractedBudgetPercentage"/>
                         </Record>
                     </Collection>
                 </Annotation>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_ACTIVITY_VHType/Spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_ASSUR_VHType/Spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_BOOLEAN_VHType/Spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_BRANCHE_VHType/Spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_BUSINESS_VHType/spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_GROUPM_VHType/spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_MISSION_VHType/spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_MODALR_VHType/Spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_NATIONAL_VHType/Spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_SCCLT_VHType/istype">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_SCCLT_VHType/Spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_SITE_VHType/Land">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_SOUFAM_VHType/Spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_SOUFAM_VHType/Activity">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_STATUS_VHType/Spras">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZI_FGA_TYPE_VHType/spras">
-                <Annotation Term="UI.Hidden"/>
             </Annotations>
         </Schema>
     </edmx:DataServices>
