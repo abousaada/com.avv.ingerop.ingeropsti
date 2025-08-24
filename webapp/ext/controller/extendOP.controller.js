@@ -182,12 +182,12 @@ sap.ui.define(
                 try {
 
                     data.to_BUDG = [
-                        {
+                        /*{
                             BUSINESS_NO_E: data.business_no_e,
                             IdFormulaire: data.id_formulaire,
                             Mission: "MISSION_001",
                             BusinessNoP: "PARTNER001"
-                        }
+                        }*/
                     ];
 
                     const oModel = this.getView().getModel();
