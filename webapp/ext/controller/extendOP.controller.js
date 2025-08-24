@@ -56,7 +56,6 @@ sap.ui.define(
                             }
 
                         } catch (error) {
-                            //Helper.errorMessage("STI update fail");
                             console.error(error);
                             return Promise.reject(error);
                         }
@@ -64,7 +63,6 @@ sap.ui.define(
                         return Promise.reject();
 
                     } catch (error) {
-                        //Helper.errorMessage("STI update fail");
                         console.error(error);
                         return Promise.reject(error);
                     }
@@ -242,7 +240,7 @@ sap.ui.define(
                         success: function (oData) {
                             var sGeneratedId = oData.ZGENERATE_IDS.Id;
                             oModel.setProperty(sPath + "/business_no_p", sGeneratedId);
-                            resolve(sGeneratedId); // Resolve with the generated ID
+                            resolve(sGeneratedId); 
                         },
                         error: function (oError) {
                             sap.m.MessageBox.error("Error: " + oError.message);
@@ -282,7 +280,7 @@ sap.ui.define(
 
             async getBudget() {
                 function escapeODataKey(val) {
-                    return String(val).replace(/'/g, "''"); // OData rule: double quotes inside keys
+                    return String(val).replace(/'/g, "''");
                 }
 
                 try {
@@ -313,7 +311,6 @@ sap.ui.define(
                     const oResponse = JSON.parse(oError.responseText);
                     let sErrorMessage = "An error occurred while creating the STI.";
 
-                    // Extract error details from SAP OData response
                     if (oResponse.error && oResponse.error.innererror && oResponse.error.innererror.errordetails) {
                         const aErrors = oResponse.error.innererror.errordetails;
                         sErrorMessage = aErrors.map(function (oErrorDetail, index) {
@@ -323,16 +320,14 @@ sap.ui.define(
                         sErrorMessage = oResponse.error.message.value || oResponse.error.message;
                     }
 
-                    // Show error popup
                     sap.m.MessageBox.error(sErrorMessage, {
                         title: "Creation Failed",
                         width: "600px",
-                        details: oError.responseText, // Optional: show raw response
+                        details: oError.responseText, 
                         styleClass: "sapUiSizeCompact"
                     });
 
                 } catch (parseError) {
-                    // Fallback for non-JSON responses
                     sap.m.MessageBox.alert("Error: " + (oError.message || "Unknown error occurred"), {
                         title: "Error"
                     });
