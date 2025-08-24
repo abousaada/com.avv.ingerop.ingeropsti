@@ -66,9 +66,12 @@
                                 text="{missions>MissionId}"
                             />
                         </Select>
-                        <Input value="{budget>Libelle}" editable="{ui>/editable}" />
+                        <Input
+                            value="{budget>Libelle}"
+                            editable="{ui>/editable}"
+                        />
                         <DatePicker
-                            value="{path: 'missions>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
+                            value="{path: 'budget>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
                             displayFormat="short"
                             editable="{ui>/editable}"
                             width="100%"
@@ -76,13 +79,13 @@
                         />
 
                         <DatePicker
-                            value="{path: 'utilities>EndDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
+                            value="{path: 'budget>EndDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
                             displayFormat="short"
                             editable="{ui>/editable}"
                             width="100%"
                             required="true"
                         />
-                        
+
                         <Input
                             value="{budget>BudgetAlloue}"
                             editable="{ui>/editable}"
@@ -91,15 +94,14 @@
                         />
                         <Select
                             items="{
-                                path: 'missions>/results',
-                                templateShareable: false
+                                path: 'currencies>/Currencies'
                             }"
                             editable="{ui>/editable}"
-                            selectedKey="{budget>Mission}"
+                            selectedKey="{budget>Currency}"
                         >
                             <core:Item
-                                key="{missions>MissionId}"
-                                text="{missions>MissionId}"
+                                key="{currencies>key}"
+                                text="{currencies>text}"
                             />
                         </Select>
                     </cells>

@@ -39,6 +39,18 @@ sap.ui.define(
                             oPayload.business_no_p = business_no_p;
                         }
 
+                        const aBudgetLines = this.getView().getModel("budget").getProperty("/results");
+                        oPayload.to_BUDG = aBudgetLines.map(line => ({
+                            BUSINESS_NO_E: oPayload.business_no_e,
+                            IdFormulaire: oPayload.id_formulaire,
+                            Mission: line.Mission,
+                            //Libelle: line.Libelle,
+                            //StartDate: line.StartDate,
+                            //EndDate: line.EndDate,
+                            BudgetAlloue: line.BudgetAlloue,
+                            //Currency: line.Currency
+                        }));
+
                         try {
                             const updatedSTI = await this.deepUpsertSTI(oPayload);
 
@@ -130,6 +142,15 @@ sap.ui.define(
                 var budget = await this.getBudget();
                 var oBudgetModel = new sap.ui.model.json.JSONModel({ results: budget });
                 this.getView().setModel(oBudgetModel, "budget");
+
+                var oCurrencyModel = new sap.ui.model.json.JSONModel({
+                    Currencies: [
+                        { key: "EUR", text: "Euro" },
+                        { key: "USD", text: "US Dollar" },
+                        { key: "GBP", text: "British Pound" }
+                    ]
+                });
+                this.getView().setModel(oCurrencyModel, "currencies");
             },
 
             _calculateFormulaireId: function () {
@@ -180,16 +201,6 @@ sap.ui.define(
 
             async deepUpsertSTI(data) {
                 try {
-
-                    data.to_BUDG = [
-                        /*{
-                            BUSINESS_NO_E: data.business_no_e,
-                            IdFormulaire: data.id_formulaire,
-                            Mission: "MISSION_001",
-                            BusinessNoP: "PARTNER001"
-                        }*/
-                    ];
-
                     const oModel = this.getView().getModel();
                     return new Promise((resolve, reject) => {
                         oModel.create("/ZC_STI", data, {
@@ -240,7 +251,7 @@ sap.ui.define(
                         success: function (oData) {
                             var sGeneratedId = oData.ZGENERATE_IDS.Id;
                             oModel.setProperty(sPath + "/business_no_p", sGeneratedId);
-                            resolve(sGeneratedId); 
+                            resolve(sGeneratedId);
                         },
                         error: function (oError) {
                             sap.m.MessageBox.error("Error: " + oError.message);
@@ -277,6 +288,8 @@ sap.ui.define(
                     return [];
                 }
             },
+
+            
 
             async getBudget() {
                 function escapeODataKey(val) {
@@ -323,7 +336,7 @@ sap.ui.define(
                     sap.m.MessageBox.error(sErrorMessage, {
                         title: "Creation Failed",
                         width: "600px",
-                        details: oError.responseText, 
+                        details: oError.responseText,
                         styleClass: "sapUiSizeCompact"
                     });
 
