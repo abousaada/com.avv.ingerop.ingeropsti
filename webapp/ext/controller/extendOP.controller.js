@@ -250,12 +250,12 @@ sap.ui.define(
                     }
                 });
 
-                /*const aSmartFields = oView.findAggregatedObjects(true, (oCtrl) => {
+                const aSmartFields = oView.findAggregatedObjects(true, (oCtrl) => {
                     return oCtrl.isA("sap.ui.comp.smartfield.SmartField") &&
                         oCtrl.getId().includes(sFieldId);
                 });
                 const bEditable = bIsCreate && oUIModel.getProperty("/editable");
-                aSmartFields.forEach((oSmartField) => oSmartField.setEditable(bEditable));*/
+                aSmartFields.forEach((oSmartField) => oSmartField.setEditable(bEditable));
             },
 
             _calculateFormulaireId: function () {
