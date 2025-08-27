@@ -224,7 +224,6 @@ sap.ui.define(
                 this._setFieldEditableState("business_p_ufo", bIsCreate);
                 this._setFieldEditableState("business_p_cdp", bIsCreate);
                 this._setFieldEditableState("business_p_bm", bIsCreate);
-                this._setFieldEditableState("business_no_e", bIsCreate);
                 this._setFieldEditableState("business_p_mail", bIsCreate);
 
             },

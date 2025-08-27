@@ -16,7 +16,13 @@
                     text="Add Line"
                     press="onAddBudgetLine"
                     type="Emphasized"
-                    enabled="{ui>/editable}"
+                    enabled="{
+                            parts: [
+                                { path: 'ui>/editable' },
+                                { path: 'missions>/results' }
+                            ],
+                            formatter: '.enableAddLine'
+                        }"
                 />
             </content>
         </Toolbar>
@@ -51,6 +57,9 @@
                 <Column>
                     <Text text="Devise" />
                 </Column>
+                <Column>
+                    <Text text="Actions" />
+                </Column>
             </columns>
 
             <items>
@@ -62,7 +71,7 @@
                                 templateShareable: false
                             }"
                             editable="{ui>/editable}"
-                            selectedKey="{budget>MissionId}"
+                            selectedKey="{budget>Mission_e}"
                             change="onMissionChange"
                         >
                             <core:Item
@@ -109,6 +118,11 @@
                                 text="{currencies>text}"
                             />
                         </Select>
+                        <Button
+                            icon="sap-icon://delete"
+                            type="Reject"
+                            press="onDeleteBudgetLine"
+                        />
                     </cells>
                 </ColumnListItem>
             </items>

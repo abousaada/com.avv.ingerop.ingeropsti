@@ -40,18 +40,25 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             const sModel = oContext.getModel();
             const sPath = oContext.getPath();
 
+            var business_no_p = sModel.getProperty(sPath + "/business_no_p");
+
             this.onMissionChange(oEvent);
 
-            var business_no_p = sModel.getProperty(sPath + "/business_no_p");
+            var oBudgetModel = this.getView().getModel("budget");
+            var aMissions = this.getView().getModel("missions").getProperty("/results");
+
+            if (!oBudgetModel.getProperty("/Mission_e") && aMissions.length > 0) {
+                oBudgetModel.setProperty("/Mission_e", aMissions[0].MissionId);
+                var sMission_e = aMissions[0].MissionId;
+            }
 
             var oModel = this.getView().getModel("budget");
             var aData = oModel.getProperty("/results") || [];
 
-            // Find the maximum numeric suffix from existing Mission_p values
             var maxSuffix = 0;
             aData.forEach(function (item) {
                 if (item.Mission_p && item.Mission_p.startsWith(business_no_p)) {
-                    // Extract the numeric part after the business_no_p prefix
+
                     var suffix = item.Mission_p.substring(business_no_p.length);
                     var numericSuffix = parseInt(suffix, 10);
                     if (!isNaN(numericSuffix) && numericSuffix > maxSuffix) {
@@ -60,18 +67,17 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
                 }
             });
 
-            // Increment the maximum suffix found
             var newSuffix = maxSuffix + 1;
 
-            // Format as double-digit and concatenate with business_no_p
             var formattedSuffix = newSuffix.toString().padStart(2, '0');
             var newMissionP = business_no_p + formattedSuffix;
 
             var oNewLine = {
-                Mission_e: "",
+                Mission_e: sMission_e,
                 Mission_p: newMissionP,
                 StartDate: '',
                 EndDate: '',
+                business_no_p: business_no_p,
                 BudgetAlloue: '0',
                 Currency: 'EUR'
             };
@@ -83,17 +89,13 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
         onMissionChange: function (oEvent) {
             var oSelect = oEvent.getSource();
 
-            // Get the parent row of the select (ColumnListItem)
             var oRow = oSelect.getParent();
 
-            // Get the binding context of the row
             var oBindingContext = oRow.getBindingContext("budget");
 
-            // Get the selected key
             var oSelectedItem = oEvent.getParameter("selectedItem");
             var sSelectedKey = oSelectedItem ? oSelectedItem.getKey() : null;
 
-            // Update the model property
             if (oBindingContext) {
                 oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Mission_e", sSelectedKey);
             }
@@ -107,7 +109,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             var aItems = oTable.getItems();
 
             aItems.forEach(function (oItem, index) {
-                var oSelect = oItem.getCells()[0]; 
+                var oSelect = oItem.getCells()[0];
                 var sSelectedKey = oSelect.getSelectedKey();
                 var oBindingContext = oItem.getBindingContext("budget");
                 var sModelValue = oBindingContext.getProperty("Mission_e");
@@ -119,7 +121,31 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
                     oSelect.setSelectedKey(sModelValue);
                 }
             });
+        },
+
+        enableAddLine: function (bEditable, aMissions) {
+            return bEditable && Array.isArray(aMissions) && aMissions.length > 0;
+        },
+
+        onDeleteBudgetLine: function (oEvent) {
+            var oButton = oEvent.getSource();
+            var oContext = oButton.getBindingContext("budget");
+
+            if (!oContext) return;
+
+            var sPath = oContext.getPath();
+
+            var oModel = this.getView().getModel("budget");
+            var aData = oModel.getProperty("/results");
+
+            var iIndex = parseInt(sPath.split("/").pop());
+
+            aData.splice(iIndex, 1);
+
+            oModel.setProperty("/results", aData);
         }
+
+
 
     });
 });
