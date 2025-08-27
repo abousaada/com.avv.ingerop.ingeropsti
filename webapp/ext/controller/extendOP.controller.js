@@ -138,8 +138,6 @@ sap.ui.define(
                     oModel.setProperty(sPath + "/proprio_sti", sUserId);
                 }
 
-
-
                 var missions = await this.getMissions();
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                 this.getView().setModel(oMissionsModel, "missions");
@@ -233,6 +231,7 @@ sap.ui.define(
 
             },
 
+
             _setFieldEditableState: function (sFieldId, bIsCreate) {
                 const oView = this.getView();
                 const oUIModel = oView.getModel("ui");
@@ -251,12 +250,12 @@ sap.ui.define(
                     }
                 });
 
-                const aSmartFields = oView.findAggregatedObjects(true, (oCtrl) => {
+                /*const aSmartFields = oView.findAggregatedObjects(true, (oCtrl) => {
                     return oCtrl.isA("sap.ui.comp.smartfield.SmartField") &&
                         oCtrl.getId().includes(sFieldId);
                 });
                 const bEditable = bIsCreate && oUIModel.getProperty("/editable");
-                aSmartFields.forEach((oSmartField) => oSmartField.setEditable(bEditable));
+                aSmartFields.forEach((oSmartField) => oSmartField.setEditable(bEditable));*/
             },
 
             _calculateFormulaireId: function () {
