@@ -31,7 +31,10 @@
         >
             <columns>
                 <Column>
-                    <Text text="Mission" />
+                    <Text text="Mission sous-traitée" />
+                </Column>
+                <Column>
+                    <Text text="Mission associée" />
                 </Column>
                 <Column>
                     <Text text="Libellé" />
@@ -59,13 +62,15 @@
                                 templateShareable: false
                             }"
                             editable="{ui>/editable}"
-                            selectedKey="{budget>Mission}"
+                            selectedKey="{budget>MissionId}"
+                            change="onMissionChange"
                         >
                             <core:Item
                                 key="{missions>MissionId}"
                                 text="{missions>MissionId}"
                             />
                         </Select>
+                        <Text text="{budget>Mission_p}" />
                         <Input
                             value="{budget>Libelle}"
                             editable="{ui>/editable}"

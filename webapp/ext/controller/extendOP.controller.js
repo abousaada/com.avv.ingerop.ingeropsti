@@ -42,13 +42,15 @@ sap.ui.define(
                         const aBudgetLines = this.getView().getModel("budget").getProperty("/results");
                         oPayload.to_BUDG = aBudgetLines.map(line => ({
                             BUSINESS_NO_E: oPayload.business_no_e,
+                            business_no_p: oPayload.business_no_p,
                             IdFormulaire: oPayload.id_formulaire,
-                            Mission: line.Mission,
-                            //Libelle: line.Libelle,
-                            //StartDate: line.StartDate,
-                            //EndDate: line.EndDate,
+                            Mission_e: line.Mission_e,
+                            Mission_p: line.Mission_p,
+                            Libelle: line.Libelle,
+                            StartDate: line.StartDate,
+                            EndDate: line.EndDate,
                             BudgetAlloue: line.BudgetAlloue,
-                            //Currency: line.Currency
+                            Currency: line.Currency
                         }));
 
                         try {
@@ -79,6 +81,7 @@ sap.ui.define(
                         return Promise.reject(error);
                     }
                 },
+
 
             },
 
@@ -135,6 +138,8 @@ sap.ui.define(
                     oModel.setProperty(sPath + "/proprio_sti", sUserId);
                 }
 
+
+
                 var missions = await this.getMissions();
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                 this.getView().setModel(oMissionsModel, "missions");
@@ -151,6 +156,103 @@ sap.ui.define(
                     ]
                 });
                 this.getView().setModel(oCurrencyModel, "currencies");
+
+                // --- Add dynamic BudgetInSTI calculation ---
+                this.getView().getModel("budget").attachPropertyChange(() => {
+                    var budgetData = this.getView().getModel("budget").getProperty("/results");
+                    var missionsData = this.getView().getModel("missions").getProperty("/results");
+
+                    missionsData.forEach(mission => {
+                        const missionId = mission.MissionId;
+
+                        const budgetInSTI = budgetData
+                            .filter(b => b.Mission_e === missionId)
+                            .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
+
+                        // BudgetInSTI
+                        mission.BudgetInSTI = budgetInSTI.toFixed(2);
+
+                        // GlobalBudget = 100
+                        mission.GlobalBudget = 100;
+
+                        // AvailableBudget = GlobalBudget - BudgetInSTI
+                        mission.AvailableBudget = (mission.GlobalBudget - budgetInSTI).toFixed(2);
+
+                        // SubcontractedBudgetPercentage = BudgetInSTI / GlobalBudget * 100
+                        mission.SubcontractedBudgetPercentage = ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
+
+
+                    });
+
+                    this.getView().getModel("missions").refresh();
+
+                });
+
+                // --- Initial calculation to display the values immediately ---
+                missions.forEach(mission => {
+                    const missionId = mission.MissionId;
+
+                    // Sum of BudgetAlloue for this mission
+                    const budgetInSTI = budget
+                        .filter(b => b.Mission_e === missionId)
+                        .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
+
+                    mission.BudgetInSTI = budgetInSTI.toFixed(2);
+                    mission.GlobalBudget = 100;
+                    mission.AvailableBudget = (mission.GlobalBudget - budgetInSTI).toFixed(2);
+                    mission.SubcontractedBudgetPercentage = ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
+                });
+
+                var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
+                this.getView().setModel(oMissionsModel, "missions");
+
+
+                //attach event
+                if (oContext) {
+                    const oBinding = oContext.getModel().bindProperty(oContext.getPath() + "/business_no_e");
+
+                    oBinding.attachChange((oEvent) => {
+                        const sNewValue = oEvent.getSource().getValue();
+                        this._onBusinessNoEChanged({ getParameter: () => sNewValue });
+                    });
+                }
+
+                // Make fields only in create mode
+                this._setFieldEditableState("business_no_e", bIsCreate);
+                this._setFieldEditableState("business_no_p_t", bIsCreate);
+                this._setFieldEditableState("business_p_cmp", bIsCreate);
+                this._setFieldEditableState("business_p_ufo", bIsCreate);
+                this._setFieldEditableState("business_p_cdp", bIsCreate);
+                this._setFieldEditableState("business_p_bm", bIsCreate);
+                this._setFieldEditableState("business_no_e", bIsCreate);
+                this._setFieldEditableState("business_p_mail", bIsCreate);
+
+            },
+
+            _setFieldEditableState: function (sFieldId, bIsCreate) {
+                const oView = this.getView();
+                const oUIModel = oView.getModel("ui");
+
+                oUIModel.attachPropertyChange((oEvent) => {
+                    if (oEvent.getParameter("path") === "/editable") {
+                        const bNowEditable = oUIModel.getProperty("/editable");
+
+                        const aSmartFields = oView.findAggregatedObjects(true, (oCtrl) => {
+                            return oCtrl.isA("sap.ui.comp.smartfield.SmartField") &&
+                                oCtrl.getId().includes(sFieldId);
+                        });
+                        aSmartFields.forEach((oSmartField) => {
+                            oSmartField.setEditable(bIsCreate && bNowEditable);
+                        });
+                    }
+                });
+
+                const aSmartFields = oView.findAggregatedObjects(true, (oCtrl) => {
+                    return oCtrl.isA("sap.ui.comp.smartfield.SmartField") &&
+                        oCtrl.getId().includes(sFieldId);
+                });
+                const bEditable = bIsCreate && oUIModel.getProperty("/editable");
+                aSmartFields.forEach((oSmartField) => oSmartField.setEditable(bEditable));
             },
 
             _calculateFormulaireId: function () {
@@ -259,6 +361,7 @@ sap.ui.define(
                         }
 
                     });
+
                 });
             },
 
@@ -289,7 +392,7 @@ sap.ui.define(
                 }
             },
 
-            
+
 
             async getBudget() {
                 function escapeODataKey(val) {
@@ -351,7 +454,30 @@ sap.ui.define(
                 sap.m.MessageBox.alert("Unexpected error: " + error.message, {
                     title: "Unexpected Error"
                 });
-            }
+            },
+
+            _onBusinessNoEChanged: async function (sBusinessNoE) {
+                try {
+                    var missions = await this.getMissions();
+                    var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
+                    //this.getView().setModel(oMissionsModel, "missions");
+
+                    var oMissionsModel = this.getView().getModel("missions");
+                    if (oMissionsModel) {
+                        oMissionsModel.setData({ results: missions });
+                        oMissionsModel.refresh(true);
+                    } else {
+                        oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
+                        this.getView().setModel(oMissionsModel, "missions");
+                    }
+
+                } catch (error) {
+                    console.error("Error in business_no_e change handler:", error);
+                } finally {
+                    sap.ui.core.BusyIndicator.hide();
+                }
+            },
+
 
         });
     }

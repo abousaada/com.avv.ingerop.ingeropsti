@@ -35,18 +35,91 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
         //	}
 
         onAddBudgetLine: function (oEvent) {
+            const oView = this.getView();
+            const oContext = oView.getBindingContext();
+            const sModel = oContext.getModel();
+            const sPath = oContext.getPath();
+
+            this.onMissionChange(oEvent);
+
+            var business_no_p = sModel.getProperty(sPath + "/business_no_p");
+
             var oModel = this.getView().getModel("budget");
             var aData = oModel.getProperty("/results") || [];
 
+            // Find the maximum numeric suffix from existing Mission_p values
+            var maxSuffix = 0;
+            aData.forEach(function (item) {
+                if (item.Mission_p && item.Mission_p.startsWith(business_no_p)) {
+                    // Extract the numeric part after the business_no_p prefix
+                    var suffix = item.Mission_p.substring(business_no_p.length);
+                    var numericSuffix = parseInt(suffix, 10);
+                    if (!isNaN(numericSuffix) && numericSuffix > maxSuffix) {
+                        maxSuffix = numericSuffix;
+                    }
+                }
+            });
+
+            // Increment the maximum suffix found
+            var newSuffix = maxSuffix + 1;
+
+            // Format as double-digit and concatenate with business_no_p
+            var formattedSuffix = newSuffix.toString().padStart(2, '0');
+            var newMissionP = business_no_p + formattedSuffix;
+
             var oNewLine = {
-                Mission: "",
-                BusinessNoP: "",
-                BudgetAlloue: 0,
-                BudgetStiCumu: 0
+                Mission_e: "",
+                Mission_p: newMissionP,
+                StartDate: '',
+                EndDate: '',
+                BudgetAlloue: '0',
+                Currency: 'EUR'
             };
 
             aData.push(oNewLine);
             oModel.setProperty("/results", aData);
+        },
+
+        onMissionChange: function (oEvent) {
+            var oSelect = oEvent.getSource();
+
+            // Get the parent row of the select (ColumnListItem)
+            var oRow = oSelect.getParent();
+
+            // Get the binding context of the row
+            var oBindingContext = oRow.getBindingContext("budget");
+
+            // Get the selected key
+            var oSelectedItem = oEvent.getParameter("selectedItem");
+            var sSelectedKey = oSelectedItem ? oSelectedItem.getKey() : null;
+
+            // Update the model property
+            if (oBindingContext) {
+                oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Mission_e", sSelectedKey);
+            }
+
+            console.log("Selected Mission Key:", sSelectedKey);
+        },
+
+
+        onAfterRendering: function () {
+            var oTable = this.byId("budgetTable");
+            var aItems = oTable.getItems();
+
+            aItems.forEach(function (oItem, index) {
+                var oSelect = oItem.getCells()[0]; 
+                var sSelectedKey = oSelect.getSelectedKey();
+                var oBindingContext = oItem.getBindingContext("budget");
+                var sModelValue = oBindingContext.getProperty("Mission_e");
+
+                console.log("Row " + index + " - Select key:", sSelectedKey, "Model value:", sModelValue);
+
+                if (sSelectedKey !== sModelValue) {
+                    console.warn("MISMATCH in row " + index);
+                    oSelect.setSelectedKey(sModelValue);
+                }
+            });
         }
+
     });
 });
