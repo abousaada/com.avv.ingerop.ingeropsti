@@ -173,14 +173,16 @@ sap.ui.define(
                         mission.BudgetInSTI = budgetInSTI.toFixed(2);
 
                         // GlobalBudget = 100
-                        mission.GlobalBudget = 100;
+                        //mission.GlobalBudget = 100;
 
                         // AvailableBudget = GlobalBudget - BudgetInSTI
                         mission.AvailableBudget = (mission.GlobalBudget - budgetInSTI).toFixed(2);
 
                         // SubcontractedBudgetPercentage = BudgetInSTI / GlobalBudget * 100
-                        mission.SubcontractedBudgetPercentage = ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
-
+                        if (mission.GlobalBudget === "0.00") { mission.SubcontractedBudgetPercentage = "0%" }
+                        else {
+                            mission.SubcontractedBudgetPercentage = ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
+                        }
 
                     });
 
@@ -198,9 +200,12 @@ sap.ui.define(
                         .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
 
                     mission.BudgetInSTI = budgetInSTI.toFixed(2);
-                    mission.GlobalBudget = 100;
+                    //mission.GlobalBudget = 100;
                     mission.AvailableBudget = (mission.GlobalBudget - budgetInSTI).toFixed(2);
-                    mission.SubcontractedBudgetPercentage = ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
+                    if (mission.GlobalBudget === "0.00") { mission.SubcontractedBudgetPercentage = "0%" }
+                    else {
+                        mission.SubcontractedBudgetPercentage = ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
+                    }
                 });
 
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
