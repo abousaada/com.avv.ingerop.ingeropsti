@@ -36,10 +36,10 @@
             items="{budget>/results}"
         >
             <columns>
-                <Column>
+                <Column width="280px">
                     <Text text="Mission sous-traitée" />
                 </Column>
-                <Column>
+                <Column width="230px">
                     <Text text="Mission associée" />
                 </Column>
                 <Column>
@@ -57,7 +57,7 @@
                 <Column>
                     <Text text="Devise" />
                 </Column>
-                <Column>
+                <Column width="80px">
                     <Text text="Actions" />
                 </Column>
             </columns>

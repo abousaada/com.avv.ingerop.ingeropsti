@@ -371,7 +371,9 @@ sap.ui.define(
                     const sPath = oContext.getPath();
                     var oModel = this.getView().getModel();
 
-                    var sBusinessUfo = oModel.getProperty(sPath + "/business_p_ufo");
+                    //var sBusinessUfo = oModel.getProperty(sPath + "/business_p_ufo");
+                    var sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
+
                     var sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
 
                     if (!sBusinessUfo) {
