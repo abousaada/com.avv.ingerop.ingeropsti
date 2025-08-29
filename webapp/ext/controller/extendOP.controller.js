@@ -471,6 +471,9 @@ sap.ui.define(
 
                     return new Promise((resolve, reject) => {
                         oModel.read(sPath, {
+                            urlParameters: {
+                                "$orderby": "MissionId"
+                            },
                             success: (oData) => resolve(oData?.results || []),
                             error: (oError) => reject(oError)
                         });
