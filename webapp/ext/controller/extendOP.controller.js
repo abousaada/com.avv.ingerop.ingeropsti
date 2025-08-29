@@ -255,7 +255,7 @@ sap.ui.define(
                 this._setFieldEditableState("business_no_e", bIsCreate);
                 this._setFieldEditableState("business_no_e_t", bIsCreate);
                 this._setFieldEditableState("business_no_p_t", bIsCreate);
-                this._setFieldEditableState("business_p_cmp", bIsCreate);
+                //this._setFieldEditableState("business_p_cmp", bIsCreate);
                 this._setFieldEditableState("business_p_ufo", bIsCreate);
                 this._setFieldEditableState("business_p_cdp", bIsCreate);
                 this._setFieldEditableState("business_p_bm", bIsCreate);
@@ -452,6 +452,17 @@ sap.ui.define(
                 try {
                     const oContext = this._getController().getView().getBindingContext();
                     const oModel = this.getView().getModel();
+
+                    if (!oContext) {
+                        console.warn("Pas de bindingContext trouvé sur la vue.");
+                        return [];
+                    }
+
+                    const sPathContext = oContext.getPath();
+                    if (!sPathContext) {
+                        console.warn("Pas de path disponible sur le bindingContext.");
+                        return [];
+                    }
 
                     const id_formulaire = escapeODataKey(oModel.getProperty(oContext.getPath() + "/id_formulaire"));
                     const business_no_e = escapeODataKey(oModel.getProperty(oContext.getPath() + "/business_no_e"));

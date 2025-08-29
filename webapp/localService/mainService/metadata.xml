@@ -401,7 +401,7 @@
                 </Key>
                 <Property Name="id_formulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_no_e" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:heading="" sap:quickinfo="Character field length 24" sap:value-list="standard"/>
-                <Property Name="business_no_e_t" Type="Edm.String" MaxLength="40" sap:label="Description" sap:heading="" sap:quickinfo="PS: Short description (1st text line)" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="business_e_t" Type="Edm.String" MaxLength="40" sap:label="Description" sap:heading="" sap:quickinfo="PS: Short description (1st text line)" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_e_cmp" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Company code" sap:heading="" sap:quickinfo="Company code for WBS element" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
                 <Property Name="business_e_ufo" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Set Name" sap:heading="" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
                 <Property Name="business_e_cdp" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Profit Center" sap:heading="" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
@@ -409,8 +409,8 @@
                 <Property Name="business_e_clt" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_no_p" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:heading="" sap:quickinfo="Character field length 24" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_no_p_t" Type="Edm.String" MaxLength="40" sap:label="Description" sap:heading="" sap:quickinfo="PS: Short description (1st text line)"/>
-                <Property Name="business_p_cmp" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Company code" sap:heading="" sap:quickinfo="Company code for WBS element"/>
                 <Property Name="business_p_ufo" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Set Name" sap:heading="" sap:value-list="standard"/>
+                <Property Name="business_p_cmp" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Company code" sap:heading="" sap:quickinfo="Company code for WBS element" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_p_cdp" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="" sap:value-list="standard"/>
                 <Property Name="business_p_bm" Type="Edm.String" MaxLength="25" sap:label=""/>
                 <Property Name="business_p_mis" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
@@ -528,8 +528,8 @@
                     <End EntitySet="ZC_STI_BUDG" Role="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 </AssociationSet>
                 <FunctionImport Name="ZGENERATE_IDS" ReturnType="ZSTI_SRV.ZGeneratedIdType" m:HttpMethod="POST">
-                    <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_UFO" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
@@ -750,7 +750,7 @@
                                     <PropertyValue Property="ValueListProperty" String="BusinessNo"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_no_e_t"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_t"/>
                                     <PropertyValue Property="ValueListProperty" String="BusinessName"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterInOut">

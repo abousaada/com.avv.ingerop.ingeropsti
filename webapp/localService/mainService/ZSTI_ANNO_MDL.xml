@@ -254,10 +254,10 @@
                                     <PropertyValue Property="Value" Path="business_no_p_t"/>
                                 </Record>
                                 <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="business_p_cmp"/>
+                                    <PropertyValue Property="Value" Path="business_p_ufo"/>
                                 </Record>
                                 <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="business_p_ufo"/>
+                                    <PropertyValue Property="Value" Path="business_p_cmp"/>
                                 </Record>
                                 <Record Type="UI.DataField">
                                     <PropertyValue Property="Value" Path="business_p_cdp"/>
@@ -283,7 +283,7 @@
                                     <PropertyValue Property="Value" Path="business_no_e"/>
                                 </Record>
                                 <Record Type="UI.DataField">
-                                    <PropertyValue Property="Value" Path="business_no_e_t"/>
+                                    <PropertyValue Property="Value" Path="business_e_t"/>
                                 </Record>
                                 <Record Type="UI.DataField">
                                     <PropertyValue Property="Value" Path="business_e_clt"/>
@@ -349,10 +349,10 @@
                             <PropertyValue Property="Value" Path="business_no_p_t"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_no_e_t"/>
+                            <PropertyValue Property="Value" Path="business_e_t"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_p_cmp"/>
+                            <PropertyValue Property="Value" Path="business_p_ufo"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_e_clt"/>
@@ -370,7 +370,7 @@
                             <PropertyValue Property="Value" Path="business_e_cmp"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_p_ufo"/>
+                            <PropertyValue Property="Value" Path="business_p_cmp"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_p_cdp"/>
@@ -389,46 +389,49 @@
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="stidescr"/>
+                            <PropertyValue Property="Value" Path="id_formulaire"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="proprio_sti"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_no_p"/>
+                            <PropertyValue Property="Value" Path="stidescr"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_e"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="id_formulaire"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_no_p_t"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_no_e_t"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_p_cmp"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_e_clt"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_e_bm"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_e_cdp"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_e_ufo"/>
+                            <PropertyValue Property="Value" Path="business_e_t"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_e_cmp"/>
                         </Record>
                         <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="business_e_ufo"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="business_e_cdp"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="business_e_bm"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="business_e_clt"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="business_no_p"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="business_no_p_t"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="business_p_mis"/>
+                        </Record>
+                        <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_p_ufo"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="business_p_cmp"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_p_cdp"/>
@@ -441,9 +444,6 @@
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_p_projm"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="business_p_mis"/>
                         </Record>
                     </Collection>
                 </Annotation>
@@ -460,7 +460,7 @@
                     <Collection>
                         <PropertyPath>id_formulaire</PropertyPath>
                         <PropertyPath>business_no_e</PropertyPath>
-                        <PropertyPath>business_no_e_t</PropertyPath>
+                        <PropertyPath>business_e_t</PropertyPath>
                         <PropertyPath>business_e_cmp</PropertyPath>
                         <PropertyPath>business_e_cdp</PropertyPath>
                         <PropertyPath>business_e_ufo</PropertyPath>
@@ -468,8 +468,8 @@
                         <PropertyPath>business_e_clt</PropertyPath>
                         <PropertyPath>business_no_p</PropertyPath>
                         <PropertyPath>business_no_p_t</PropertyPath>
-                        <PropertyPath>business_p_cmp</PropertyPath>
                         <PropertyPath>business_p_ufo</PropertyPath>
+                        <PropertyPath>business_p_cmp</PropertyPath>
                         <PropertyPath>business_p_cdp</PropertyPath>
                         <PropertyPath>business_p_bm</PropertyPath>
                         <PropertyPath>business_p_mis</PropertyPath>
