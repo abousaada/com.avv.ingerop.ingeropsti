@@ -548,8 +548,14 @@ sap.ui.define(
 
             _onPartnerCDPChanged: function (oEvent) {
                 const oContext = this._getController().getView().getBindingContext();
-                const sPath = oContext.getPath();
+                const sPath = oContext?.getPath();
                 var oModel = this.getView().getModel();
+
+                /*if (sPath) {
+
+                } else {
+                    console.warn("Binding context or path is not available");
+                }*/
 
                 var sProfitCenter = oEvent.getParameter("value");
                 if (!sProfitCenter) return;
