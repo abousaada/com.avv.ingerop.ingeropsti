@@ -330,7 +330,50 @@ sap.ui.define(
                 }
             },
 
+
             onGenerateId: function () {
+                return new Promise((resolve, reject) => {
+
+                    const oContext = this._getController().getView().getBindingContext();
+                    const sPath = oContext.getPath();
+                    var oModel = this.getView().getModel();
+
+                    var sBusinessUfo = oModel.getProperty(sPath + "/business_p_ufo");
+                    var sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
+
+                    if (!sBusinessUfo) {
+                        sap.m.MessageBox.error("Business UFO field is empty");
+                        return;
+                    }
+
+                    if (sBusinessNoE) {
+                        const prefix = sBusinessNoE.substring(0, 4);    // first 4 chars
+                        const segment = sBusinessNoE.substring(4, 8);  // chars 5-8
+                        const rest = sBusinessNoE.substring(8);        // chars 9-end
+                        let newMiddle;
+
+                        if (/^X{4}$/.test(segment)) {
+                            // All X → replace positions 5-8 with UFO, keep rest
+                            newMiddle = sBusinessUfo + rest;
+                        } else {
+                            // Not all X → replace positions 5-8 with UFO, but keep the next 4 chars intact
+                            const next4 = sBusinessNoE.substring(4, 8); // chars 5-9
+                            const remaining = sBusinessNoE.substring(12); // rest
+                            newMiddle = sBusinessUfo + next4 + remaining;
+                        }
+
+                        const newId = prefix + newMiddle;
+                        oModel.setProperty(sPath + "/business_no_p", newId);
+                        resolve(newId);
+
+                    }
+
+                });
+            },
+
+
+
+            onGenerateId_old: function () {
                 return new Promise((resolve, reject) => {
 
                     const oContext = this._getController().getView().getBindingContext();
