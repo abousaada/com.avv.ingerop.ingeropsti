@@ -210,7 +210,7 @@ sap.ui.define(
                 this.getView().setModel(oMissionsModel, "missions");
 
 
-                //attach event
+                //attach event to business_no_e => get missions
                 if (oContext) {
                     const oBinding = oContext.getModel().bindProperty(oContext.getPath() + "/business_no_e");
 
@@ -220,14 +220,26 @@ sap.ui.define(
                     });
                 }
 
+                //attach event to business_p_cdp
+                if (oContext) {
+                    const oBinding = oContext.getModel().bindProperty(oContext.getPath() + "/business_p_cdp");
+
+                    oBinding.attachChange((oEvent) => {
+                        const sNewValue = oEvent.getSource().getValue();
+                        this._onPartnerCDPChanged({ getParameter: () => sNewValue });
+                    });
+                }
+
                 // Make fields only in create mode
                 this._setFieldEditableState("business_no_e", bIsCreate);
+                this._setFieldEditableState("business_no_e_t", bIsCreate);
                 this._setFieldEditableState("business_no_p_t", bIsCreate);
                 this._setFieldEditableState("business_p_cmp", bIsCreate);
                 this._setFieldEditableState("business_p_ufo", bIsCreate);
                 this._setFieldEditableState("business_p_cdp", bIsCreate);
                 this._setFieldEditableState("business_p_bm", bIsCreate);
                 this._setFieldEditableState("business_p_mail", bIsCreate);
+                this._setFieldEditableState("business_p_projm", bIsCreate);
 
             },
 
@@ -501,6 +513,33 @@ sap.ui.define(
                     title: "Unexpected Error"
                 });
             },
+
+            _onPartnerCDPChanged: function (oEvent) {
+                const oContext = this._getController().getView().getBindingContext();
+                const sPath = oContext.getPath();
+                var oModel = this.getView().getModel();
+
+                var sProfitCenter = oEvent.getParameter("value");
+                if (!sProfitCenter) return;
+
+                var oModel = this.getView().getModel();
+
+                oModel.read("/ZC_STI_CEPC_BUKRS", {
+                    filters: [new sap.ui.model.Filter("PRCTR", sap.ui.model.FilterOperator.EQ, sProfitCenter)],
+                    success: function (oData) {
+                        if (oData.results.length > 0) {
+                            oModel.setProperty(sPath + "/business_p_cmp", oData.results[0].BUKRS);
+                            //this.getView().byId("business_p_cmp").setValue(oData.results[0].BUKRS);
+                        } else {
+                            oModel.setProperty(sPath + "/business_p_cmp", "");
+                        }
+                    }.bind(this),
+                    error: function (oError) {
+                        sap.m.MessageToast.show("Error fetching company code");
+                    }
+                });
+            },
+
 
             _onBusinessNoEChanged: async function (sBusinessNoE) {
                 try {
