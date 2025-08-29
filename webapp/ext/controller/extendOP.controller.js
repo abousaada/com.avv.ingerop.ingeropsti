@@ -119,6 +119,7 @@ sap.ui.define(
                 const oContext = this._getController().getView().getBindingContext();
                 const oModel = oContext.getModel();
                 const sPath = oContext.getPath();
+                const oView = this.getView();
 
                 if (!oContext) {
                     return;
@@ -229,6 +230,26 @@ sap.ui.define(
                         this._onPartnerCDPChanged({ getParameter: () => sNewValue });
                     });
                 }
+
+                //Set visibility business_p_projm
+
+                var sBusinessEcmp = oModel.getProperty(sPath + "/business_e_cmp");
+                var sBusinessPcmp = oModel.getProperty(sPath + "/business_p_cmp");
+
+                const aSmartFields = oView.findAggregatedObjects(true, (oCtrl) => {
+
+                    return oCtrl.isA("sap.ui.comp.smartfield.SmartField") &&
+                        oCtrl.getId().includes("business_p_projm");
+                });
+                aSmartFields.forEach((oSmartField) => {
+
+                    if (sBusinessEcmp === sBusinessPcmp) {
+                        oSmartField.setVisible(false);
+                    } else {
+                        oSmartField.setVisible(true);
+                    }
+
+                });
 
                 // Make fields only in create mode
                 this._setFieldEditableState("business_no_e", bIsCreate);
@@ -529,7 +550,19 @@ sap.ui.define(
                     success: function (oData) {
                         if (oData.results.length > 0) {
                             oModel.setProperty(sPath + "/business_p_cmp", oData.results[0].BUKRS);
-                            //this.getView().byId("business_p_cmp").setValue(oData.results[0].BUKRS);
+
+                            //Set visibility business_p_projm
+
+                            var sBusinessEcmp = oModel.getProperty(sPath + "/business_e_cmp");
+                            var sBusinessPcmp = oModel.getProperty(sPath + "/business_p_cmp");
+
+                            if (sBusinessEcmp === sBusinessPcmp) {
+                                this.byId(sPath + "business_p_projm").setVisible(true);
+                            } else {
+                                this.byId(sPath + "business_p_projm").setVisible(false);
+                            }
+
+
                         } else {
                             oModel.setProperty(sPath + "/business_p_cmp", "");
                         }
