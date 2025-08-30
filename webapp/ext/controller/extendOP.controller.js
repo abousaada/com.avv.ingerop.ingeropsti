@@ -62,11 +62,12 @@ sap.ui.define(
                                     title: "Success",
                                     actions: [sap.m.MessageBox.Action.OK],
                                     onClose: function () {
-                                        oView.getModel().refresh(true);
+                                        //oView.getModel().refresh(true);
                                         const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
                                         oRouter.navTo("ListReport");
                                     }
                                 });
+
                             }
 
                         } catch (error) {
@@ -243,9 +244,9 @@ sap.ui.define(
                 });
                 aSmartFields.forEach((oSmartField) => {
 
-                    if (sBusinessEcmp === sBusinessPcmp) {
-                        oSmartField.setVisible(false);
-                    } else {
+                    if (!sBusinessEcmp && !sBusinessPcmp) { //&& sBusinessEcmp === sBusinessPcmp) {
+                        //oSmartField.setVisible(false);
+                        //} else {
                         oSmartField.setVisible(true);
                     }
 
@@ -555,6 +556,7 @@ sap.ui.define(
                 const oContext = this._getController().getView().getBindingContext();
                 const sPath = oContext?.getPath();
                 var oModel = this.getView().getModel();
+                const oView = this.getView();
 
                 /*if (sPath) {
 
@@ -578,11 +580,20 @@ sap.ui.define(
                             var sBusinessEcmp = oModel.getProperty(sPath + "/business_e_cmp");
                             var sBusinessPcmp = oModel.getProperty(sPath + "/business_p_cmp");
 
-                            if (sBusinessEcmp === sBusinessPcmp) {
-                                this.byId(sPath + "business_p_projm").setVisible(true);
-                            } else {
-                                this.byId(sPath + "business_p_projm").setVisible(false);
-                            }
+                            const aSmartFields = oView.findAggregatedObjects(true, (oCtrl) => {
+
+                                return oCtrl.isA("sap.ui.comp.smartfield.SmartField") &&
+                                    oCtrl.getId().includes("business_p_projm");
+                            });
+                            aSmartFields.forEach((oSmartField) => {
+
+                                if (sBusinessEcmp && sBusinessPcmp && sBusinessEcmp === sBusinessPcmp) {
+                                    oSmartField.setVisible(false);
+                                } else {
+                                    oSmartField.setVisible(true);
+                                }
+
+                            });
 
 
                         } else {
