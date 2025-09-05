@@ -1,10 +1,11 @@
 sap.ui.define(
     [
         "sap/ui/core/mvc/ControllerExtension",
-        "sap/ui/core/mvc/OverrideExecution"
+        "sap/ui/core/mvc/OverrideExecution",
+        "sap/ui/model/json/JSONModel",
     ],
     function (
-        ControllerExtension, OverrideExecution
+        ControllerExtension, OverrideExecution,JSONModel
     ) {
         "use strict";
 
@@ -650,6 +651,9 @@ sap.ui.define(
             this.getView().getModel("missions").setProperty("/", treeData);
             this.getView().getModel("missions").setProperty("/results", missions);
 
+            // Calculate and update row count after building the tree
+            var rowCount = this.countRows(treeData);
+            this.updateRowCount(rowCount);
         },
 
         _transformMissionsToTree: function(missions) {
@@ -728,13 +732,6 @@ sap.ui.define(
             }
         },
 
-        // Remove all editable-related methods since we're display-only
-        // Removed: isGroupementAddVisible, isFGAAddVisible, isDeleteVisible, 
-        // onAddGroupement, onAddMissionToGroupement, onDeleteMission,
-        // _deleteFromHierarchy, validateMissionsTreeRequiredFields,
-        // _findInputControl, _getControlValue, onMissionCodeChange
-
-        // Keep only the essential methods for display
         countRows: function (nodes) {
             if (!nodes || nodes.length === 0) return 0;
 
@@ -750,16 +747,33 @@ sap.ui.define(
         },
 
         updateRowCount: function (rowCount) {
-            if (!this.getView().getModel("localModel")) {
-                this.getView().setModel(new JSONModel({
-                    tableSettings: {
-                        minRowCount: 5
-                    }
-                }), "localModel");
-            }
+            try {
+                var oLocalModel = this.getView().getModel("localModel");
+                if (!oLocalModel) {
+                    oLocalModel = new JSONModel({
+                        tableSettings: {
+                            minRowCount: 10
+                        }
+                    });
+                    this.getView().setModel(oLocalModel, "localModel");
+                }
 
-            this.getView().getModel("localModel").setProperty("/tableSettings/minRowCount",
-                Math.max(rowCount, 1));
+                var oData = oLocalModel.getData();
+                if (!oData.tableSettings) {
+                    oData.tableSettings = {
+                        minRowCount: 10
+                    };
+                    oLocalModel.setData(oData);
+                }
+
+                var calculatedRowCount = Math.max(rowCount, 1) + 1; // +1 for better visual appearance
+                oLocalModel.setProperty("/tableSettings/minRowCount", calculatedRowCount);
+                
+                oLocalModel.refresh();
+                
+            } catch (error) {
+                console.error("Error updating row count:", error);
+            }
         }
 
         });
