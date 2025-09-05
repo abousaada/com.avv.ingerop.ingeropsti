@@ -1,56 +1,150 @@
 <core:FragmentDefinition
-    xmlns:core="sap.ui.core"
     xmlns="sap.m"
-    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table"
+    xmlns:layout="sap.ui.layout"
+    xmlns:rm="sap.ui.table.rowmodes"
 >
-    <Panel
-        headerText="Missions"
-        expandable="true"
-        expanded="true"
-    >
-        <Table
-            id="missionsTable"
-            inset="false"
-            growing="true"
-            growingScrollToLoad="true"
-            mode="None"
-            items="{
-            path: 'missions>/results'
-                }"
+    <layout:VerticalLayout width="100%">
+        <Toolbar>
+            <content>
+                <ToolbarSpacer />
+                <Button
+                    icon="sap-icon://refresh"
+                    text="Refresh"
+                    press=".onRefreshTree"
+                    type="Emphasized"
+                />
+            </content>
+        </Toolbar>
+        <table:TreeTable
+            id="missionsTreeTable"
+            rows="{
+                path: 'missions>/',
+                parameters: {
+                    arrayNames: ['children'],
+                    numberOfExpandedLevels: 3
+                }
+            }"
+            selectionMode="None"
+            ariaLabelledBy="title"
+            enableColumnReordering="false"
         >
-            <columns>
-                <Column>
-                    <Text text="Mission" />
-                </Column>
-                <Column>
-                    <Text text="Libellé" />
-                </Column>
-                <Column>
-                    <Text text="Budget global (recette)" />
-                </Column>
-                <Column>
-                    <Text text="Budget déjà en STI" />
-                </Column>
-                <Column>
-                    <Text text="Budget disponible" />
-                </Column>
-                <Column>
-                    <Text text="Pourcentage Budget sous-traité" />
-                </Column>
-            </columns>
+            <table:rowMode>
+                <rm:Auto
+                    minRowCount="{localModel>/tableSettings/minRowCount}"
+                />
+            </table:rowMode>
+            <table:columns>
+                <!-- Hierarchy Column -->
+                <table:Column width="20rem">
+                    <Label text="Hierarchy" />
+                    <table:template>
+                        <HBox>
+                            <Text
+                                text="{= ${missions>type} === 'business' ? ${missions>BusinessNo} : 
+                                      ${missions>type} === 'regroupement' ? ${missions>Regroupement} : 
+                                      ${missions>MissionId}}"
+                                class="{= ${missions>type} === 'business' ? 'sapUiLargeMarginBegin' : 
+                                       ${missions>type} === 'regroupement' ? 'sapUiMediumMarginBegin' : 
+                                       'sapUiSmallMarginBegin'}"
+                            />
+                        </HBox>
+                    </table:template>
+                </table:Column>
 
-            <items>
-                <ColumnListItem>
-                    <cells>
-                        <Text text="{missions>MissionId}" />
-                        <Text text="{missions>MissionCode}" />
-                        <Text text="{missions>GlobalBudget}" />
-                        <Text text="{missions>BudgetInSTI}" />
-                        <Text text="{missions>AvailableBudget}" />
-                        <Text text="{missions>SubcontractedBudgetPercentage}" />
-                    </cells>
-                </ColumnListItem>
-            </items>
-        </Table>
-    </Panel>
+                <!-- Libellé Column -->
+                <table:Column width="12rem">
+                    <Label text="Libellé" />
+                    <table:template>
+                        <Text
+                            text="{missions>MissionCode}"
+                            visible="{= ${missions>type} === 'mission'}"
+                        />
+                    </table:template>
+                </table:Column>
+
+                <!-- Budget global (recette) Column -->
+                <table:Column width="10rem">
+                    <Label text="Budget global" />
+                    <table:template>
+                        <ObjectNumber
+                            number="{missions>GlobalBudget}"
+                            unit="EUR"
+                            visible="{= ${missions>type} === 'mission'}"
+                            state="None"
+                        />
+                    </table:template>
+                </table:Column>
+
+                <!-- Budget déjà en STI Column -->
+                <table:Column width="10rem">
+                    <Label text="Budget STI" />
+                    <table:template>
+                        <ObjectNumber
+                            number="{missions>BudgetInSTI}"
+                            unit="EUR"
+                            visible="{= ${missions>type} === 'mission'}"
+                            state="None"
+                        />
+                    </table:template>
+                </table:Column>
+
+                <!-- Budget disponible Column -->
+                <table:Column width="10rem">
+                    <Label text="Budget disponible" />
+                    <table:template>
+                        <ObjectNumber
+                            number="{missions>AvailableBudget}"
+                            unit="EUR"
+                            visible="{= ${missions>type} === 'mission'}"
+                            state="{= parseFloat(${missions>AvailableBudget}) > 0 ? 'Success' : 'Error'}"
+                        />
+                    </table:template>
+                </table:Column>
+
+                <!-- Pourcentage Budget sous-traité Column -->
+                <table:Column width="8rem">
+                    <Label text="% Sous-traité" />
+                    <table:template>
+                        <ProgressIndicator
+                            displayValue="{missions>SubcontractedBudgetPercentage}"
+                            percentValue="{= parseFloat(${missions>SubcontractedBudgetPercentage}) || 0}"
+                            visible="{= ${missions>type} === 'mission'}"
+                            state="{= parseFloat(${missions>SubcontractedBudgetPercentage}) > 80 ? 'Error' : 
+                                   parseFloat(${missions>SubcontractedBudgetPercentage}) > 50 ? 'Warning' : 'Success'}"
+                            width="100%"
+                        />
+                    </table:template>
+                </table:Column>
+
+                <!-- Summary Columns for Parent Nodes -->
+                <!-- BusinessNo Summary -->
+                <table:Column width="10rem">
+                    <Label text="Total Business" />
+                    <table:template>
+                        <ObjectNumber
+                            number="0"
+                            unit="EUR"
+                            visible="{= ${missions>type} === 'business'}"
+                            state="None"
+                        />
+                    </table:template>
+                </table:Column>
+
+                <!-- Regroupement Summary -->
+                <table:Column width="10rem">
+                    <Label text="Total Regroupement" />
+                    <table:template>
+                        <ObjectNumber
+                            number="0"
+                            unit="EUR"
+                            visible="{= ${missions>type} === 'regroupement'}"
+                            state="None"
+                        />
+                    </table:template>
+                </table:Column>
+            </table:columns>
+        </table:TreeTable>
+    </layout:VerticalLayout>
 </core:FragmentDefinition>

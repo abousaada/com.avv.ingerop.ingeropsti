@@ -219,6 +219,7 @@ sap.ui.define(
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                 this.getView().setModel(oMissionsModel, "missions");
 
+                this.prepareMissionsTreeData();
 
                 //attach event to business_no_e => get missions
                 if (oContext) {
@@ -638,6 +639,125 @@ sap.ui.define(
                 }
             },
 
+        prepareMissionsTreeData: function () {
+            var missions = this.getView().getModel("missions").getProperty("/results");
+
+            // Transform flat missions to hierarchical tree structure
+            var treeData = this._transformMissionsToTree(missions);
+
+            // Set the tree data to missions model
+            this.getView().getModel("missions").setProperty("/", treeData);
+        },
+
+        _transformMissionsToTree: function(missions) {
+            const treeData = [];
+            const businessNoMap = new Map();
+            const regroupementMap = new Map();
+
+            if (!missions) return treeData;
+
+            // First pass: Group by BusinessNo
+            missions.forEach(mission => {
+                const businessNo = mission.BusinessNo || 'Unknown Business';
+                
+                if (!businessNoMap.has(businessNo)) {
+                    const businessNode = {
+                        name: businessNo,
+                        BusinessNo: businessNo,
+                        type: 'business',
+                        info: 'Business Unit',
+                        infoState: 'None',
+                        children: []
+                    };
+                    businessNoMap.set(businessNo, businessNode);
+                    treeData.push(businessNode);
+                }
+                
+                const regroupement = mission.Regroupement || 'Unknown Regroupement';
+                const regroupementKey = `${businessNo}-${regroupement}`;
+                
+                if (!regroupementMap.has(regroupementKey)) {
+                    const regroupementNode = {
+                        name: regroupement,
+                        Regroupement: regroupement,
+                        type: 'regroupement',
+                        info: 'Regroupement',
+                        infoState: 'None',
+                        children: []
+                    };
+                    regroupementMap.set(regroupementKey, regroupementNode);
+                    businessNoMap.get(businessNo).children.push(regroupementNode);
+                }
+                
+                // Add mission as child of regroupement
+                const missionNode = {
+                    name: mission.MissionId,
+                    type: 'mission',
+                    info: `${mission.MissionCode} - ${mission.AvailableBudget} available`,
+                    infoState: parseFloat(mission.AvailableBudget) > 0 ? 'Success' : 'Error',
+                    MissionId: mission.MissionId,
+                    MissionCode: mission.MissionCode,
+                    GlobalBudget: mission.GlobalBudget,
+                    BudgetInSTI: mission.BudgetInSTI,
+                    AvailableBudget: mission.AvailableBudget,
+                    SubcontractedBudgetPercentage: mission.SubcontractedBudgetPercentage,
+                    BusinessNo: mission.BusinessNo,
+                    Regroupement: mission.Regroupement
+                };
+                
+                regroupementMap.get(regroupementKey).children.push(missionNode);
+            });
+
+            return treeData;
+        },
+
+        onRefreshTree: function () {
+            this.getView().setBusy(true);
+
+            try {
+                // Re-fetch missions and rebuild the tree
+                this.prepareMissionsTreeData();
+                sap.m.MessageToast.show("Mission tree refreshed successfully");
+            } catch (error) {
+                sap.m.MessageBox.error("Error refreshing tree: " + error.message);
+            } finally {
+                this.getView().setBusy(false);
+            }
+        },
+
+        // Remove all editable-related methods since we're display-only
+        // Removed: isGroupementAddVisible, isFGAAddVisible, isDeleteVisible, 
+        // onAddGroupement, onAddMissionToGroupement, onDeleteMission,
+        // _deleteFromHierarchy, validateMissionsTreeRequiredFields,
+        // _findInputControl, _getControlValue, onMissionCodeChange
+
+        // Keep only the essential methods for display
+        countRows: function (nodes) {
+            if (!nodes || nodes.length === 0) return 0;
+
+            var count = 0;
+            nodes.forEach(function (node) {
+                count++;
+                if (node.children && node.children.length > 0) {
+                    count += this.countRows(node.children);
+                }
+            }.bind(this));
+
+            return count;
+        },
+
+        updateRowCount: function (rowCount) {
+            if (!this.getView().getModel("localModel")) {
+                this.getView().setModel(new JSONModel({
+                    tableSettings: {
+                        minRowCount: 5
+                    }
+                }), "localModel");
+            }
+
+            this.getView().getModel("localModel").setProperty("/tableSettings/minRowCount",
+                Math.max(rowCount, 1));
+        }
 
         });
     }

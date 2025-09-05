@@ -1,0 +1,56 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+>
+    <Panel
+        headerText="Missions"
+        expandable="true"
+        expanded="true"
+    >
+        <Table
+            id="missionsTable"
+            inset="false"
+            growing="true"
+            growingScrollToLoad="true"
+            mode="None"
+            items="{
+            path: 'missions>/results'
+                }"
+        >
+            <columns>
+                <Column>
+                    <Text text="Mission" />
+                </Column>
+                <Column>
+                    <Text text="Libellé" />
+                </Column>
+                <Column>
+                    <Text text="Budget global (recette)" />
+                </Column>
+                <Column>
+                    <Text text="Budget déjà en STI" />
+                </Column>
+                <Column>
+                    <Text text="Budget disponible" />
+                </Column>
+                <Column>
+                    <Text text="Pourcentage Budget sous-traité" />
+                </Column>
+            </columns>
+
+            <items>
+                <ColumnListItem>
+                    <cells>
+                        <Text text="{missions>MissionId}" />
+                        <Text text="{missions>MissionCode}" />
+                        <Text text="{missions>GlobalBudget}" />
+                        <Text text="{missions>BudgetInSTI}" />
+                        <Text text="{missions>AvailableBudget}" />
+                        <Text text="{missions>SubcontractedBudgetPercentage}" />
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+    </Panel>
+</core:FragmentDefinition>
