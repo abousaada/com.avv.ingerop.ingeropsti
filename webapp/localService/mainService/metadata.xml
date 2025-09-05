@@ -407,6 +407,7 @@
                 <Property Name="business_e_cdp" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Profit Center" sap:heading="" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
                 <Property Name="business_e_bm" Type="Edm.String" MaxLength="25" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_e_clt" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="business_e_curr" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="Currency" sap:heading="" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
                 <Property Name="business_no_p" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:heading="" sap:quickinfo="Character field length 24" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_no_p_t" Type="Edm.String" MaxLength="40" sap:label="Description" sap:heading="" sap:quickinfo="PS: Short description (1st text line)"/>
                 <Property Name="business_p_ufo" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Set Name" sap:heading="" sap:value-list="standard"/>

@@ -140,6 +140,14 @@ sap.ui.define(
                     oModel.setProperty(sPath + "/proprio_sti", sUserId);
                 }
 
+                const oEntityData = oContext.getObject();
+
+                if (!this.getView().getModel("viewModel")) {
+                    this.getView().setModel(new sap.ui.model.json.JSONModel(), "viewModel");
+                }
+
+                this.getView().getModel("viewModel").setData(oEntityData);
+
                 var missions = await this.getMissions();
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                 this.getView().setModel(oMissionsModel, "missions");
@@ -475,6 +483,7 @@ sap.ui.define(
                     return new Promise((resolve, reject) => {
                         oModel.read(sPath, {
                             urlParameters: {
+                                "$filter": "statutmission eq 'A'",
                                 "$orderby": "MissionId"
                             },
                             success: (oData) => resolve(oData?.results || []),

@@ -34,7 +34,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
         //
         //	}
 
-        onAddBudgetLine: function (oEvent) {
+        onAddBudgetLine1: function (oEvent) {
             const oView = this.getView();
             const oContext = oView.getBindingContext();
             const sModel = oContext.getModel();
@@ -86,7 +86,92 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             oModel.setProperty("/results", aData);
         },
 
-        onMissionChange: function (oEvent) {
+        onAddBudgetLine: function (oEvent) {
+            const oView = this.getView();
+            const oContext = oView.getBindingContext();
+            const sModel = oContext.getModel();
+            const sPath = oContext.getPath();
+
+            var business_no_p = sModel.getProperty(sPath + "/business_no_p");
+
+            var oBudgetModel = this.getView().getModel("budget");
+            var aMissions = this.getView().getModel("missions").getProperty("/results");
+
+            // Get default mission if available
+            var sMission_e = "";
+            if (aMissions.length > 0) {
+                sMission_e = aMissions[0].MissionId;
+            }
+
+            var oModel = this.getView().getModel("budget");
+            var aData = oModel.getProperty("/results") || [];
+
+            var maxSuffix = 0;
+            aData.forEach(function (item) {
+                if (item.Mission_p && item.Mission_p.startsWith(business_no_p)) {
+                    var suffix = item.Mission_p.substring(business_no_p.length);
+                    var numericSuffix = parseInt(suffix, 10);
+                    if (!isNaN(numericSuffix) && numericSuffix > maxSuffix) {
+                        maxSuffix = numericSuffix;
+                    }
+                }
+            });
+
+            var newSuffix = maxSuffix + 1;
+            var formattedSuffix = newSuffix.toString().padStart(2, '0');
+            var newMissionP = business_no_p + formattedSuffix;
+
+            var oNewLine = {
+                Mission_e: sMission_e,
+                Mission_p: newMissionP,
+                StartDate: '',
+                EndDate: '',
+                business_no_p: business_no_p,
+                BudgetAlloue: '0',
+                Currency: 'EUR',
+                isNew: true 
+            };
+
+            aData.push(oNewLine);
+            oModel.setProperty("/results", aData);
+        },
+
+         onMissionChange: function (oEvent) {
+            var oSelect = oEvent.getSource();
+            var oRow = oSelect.getParent();
+            var oBindingContext = oRow.getBindingContext("budget");
+            var oSelectedItem = oEvent.getParameter("selectedItem");
+            var sSelectedKey = oSelectedItem ? oSelectedItem.getKey() : null;
+
+            if (oBindingContext) {
+                oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Mission_e", sSelectedKey);
+            }
+        },
+
+        isLineEditable: function(bIsNew) {
+            return bIsNew === true;
+        },
+
+        enableAddLine: function (bEditable, aMissions) {
+            return bEditable && Array.isArray(aMissions) && aMissions.length > 0;
+        },
+
+        onDeleteBudgetLine: function (oEvent) {
+            var oButton = oEvent.getSource();
+            var oContext = oButton.getBindingContext("budget");
+
+            if (!oContext) return;
+
+            var sPath = oContext.getPath();
+            var oModel = this.getView().getModel("budget");
+            var aData = oModel.getProperty("/results");
+            var iIndex = parseInt(sPath.split("/").pop());
+
+            aData.splice(iIndex, 1);
+            oModel.setProperty("/results", aData);
+        },
+
+        onMissionChange1: function (oEvent) {
             var oSelect = oEvent.getSource();
 
             var oRow = oSelect.getParent();

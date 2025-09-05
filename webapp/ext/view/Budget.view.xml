@@ -17,12 +17,12 @@
                     press="onAddBudgetLine"
                     type="Emphasized"
                     enabled="{
-                            parts: [
-                                { path: 'ui>/editable' },
-                                { path: 'missions>/results' }
-                            ],
-                            formatter: '.enableAddLine'
-                        }"
+                        parts: [
+                            { path: 'ui>/editable' },
+                            { path: 'missions>/results' }
+                        ],
+                        formatter: '.enableAddLine'
+                    }"
                 />
             </content>
         </Toolbar>
@@ -70,7 +70,10 @@
                                 path: 'missions>/results',
                                 templateShareable: false
                             }"
-                            editable="{ui>/editable}"
+                            editable="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                             selectedKey="{budget>Mission_e}"
                             change="onMissionChange"
                         >
@@ -82,12 +85,18 @@
                         <Text text="{budget>Mission_p}" />
                         <Input
                             value="{budget>Libelle}"
-                            editable="{ui>/editable}"
+                            editable="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                         />
                         <DatePicker
                             value="{path: 'budget>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
                             displayFormat="short"
-                            editable="{ui>/editable}"
+                            editable="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                             width="100%"
                             required="true"
                         />
@@ -95,29 +104,24 @@
                         <DatePicker
                             value="{path: 'budget>EndDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
                             displayFormat="short"
-                            editable="{ui>/editable}"
+                            editable="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                             width="100%"
                             required="true"
                         />
 
                         <Input
                             value="{budget>BudgetAlloue}"
-                            editable="{ui>/editable}"
+                            editable="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                             type="Number"
                             placeholder="0.00"
                         />
-                        <Select
-                            items="{
-                                path: 'currencies>/Currencies'
-                            }"
-                            editable="{ui>/editable}"
-                            selectedKey="{budget>Currency}"
-                        >
-                            <core:Item
-                                key="{currencies>key}"
-                                text="{currencies>text}"
-                            />
-                        </Select>
+                        <Text text="{viewModel>/business_e_curr}" />
                         <Button
                             icon="sap-icon://delete"
                             type="Reject"
