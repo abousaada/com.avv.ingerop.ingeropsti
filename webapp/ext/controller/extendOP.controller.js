@@ -219,8 +219,7 @@ sap.ui.define(
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                 this.getView().setModel(oMissionsModel, "missions");
 
-                this.prepareMissionsTreeData();
-
+                
                 //attach event to business_no_e => get missions
                 if (oContext) {
                     const oBinding = oContext.getModel().bindProperty(oContext.getPath() + "/business_no_e");
@@ -271,6 +270,8 @@ sap.ui.define(
                 this._setFieldEditableState("business_p_bm", bIsCreate);
                 this._setFieldEditableState("business_p_mail", bIsCreate);
                 this._setFieldEditableState("business_p_projm", bIsCreate);
+
+                this.prepareMissionsTreeData();
 
             },
 
@@ -647,6 +648,8 @@ sap.ui.define(
 
             // Set the tree data to missions model
             this.getView().getModel("missions").setProperty("/", treeData);
+            this.getView().getModel("missions").setProperty("/results", missions);
+
         },
 
         _transformMissionsToTree: function(missions) {
