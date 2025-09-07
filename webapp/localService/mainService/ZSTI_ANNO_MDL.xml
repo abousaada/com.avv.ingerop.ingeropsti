@@ -484,7 +484,7 @@
                     <Record>
                         <PropertyValue Property="RequestAtLeast">
                             <Collection>
-                                <PropertyPath>business_no_e</PropertyPath>
+                                <PropertyPath>id_formulaire</PropertyPath>
                             </Collection>
                         </PropertyValue>
                     </Record>

@@ -1250,7 +1250,7 @@
             <Annotations Target="ZSTI_SRV.ZC_STIType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.SemanticKey">
                     <Collection>
-                        <PropertyPath>business_no_e</PropertyPath>
+                        <PropertyPath>id_formulaire</PropertyPath>
                     </Collection>
                 </Annotation>
             </Annotations>
