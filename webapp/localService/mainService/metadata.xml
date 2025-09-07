@@ -306,6 +306,22 @@
                 <Property Name="Segment" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="Segment_Text" sap:label="Segment" sap:quickinfo="Segment for Segmental Reporting"/>
                 <Property Name="Segment_Text" Type="Edm.String" MaxLength="50" sap:label="Segment Name" sap:creatable="false" sap:updatable="false"/>
             </EntityType>
+            <EntityType Name="ZC_FGA_MISSIONType" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="MissionId"/>
+                    <PropertyRef Name="BusinessNo"/>
+                </Key>
+                <Property Name="MissionId" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
+                <Property Name="BusinessNo" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label=""/>
+                <Property Name="MissionCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="3-Byte field" sap:heading=""/>
+                <Property Name="StartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:heading="" sap:quickinfo="Field of type DATS"/>
+                <Property Name="EndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:heading="" sap:quickinfo="Field of type DATS"/>
+                <Property Name="ExternalRevenue" Type="Edm.Decimal" Precision="14" Scale="3" sap:label=""/>
+                <Property Name="LaborBudget" Type="Edm.Decimal" Precision="14" Scale="3" sap:label=""/>
+                <Property Name="Regroupement" Type="Edm.String" MaxLength="40" sap:label="Regroupement mission"/>
+                <Property Name="statutmission" Type="Edm.String" MaxLength="1" sap:label="Statut mission"/>
+                <Property Name="description" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
+            </EntityType>
             <EntityType Name="ZC_FGA_VHType" sap:value-list="true" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="BusinessNo"/>
@@ -516,6 +532,7 @@
                 <EntitySet Name="I_ProfitCenter" EntityType="ZSTI_SRV.I_ProfitCenterType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="I_ProfitCenterStdVH" EntityType="ZSTI_SRV.I_ProfitCenterStdVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="I_SegmentStdVH" EntityType="ZSTI_SRV.I_SegmentStdVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="ZC_FGA_MISSION" EntityType="ZSTI_SRV.ZC_FGA_MISSIONType" sap:content-version="1"/>
                 <EntitySet Name="ZC_FGA_VH" EntityType="ZSTI_SRV.ZC_FGA_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI" EntityType="ZSTI_SRV.ZC_STIType" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_BUDG" EntityType="ZSTI_SRV.ZC_STI_BUDGType" sap:searchable="true" sap:content-version="1"/>
@@ -537,8 +554,8 @@
                     <End EntitySet="ZC_STI_BUDG" Role="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 </AssociationSet>
                 <FunctionImport Name="ZGENERATE_IDS" ReturnType="ZSTI_SRV.ZGeneratedIdType" m:HttpMethod="POST">
-                    <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_UFO" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>

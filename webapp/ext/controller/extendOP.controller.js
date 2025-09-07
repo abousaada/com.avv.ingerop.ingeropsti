@@ -5,7 +5,7 @@ sap.ui.define(
         "sap/ui/model/json/JSONModel",
     ],
     function (
-        ControllerExtension, OverrideExecution,JSONModel
+        ControllerExtension, OverrideExecution, JSONModel
     ) {
         "use strict";
 
@@ -63,7 +63,7 @@ sap.ui.define(
                                     title: "Success",
                                     actions: [sap.m.MessageBox.Action.OK],
                                     onClose: function () {
-                                        //oView.getModel().refresh(true);
+                                        oView.getModel().refresh(true);
                                         const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
                                         oRouter.navTo("ListReport");
                                     }
@@ -220,7 +220,7 @@ sap.ui.define(
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                 this.getView().setModel(oMissionsModel, "missions");
 
-                
+
                 //attach event to business_no_e => get missions
                 if (oContext) {
                     const oBinding = oContext.getModel().bindProperty(oContext.getPath() + "/business_no_e");
@@ -409,16 +409,94 @@ sap.ui.define(
                             newMiddle = sBusinessUfo + next4 + remaining;
                         }
 
-                        const newId = prefix + newMiddle;
+                        /*const newId = prefix + newMiddle;
                         oModel.setProperty(sPath + "/business_no_p", newId);
-                        resolve(newId);
+                        resolve(newId);*/
+
+                        const baseId = prefix + newMiddle;
+                        // Calculate the next sequential ID
+                        const nextId = this._calculateBusinessNoPId(baseId);
+                        oModel.setProperty(sPath + "/business_no_p", nextId);
+                        resolve(nextId);
 
                     }
 
                 });
             },
 
+            _calculateBusinessNoPId: function (baseId) {
+                try {
+                    const oModel = this.getView().getModel();
+                    const oData = oModel.getProperty("/");
 
+                    // Extract all existing business_no_p values
+                    const existingIds = this._extractAllBusinessNoPIds(oData);
+
+                    // Check if baseId already ends with a 3-digit pattern
+                    const hasExistingSuffix = /-\d{3}$/.test(baseId);
+
+                    if (hasExistingSuffix) {
+                        // If baseId already has a suffix like -000, remove it to get the true base
+                        baseId = baseId.replace(/-\d{3}$/, '');
+                    }
+
+                    if (existingIds.length === 0) {
+                        // If no existing IDs, start with -000
+                        return baseId + "-000";
+                    }
+
+                    // Filter IDs that match the base pattern (before the last 3 digits)
+                    const matchingIds = existingIds.filter(id => {
+                        const idWithoutSuffix = id.replace(/-\d{3}$/, '');
+                        return idWithoutSuffix === baseId;
+                    });
+
+                    if (matchingIds.length === 0) {
+                        // If no matching IDs, start with -000
+                        return baseId + "-000";
+                    }
+
+                    // Extract and parse the last 3 digits (after the last hyphen)
+                    const numericIds = matchingIds.map(id => {
+                        const last3Digits = id.split('-').pop(); // Get the part after the last hyphen
+                        const num = parseInt(last3Digits, 10);
+                        return isNaN(num) ? 0 : num;
+                    });
+
+                    // Find the maximum ID and increment
+                    const maxId = Math.max(...numericIds);
+
+                    if (maxId >= 999) {
+                        // Handle overflow
+                        sap.m.MessageBox.warning("Maximum sequence reached (999) for this business ID");
+                        return baseId + "-999";
+                    }
+
+                    const nextId = maxId + 1;
+                    return baseId + "-" + nextId.toString().padStart(3, '0');
+
+                } catch (error) {
+                    console.error("Error calculating business_no_p ID:", error);
+                    // Fallback to base ID with -000
+                    return baseId + "-000";
+                }
+            },
+
+            _extractAllBusinessNoPIds: function (data, ids = []) {
+                if (Array.isArray(data)) {
+                    data.forEach(item => this._extractAllBusinessNoPIds(item, ids));
+                } else if (typeof data === 'object' && data !== null) {
+                    if (data.business_no_p && typeof data.business_no_p === 'string') {
+                        ids.push(data.business_no_p);
+                    }
+                    Object.values(data).forEach(value => {
+                        if (typeof value === 'object' && value !== null) {
+                            this._extractAllBusinessNoPIds(value, ids);
+                        }
+                    });
+                }
+                return ids;
+            },
 
             onGenerateId_old: function () {
                 return new Promise((resolve, reject) => {
@@ -481,12 +559,15 @@ sap.ui.define(
                     const id_formulaire = escapeODataKey(oModel.getProperty(oContext.getPath() + "/id_formulaire"));
                     const business_no_e = escapeODataKey(oModel.getProperty(oContext.getPath() + "/business_no_e"));
 
-                    const sPath = `/ZC_STI(id_formulaire='${id_formulaire}',business_no_e='${business_no_e}')/to_Missions`;
+                    //const sPath = `/ZC_STI(id_formulaire='${id_formulaire}',business_no_e='${business_no_e}')/to_Missions`;
+                    
+                    const sPath = "/ZC_STI_MISSION";
 
                     return new Promise((resolve, reject) => {
                         oModel.read(sPath, {
                             urlParameters: {
-                                "$filter": "statutmission eq 'A'",
+                                //"$filter": "statutmission eq 'A'",
+                                "$filter": `BusinessNo eq '${business_no_e}' and statutmission eq 'A'`,
                                 "$orderby": "MissionId"
                             },
                             success: (oData) => resolve(oData?.results || []),
@@ -629,6 +710,9 @@ sap.ui.define(
                     if (oMissionsModel) {
                         oMissionsModel.setData({ results: missions });
                         oMissionsModel.refresh(true);
+
+                        this.prepareMissionsTreeData();
+                        
                     } else {
                         oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                         this.getView().setModel(oMissionsModel, "missions");
@@ -641,140 +725,140 @@ sap.ui.define(
                 }
             },
 
-        prepareMissionsTreeData: function () {
-            var missions = this.getView().getModel("missions").getProperty("/results");
+            prepareMissionsTreeData: function () {
+                var missions = this.getView().getModel("missions").getProperty("/results");
 
-            // Transform flat missions to hierarchical tree structure
-            var treeData = this._transformMissionsToTree(missions);
+                // Transform flat missions to hierarchical tree structure
+                var treeData = this._transformMissionsToTree(missions);
 
-            // Set the tree data to missions model
-            this.getView().getModel("missions").setProperty("/", treeData);
-            this.getView().getModel("missions").setProperty("/results", missions);
+                // Set the tree data to missions model
+                this.getView().getModel("missions").setProperty("/", treeData);
+                this.getView().getModel("missions").setProperty("/results", missions);
 
-            // Calculate and update row count after building the tree
-            var rowCount = this.countRows(treeData);
-            this.updateRowCount(rowCount);
-        },
+                // Calculate and update row count after building the tree
+                var rowCount = this.countRows(treeData);
+                this.updateRowCount(rowCount);
+            },
 
-        _transformMissionsToTree: function(missions) {
-            const treeData = [];
-            const businessNoMap = new Map();
-            const regroupementMap = new Map();
+            _transformMissionsToTree: function (missions) {
+                const treeData = [];
+                const businessNoMap = new Map();
+                const regroupementMap = new Map();
 
-            if (!missions) return treeData;
+                if (!missions) return treeData;
 
-            // First pass: Group by BusinessNo
-            missions.forEach(mission => {
-                const businessNo = mission.BusinessNo || 'Unknown Business';
-                
-                if (!businessNoMap.has(businessNo)) {
-                    const businessNode = {
-                        name: businessNo,
-                        BusinessNo: businessNo,
-                        type: 'business',
-                        info: 'Business Unit',
-                        infoState: 'None',
-                        children: []
+                // First pass: Group by BusinessNo
+                missions.forEach(mission => {
+                    const businessNo = mission.BusinessNo || 'Unknown Business';
+
+                    if (!businessNoMap.has(businessNo)) {
+                        const businessNode = {
+                            name: businessNo,
+                            BusinessNo: businessNo,
+                            type: 'business',
+                            info: 'Business Unit',
+                            infoState: 'None',
+                            children: []
+                        };
+                        businessNoMap.set(businessNo, businessNode);
+                        treeData.push(businessNode);
+                    }
+
+                    const regroupement = mission.Regroupement || 'Unknown Regroupement';
+                    const regroupementKey = `${businessNo}-${regroupement}`;
+
+                    if (!regroupementMap.has(regroupementKey)) {
+                        const regroupementNode = {
+                            name: regroupement,
+                            Regroupement: regroupement,
+                            type: 'regroupement',
+                            info: 'Regroupement',
+                            infoState: 'None',
+                            children: []
+                        };
+                        regroupementMap.set(regroupementKey, regroupementNode);
+                        businessNoMap.get(businessNo).children.push(regroupementNode);
+                    }
+
+                    // Add mission as child of regroupement
+                    const missionNode = {
+                        name: mission.MissionId,
+                        type: 'mission',
+                        info: `${mission.MissionCode} - ${mission.AvailableBudget} available`,
+                        infoState: parseFloat(mission.AvailableBudget) > 0 ? 'Success' : 'Error',
+                        MissionId: mission.MissionId,
+                        MissionCode: mission.MissionCode,
+                        GlobalBudget: mission.GlobalBudget,
+                        BudgetInSTI: mission.BudgetInSTI,
+                        AvailableBudget: mission.AvailableBudget,
+                        SubcontractedBudgetPercentage: mission.SubcontractedBudgetPercentage,
+                        BusinessNo: mission.BusinessNo,
+                        Regroupement: mission.Regroupement
                     };
-                    businessNoMap.set(businessNo, businessNode);
-                    treeData.push(businessNode);
+
+                    regroupementMap.get(regroupementKey).children.push(missionNode);
+                });
+
+                return treeData;
+            },
+
+            onRefreshTree: function () {
+                this.getView().setBusy(true);
+
+                try {
+                    // Re-fetch missions and rebuild the tree
+                    this.prepareMissionsTreeData();
+                    sap.m.MessageToast.show("Mission tree refreshed successfully");
+                } catch (error) {
+                    sap.m.MessageBox.error("Error refreshing tree: " + error.message);
+                } finally {
+                    this.getView().setBusy(false);
                 }
-                
-                const regroupement = mission.Regroupement || 'Unknown Regroupement';
-                const regroupementKey = `${businessNo}-${regroupement}`;
-                
-                if (!regroupementMap.has(regroupementKey)) {
-                    const regroupementNode = {
-                        name: regroupement,
-                        Regroupement: regroupement,
-                        type: 'regroupement',
-                        info: 'Regroupement',
-                        infoState: 'None',
-                        children: []
-                    };
-                    regroupementMap.set(regroupementKey, regroupementNode);
-                    businessNoMap.get(businessNo).children.push(regroupementNode);
-                }
-                
-                // Add mission as child of regroupement
-                const missionNode = {
-                    name: mission.MissionId,
-                    type: 'mission',
-                    info: `${mission.MissionCode} - ${mission.AvailableBudget} available`,
-                    infoState: parseFloat(mission.AvailableBudget) > 0 ? 'Success' : 'Error',
-                    MissionId: mission.MissionId,
-                    MissionCode: mission.MissionCode,
-                    GlobalBudget: mission.GlobalBudget,
-                    BudgetInSTI: mission.BudgetInSTI,
-                    AvailableBudget: mission.AvailableBudget,
-                    SubcontractedBudgetPercentage: mission.SubcontractedBudgetPercentage,
-                    BusinessNo: mission.BusinessNo,
-                    Regroupement: mission.Regroupement
-                };
-                
-                regroupementMap.get(regroupementKey).children.push(missionNode);
-            });
+            },
 
-            return treeData;
-        },
+            countRows: function (nodes) {
+                if (!nodes || nodes.length === 0) return 0;
 
-        onRefreshTree: function () {
-            this.getView().setBusy(true);
+                var count = 0;
+                nodes.forEach(function (node) {
+                    count++;
+                    if (node.children && node.children.length > 0) {
+                        count += this.countRows(node.children);
+                    }
+                }.bind(this));
 
-            try {
-                // Re-fetch missions and rebuild the tree
-                this.prepareMissionsTreeData();
-                sap.m.MessageToast.show("Mission tree refreshed successfully");
-            } catch (error) {
-                sap.m.MessageBox.error("Error refreshing tree: " + error.message);
-            } finally {
-                this.getView().setBusy(false);
-            }
-        },
+                return count;
+            },
 
-        countRows: function (nodes) {
-            if (!nodes || nodes.length === 0) return 0;
+            updateRowCount: function (rowCount) {
+                try {
+                    var oLocalModel = this.getView().getModel("localModel");
+                    if (!oLocalModel) {
+                        oLocalModel = new JSONModel({
+                            tableSettings: {
+                                minRowCount: 10
+                            }
+                        });
+                        this.getView().setModel(oLocalModel, "localModel");
+                    }
 
-            var count = 0;
-            nodes.forEach(function (node) {
-                count++;
-                if (node.children && node.children.length > 0) {
-                    count += this.countRows(node.children);
-                }
-            }.bind(this));
-
-            return count;
-        },
-
-        updateRowCount: function (rowCount) {
-            try {
-                var oLocalModel = this.getView().getModel("localModel");
-                if (!oLocalModel) {
-                    oLocalModel = new JSONModel({
-                        tableSettings: {
+                    var oData = oLocalModel.getData();
+                    if (!oData.tableSettings) {
+                        oData.tableSettings = {
                             minRowCount: 10
-                        }
-                    });
-                    this.getView().setModel(oLocalModel, "localModel");
-                }
+                        };
+                        oLocalModel.setData(oData);
+                    }
 
-                var oData = oLocalModel.getData();
-                if (!oData.tableSettings) {
-                    oData.tableSettings = {
-                        minRowCount: 10
-                    };
-                    oLocalModel.setData(oData);
-                }
+                    var calculatedRowCount = Math.max(rowCount, 1) + 1; // +1 for better visual appearance
+                    oLocalModel.setProperty("/tableSettings/minRowCount", calculatedRowCount);
 
-                var calculatedRowCount = Math.max(rowCount, 1) + 1; // +1 for better visual appearance
-                oLocalModel.setProperty("/tableSettings/minRowCount", calculatedRowCount);
-                
-                oLocalModel.refresh();
-                
-            } catch (error) {
-                console.error("Error updating row count:", error);
+                    oLocalModel.refresh();
+
+                } catch (error) {
+                    console.error("Error updating row count:", error);
+                }
             }
-        }
 
         });
     }

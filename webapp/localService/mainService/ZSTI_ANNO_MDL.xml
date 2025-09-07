@@ -129,6 +129,36 @@
                     </Collection>
                 </Annotation>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType/Regroupement">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType/statutmission">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType/description">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_FGA_MISSIONType">
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="MissionCode"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="StartDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="EndDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="ExternalRevenue"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="LaborBudget"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_FGA_VHType/CompanyCountry">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
