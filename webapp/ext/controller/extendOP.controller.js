@@ -682,6 +682,7 @@ sap.ui.define(
 
                                 if (sBusinessEcmp && sBusinessPcmp && sBusinessEcmp === sBusinessPcmp) {
                                     oSmartField.setVisible(false);
+                                    oModel.setProperty(sPath + "/business_p_projm", "");
                                 } else {
                                     oSmartField.setVisible(true);
                                 }
