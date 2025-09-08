@@ -95,6 +95,7 @@ sap.ui.define(
                         if (oEvent.key === "Enter" || oEvent.keyCode === 13) {
                             oEvent.preventDefault();
                             this._onEnterKeyPressed(oEvent);
+                            this._recalculateMissionBudgets();
                         }
                     }.bind(this));
                 }.bind(this));
@@ -560,7 +561,7 @@ sap.ui.define(
                     const business_no_e = escapeODataKey(oModel.getProperty(oContext.getPath() + "/business_no_e"));
 
                     //const sPath = `/ZC_STI(id_formulaire='${id_formulaire}',business_no_e='${business_no_e}')/to_Missions`;
-                    
+
                     const sPath = "/ZC_STI_MISSION";
 
                     return new Promise((resolve, reject) => {
@@ -580,8 +581,6 @@ sap.ui.define(
                     return [];
                 }
             },
-
-
 
             async getBudget() {
                 function escapeODataKey(val) {
@@ -713,7 +712,7 @@ sap.ui.define(
                         oMissionsModel.refresh(true);
 
                         this.prepareMissionsTreeData();
-                        
+
                     } else {
                         oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                         this.getView().setModel(oMissionsModel, "missions");
@@ -742,6 +741,87 @@ sap.ui.define(
             },
 
             _transformMissionsToTree: function (missions) {
+                const treeData = [];
+                const businessNoMap = new Map();
+                const regroupementMap = new Map();
+
+                if (!missions) return treeData;
+
+                // First pass: Group by BusinessNo
+                missions.forEach(mission => {
+                    const businessNo = mission.BusinessNo || 'Unknown Business';
+
+                    if (!businessNoMap.has(businessNo)) {
+                        const businessNode = {
+                            name: businessNo,
+                            BusinessNo: businessNo,
+                            type: 'business',
+                            info: 'Business Unit',
+                            infoState: 'None',
+                            children: [],
+                            // Initialize totals for business node
+                            totalGlobalBudget: 0,
+                            totalBudgetInSTI: 0,
+                            totalAvailableBudget: 0
+                        };
+                        businessNoMap.set(businessNo, businessNode);
+                        treeData.push(businessNode);
+                    }
+
+                    const regroupement = mission.Regroupement || 'Unknown Regroupement';
+                    const regroupementKey = `${businessNo}-${regroupement}`;
+
+                    if (!regroupementMap.has(regroupementKey)) {
+                        const regroupementNode = {
+                            name: regroupement,
+                            Regroupement: regroupement,
+                            type: 'regroupement',
+                            info: 'Regroupement',
+                            infoState: 'None',
+                            children: [],
+                            // Initialize totals for regroupement node
+                            totalGlobalBudget: 0,
+                            totalBudgetInSTI: 0,
+                            totalAvailableBudget: 0
+                        };
+                        regroupementMap.set(regroupementKey, regroupementNode);
+                        businessNoMap.get(businessNo).children.push(regroupementNode);
+                    }
+
+                    // Add mission as child of regroupement
+                    const missionNode = {
+                        name: mission.MissionId,
+                        type: 'mission',
+                        info: `${mission.MissionCode} - ${mission.AvailableBudget} available`,
+                        infoState: parseFloat(mission.AvailableBudget) > 0 ? 'Success' : 'Error',
+                        MissionId: mission.MissionId,
+                        MissionCode: mission.MissionCode,
+                        GlobalBudget: mission.GlobalBudget,
+                        BudgetInSTI: mission.BudgetInSTI,
+                        AvailableBudget: mission.AvailableBudget,
+                        SubcontractedBudgetPercentage: mission.SubcontractedBudgetPercentage,
+                        BusinessNo: mission.BusinessNo,
+                        Regroupement: mission.Regroupement
+                    };
+
+                    // Add mission values to regroupement totals
+                    const regroupementNode = regroupementMap.get(regroupementKey);
+                    regroupementNode.totalGlobalBudget += parseFloat(mission.GlobalBudget) || 0;
+                    regroupementNode.totalBudgetInSTI += parseFloat(mission.BudgetInSTI) || 0;
+                    regroupementNode.totalAvailableBudget += parseFloat(mission.AvailableBudget) || 0;
+
+                    // Add regroupement values to business totals
+                    const businessNode = businessNoMap.get(businessNo);
+                    businessNode.totalGlobalBudget += parseFloat(mission.GlobalBudget) || 0;
+                    businessNode.totalBudgetInSTI += parseFloat(mission.BudgetInSTI) || 0;
+                    businessNode.totalAvailableBudget += parseFloat(mission.AvailableBudget) || 0;
+
+                    regroupementNode.children.push(missionNode);
+                });
+
+                return treeData;
+            },
+            _transformMissionsToTree1: function (missions) {
                 const treeData = [];
                 const businessNoMap = new Map();
                 const regroupementMap = new Map();
@@ -859,7 +939,38 @@ sap.ui.define(
                 } catch (error) {
                     console.error("Error updating row count:", error);
                 }
-            }
+            },
+
+
+            _recalculateMissionBudgets: function () {
+                var budgetData = this.getView().getModel("budget").getProperty("/results");
+                var missionsData = this.getView().getModel("missions").getProperty("/results");
+
+                missionsData.forEach(mission => {
+                    const missionId = mission.MissionId;
+
+                    // Sum of BudgetAlloue for this mission
+                    const budgetInSTI = budgetData
+                        .filter(b => b.Mission_e === missionId)
+                        .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
+
+                    mission.BudgetInSTI = budgetInSTI.toFixed(2);
+                    mission.AvailableBudget = (mission.GlobalBudget - budgetInSTI).toFixed(2);
+
+                    if (mission.GlobalBudget === "0.00") {
+                        mission.SubcontractedBudgetPercentage = "0%";
+                    } else {
+                        mission.SubcontractedBudgetPercentage = ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
+                    }
+                });
+
+                // Refresh missions model
+                this.getView().getModel("missions").refresh(true);
+
+                // Also rebuild tree totals (regroupement / business)
+                this.prepareMissionsTreeData();
+            },
+
 
         });
     }

@@ -125,7 +125,7 @@
                     <Label text="Total Regroupement" />
                     <table:template>
                         <ObjectNumber
-                            number="0"
+            number="{= ${missions>type} === 'regroupement' ? ${missions>totalGlobalBudget} : ''}"
                             unit="EUR"
                             visible="{= ${missions>type} === 'regroupement'}"
                             state="None"
@@ -138,7 +138,7 @@
                     <Label text="Total Business" />
                     <table:template>
                         <ObjectNumber
-                            number="0"
+            number="{= ${missions>type} === 'business' ? ${missions>totalGlobalBudget} : ''}"
                             unit="EUR"
                             visible="{= ${missions>type} === 'business'}"
                             state="None"
