@@ -93,6 +93,9 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             const sPath = oContext.getPath();
 
             var business_no_p = sModel.getProperty(sPath + "/business_no_p");
+            
+            var business_sdate_e = sModel.getProperty(sPath + "/business_e_SDate");
+            var business_edate_e = sModel.getProperty(sPath + "/business_e_EDate");
 
             var oBudgetModel = this.getView().getModel("budget");
             var aMissions = this.getView().getModel("missions").getProperty("/results");
@@ -124,8 +127,8 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             var oNewLine = {
                 Mission_e: sMission_e,
                 Mission_p: newMissionP,
-                StartDate: '',
-                EndDate: '',
+                StartDate: business_sdate_e,
+                EndDate: business_edate_e,
                 business_no_p: business_no_p,
                 BudgetAlloue: '0',
                 Currency: 'EUR',

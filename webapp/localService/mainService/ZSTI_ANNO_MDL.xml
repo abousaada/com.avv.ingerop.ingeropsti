@@ -216,6 +216,12 @@
                     </Collection>
                 </Annotation>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_SDate">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_EDate">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_curr">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>

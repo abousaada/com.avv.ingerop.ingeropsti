@@ -384,44 +384,47 @@ sap.ui.define(
                     const sPath = oContext.getPath();
                     var oModel = this.getView().getModel();
 
-                    //var sBusinessUfo = oModel.getProperty(sPath + "/business_p_ufo");
-                    var sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
+                    var sBusinessNoP = oModel.getProperty(sPath + "/business_no_p");
 
-                    var sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
+                    if (!sBusinessNoP) {
+                        
+                        var sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
 
-                    if (!sBusinessUfo) {
-                        sap.m.MessageBox.error("Business UFO field is empty");
-                        return;
-                    }
+                        var sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
 
-                    if (sBusinessNoE) {
-                        const prefix = sBusinessNoE.substring(0, 4);    // first 4 chars
-                        const segment = sBusinessNoE.substring(4, 8);  // chars 5-8
-                        const rest = sBusinessNoE.substring(8);        // chars 9-end
-                        let newMiddle;
-
-                        if (/^X{4}$/.test(segment)) {
-                            // All X → replace positions 5-8 with UFO, keep rest
-                            newMiddle = sBusinessUfo + rest;
-                        } else {
-                            // Not all X → replace positions 5-8 with UFO, but keep the next 4 chars intact
-                            const next4 = sBusinessNoE.substring(4, 8); // chars 5-9
-                            const remaining = sBusinessNoE.substring(12); // rest
-                            newMiddle = sBusinessUfo + next4 + remaining;
+                        if (!sBusinessUfo) {
+                            sap.m.MessageBox.error("Business UFO field is empty");
+                            return;
                         }
 
-                        /*const newId = prefix + newMiddle;
-                        oModel.setProperty(sPath + "/business_no_p", newId);
-                        resolve(newId);*/
+                        if (sBusinessNoE) {
+                            const prefix = sBusinessNoE.substring(0, 4);    // first 4 chars
+                            const segment = sBusinessNoE.substring(4, 8);  // chars 5-8
+                            const rest = sBusinessNoE.substring(8);        // chars 9-end
+                            let newMiddle;
 
-                        const baseId = prefix + newMiddle;
-                        // Calculate the next sequential ID
-                        const nextId = this._calculateBusinessNoPId(baseId);
-                        oModel.setProperty(sPath + "/business_no_p", nextId);
-                        resolve(nextId);
+                            if (/^X{4}$/.test(segment)) {
+                                // All X → replace positions 5-8 with UFO, keep rest
+                                newMiddle = sBusinessUfo + rest;
+                            } else {
+                                // Not all X → replace positions 5-8 with UFO, but keep the next 4 chars intact
+                                const next4 = sBusinessNoE.substring(4, 8); // chars 5-9
+                                const remaining = sBusinessNoE.substring(12); // rest
+                                newMiddle = sBusinessUfo + next4 + remaining;
+                            }
 
+                            /*const newId = prefix + newMiddle;
+                            oModel.setProperty(sPath + "/business_no_p", newId);
+                            resolve(newId);*/
+
+                            const baseId = prefix + newMiddle;
+                            // Calculate the next sequential ID
+                            const nextId = this._calculateBusinessNoPId(baseId);
+                            oModel.setProperty(sPath + "/business_no_p", nextId);
+                            resolve(nextId);
+
+                        }
                     }
-
                 });
             },
 

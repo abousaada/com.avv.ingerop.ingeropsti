@@ -407,7 +407,7 @@
                 <Property Name="DailyAvgRate" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Character Field with Length 10" sap:heading=""/>
                 <Property Name="LastUpdate" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Char20" sap:heading="" sap:quickinfo="Char 20"/>
                 <Property Name="GrpConvention" Type="Edm.String" MaxLength="50" sap:label="Description" sap:heading="" sap:quickinfo="Text Field"/>
-                <Property Name="Notes" Type="Edm.String" MaxLength="1250" sap:display-format="UpperCase" sap:label=""/>
+                <Property Name="Notes" Type="Edm.String" MaxLength="1333" sap:label=""/>
                 <Property Name="DataSource" Type="Edm.String" MaxLength="4"/>
             </EntityType>
             <EntityType Name="ZC_STIType" sap:content-version="1">
@@ -419,6 +419,8 @@
                 <Property Name="business_no_e" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:heading="" sap:quickinfo="Character field length 24" sap:value-list="standard"/>
                 <Property Name="business_e_t" Type="Edm.String" MaxLength="40" sap:label="Description" sap:heading="" sap:quickinfo="PS: Short description (1st text line)" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_e_cmp" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Company code" sap:heading="" sap:quickinfo="Company code for WBS element" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="business_e_SDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Basic start" sap:quickinfo="WBS element: Basic start date"/>
+                <Property Name="business_e_EDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Basic finish date" sap:quickinfo="WBS element: Basic finish date"/>
                 <Property Name="business_e_ufo" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Set Name" sap:heading="" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
                 <Property Name="business_e_cdp" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Profit Center" sap:heading="" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
                 <Property Name="business_e_bm" Type="Edm.String" MaxLength="25" sap:label="" sap:creatable="false" sap:updatable="false"/>
