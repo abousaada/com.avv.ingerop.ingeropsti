@@ -90,7 +90,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             oModel.setProperty("/results", aData);
         },
 
-         onMissionChange: function (oEvent) {
+        /* onMissionChange: function (oEvent) {
             var oSelect = oEvent.getSource();
             var oRow = oSelect.getParent();
             var oBindingContext = oRow.getBindingContext("budget");
@@ -99,6 +99,29 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
 
             if (oBindingContext) {
                 oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Mission_e", sSelectedKey);
+                
+            }
+        },*/
+
+        onMissionChange: function (oEvent) {
+            var oSelect = oEvent.getSource();
+            var oRow = oSelect.getParent();
+            var oBindingContext = oRow.getBindingContext("budget");
+            var oSelectedItem = oEvent.getParameter("selectedItem");
+            var sSelectedKey = oSelectedItem ? oSelectedItem.getKey() : null;
+
+            if (oBindingContext && sSelectedKey) {
+                // Get the missions model to find the selected mission's regroupement
+                var aMissions = this.getView().getModel("missions").getProperty("/results");
+                var oSelectedMission = aMissions.find(function(mission) {
+                    return mission.MissionId === sSelectedKey;
+                });
+
+                if (oSelectedMission) {
+                    // Update both Mission_e and Regroupement fields
+                    oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Mission_e", sSelectedKey);
+                    oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Regroupement", oSelectedMission.Regroupement);
+                }
             }
         },
 
