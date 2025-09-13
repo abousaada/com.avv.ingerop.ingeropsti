@@ -20,9 +20,10 @@ sap.ui.define(
                 this._setupEnterKeyHandlers();
             },
 
-            beforeSaveExtension: async function () {
+            beforeSaveExtension: async function (status) {
                 try {
-                    const oView = this.base.getView();
+                    //const oView = this.base.getView();
+                    const oView = this.getView();
                     const oContext = oView.getBindingContext();
                     const oModel = oContext.getModel();
                     const sPath = oContext.getPath();
@@ -55,10 +56,24 @@ sap.ui.define(
                         Currency: line.Currency
                     }));
 
+                    if (!status) {
+                        status = 'DRAFT';
+                    }
+                    oPayload.status = status;
+
                     try {
                         const updatedSTI = await this.deepUpsertSTI(oPayload);
 
                         if (updatedSTI) {
+
+                            var message = "STI created successfully";
+
+                            if (status = 'DRAFT') {
+                                message = "STI créée avec succès";
+                            } else {
+                                message = "STI validée avec succès";
+                            }
+
                             sap.m.MessageBox.show("STI created successfully: " + updatedSTI.id_formulaire, {
                                 icon: sap.m.MessageBox.Icon.SUCCESS,
                                 title: "Success",
@@ -805,7 +820,8 @@ sap.ui.define(
                         AvailableBudget: mission.AvailableBudget,
                         SubcontractedBudgetPercentage: mission.SubcontractedBudgetPercentage,
                         BusinessNo: mission.BusinessNo,
-                        Regroupement: mission.Regroupement
+                        Regroupement: mission.Regroupement,
+                        description: mission.description
                     };
 
                     // Add mission values to regroupement totals
@@ -821,67 +837,6 @@ sap.ui.define(
                     businessNode.totalAvailableBudget += parseFloat(mission.AvailableBudget) || 0;
 
                     regroupementNode.children.push(missionNode);
-                });
-
-                return treeData;
-            },
-            _transformMissionsToTree1: function (missions) {
-                const treeData = [];
-                const businessNoMap = new Map();
-                const regroupementMap = new Map();
-
-                if (!missions) return treeData;
-
-                // First pass: Group by BusinessNo
-                missions.forEach(mission => {
-                    const businessNo = mission.BusinessNo || 'Unknown Business';
-
-                    if (!businessNoMap.has(businessNo)) {
-                        const businessNode = {
-                            name: businessNo,
-                            BusinessNo: businessNo,
-                            type: 'business',
-                            info: 'Business Unit',
-                            infoState: 'None',
-                            children: []
-                        };
-                        businessNoMap.set(businessNo, businessNode);
-                        treeData.push(businessNode);
-                    }
-
-                    const regroupement = mission.Regroupement || 'Unknown Regroupement';
-                    const regroupementKey = `${businessNo}-${regroupement}`;
-
-                    if (!regroupementMap.has(regroupementKey)) {
-                        const regroupementNode = {
-                            name: regroupement,
-                            Regroupement: regroupement,
-                            type: 'regroupement',
-                            info: 'Regroupement',
-                            infoState: 'None',
-                            children: []
-                        };
-                        regroupementMap.set(regroupementKey, regroupementNode);
-                        businessNoMap.get(businessNo).children.push(regroupementNode);
-                    }
-
-                    // Add mission as child of regroupement
-                    const missionNode = {
-                        name: mission.MissionId,
-                        type: 'mission',
-                        info: `${mission.MissionCode} - ${mission.AvailableBudget} available`,
-                        infoState: parseFloat(mission.AvailableBudget) > 0 ? 'Success' : 'Error',
-                        MissionId: mission.MissionId,
-                        MissionCode: mission.MissionCode,
-                        GlobalBudget: mission.GlobalBudget,
-                        BudgetInSTI: mission.BudgetInSTI,
-                        AvailableBudget: mission.AvailableBudget,
-                        SubcontractedBudgetPercentage: mission.SubcontractedBudgetPercentage,
-                        BusinessNo: mission.BusinessNo,
-                        Regroupement: mission.Regroupement
-                    };
-
-                    regroupementMap.get(regroupementKey).children.push(missionNode);
                 });
 
                 return treeData;
@@ -976,7 +931,7 @@ sap.ui.define(
             },
 
             onValidateSTI: function (oEvent) {
-                MessageToast.show("Validation réussie !");
+                this.beforeSaveExtension('INAPPROVAL');
             }
 
             //});
