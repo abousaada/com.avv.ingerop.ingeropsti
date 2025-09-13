@@ -1,0 +1,80 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+>
+    <l:VerticalLayout
+        class="sapUiSmallMargin"
+        width="100%"
+    >
+        <!-- Mission du titulaire -->
+        <VBox class="sapUiSmallMarginTop">
+            <Text text="Mission du titulaire" />
+            <TextArea
+                rows="3"
+                width="50%"
+                placeholder="Écrire ici..."
+                editable="{ui>/editable}"
+                liveChange=".onLiveChangeNotes"
+                growing="true"
+                value="{utilities>/Notes}"
+            />
+        </VBox>
+
+        <!-- Données de base -->
+        <VBox class="sapUiSmallMarginTop">
+            <Text text="Données de base" />
+            <TextArea
+                rows="3"
+                width="50%"
+                placeholder="Écrire ici..."
+                editable="{ui>/editable}"
+                liveChange=".onLiveChangeNotes"
+                growing="true"
+                value="{utilities>/Notes}"
+            />
+        </VBox>
+
+        <!-- Période et délais -->
+        <VBox class="sapUiSmallMarginTop">
+            <Text text="Période et délais" />
+            <TextArea
+                rows="3"
+                width="50%"
+                placeholder="Écrire ici..."
+                editable="{ui>/editable}"
+                liveChange=".onLiveChangeNotes"
+                growing="true"
+                value="{utilities>/Notes}"
+            />
+        </VBox>
+
+        <!-- Mission sous-traitées -->
+        <VBox class="sapUiSmallMarginTop">
+            <Text text="Mission sous-traitées" />
+            <TextArea
+                rows="3"
+                width="50%"
+                placeholder="Écrire ici..."
+                editable="{ui>/editable}"
+                liveChange=".onLiveChangeNotes"
+                growing="true"
+                value="{utilities>/Notes}"
+            />
+        </VBox>
+
+        <!-- Gestion des interfaces -->
+        <VBox class="sapUiSmallMarginTop">
+            <Text text="Gestion des interfaces" />
+            <TextArea
+                rows="3"
+                width="50%"
+                placeholder="Écrire ici..."
+                editable="{ui>/editable}"
+                liveChange=".onLiveChangeNotes"
+                growing="true"
+                value="{utilities>/Notes}"
+            />
+        </VBox>
+    </l:VerticalLayout>
+</core:FragmentDefinition>

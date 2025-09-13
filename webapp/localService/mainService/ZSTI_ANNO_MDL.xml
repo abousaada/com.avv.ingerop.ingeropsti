@@ -265,20 +265,26 @@
                                 <Collection/>
                             </PropertyValue>
                         </Record>
-                        <Record Type="UI.ReferenceFacet">
+                        <Record Type="UI.CollectionFacet">
                             <PropertyValue Property="Label" String=""/>
                             <PropertyValue Property="ID" String="DescriptionFacet"/>
-                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#DescriptionFacet"/>
+                            <PropertyValue Property="Facets">
+                                <Collection/>
+                            </PropertyValue>
                         </Record>
-                        <Record Type="UI.ReferenceFacet">
+                        <Record Type="UI.CollectionFacet">
                             <PropertyValue Property="Label" String=""/>
                             <PropertyValue Property="ID" String="WorkflowFacet"/>
-                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#WorkflowFacet"/>
+                            <PropertyValue Property="Facets">
+                                <Collection/>
+                            </PropertyValue>
                         </Record>
-                        <Record Type="UI.ReferenceFacet">
+                        <Record Type="UI.CollectionFacet">
                             <PropertyValue Property="Label" String=""/>
                             <PropertyValue Property="ID" String="LienFacet"/>
-                            <PropertyValue Property="Target" AnnotationPath="@UI.LineItem#LienFacet"/>
+                            <PropertyValue Property="Facets">
+                                <Collection/>
+                            </PropertyValue>
                         </Record>
                     </Collection>
                 </Annotation>

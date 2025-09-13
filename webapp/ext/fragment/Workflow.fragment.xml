@@ -1,0 +1,51 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+    <Table id="workflowTable"
+           inset="false"
+           mode="None"
+           items="{/WorkflowSteps}">
+        
+        <!-- Columns -->
+        <columns>
+            <Column>
+                <Text text="Étape du workflow" />
+            </Column>
+            <Column>
+                <Text text="Type" />
+            </Column>
+            <Column>
+                <Text text="Nom" />
+            </Column>
+            <Column>
+                <Text text="Statut" />
+            </Column>
+            <Column>
+                <Text text="Gestionnaire" />
+            </Column>
+            <Column>
+                <Text text="Destinataire" />
+            </Column>
+            <Column>
+                <Text text="Est une étape facultative ?" />
+            </Column>
+            <Column>
+                <Text text="Dernière action" />
+            </Column>
+        </columns>
+
+        <!-- Rows (template) -->
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{Step}" />
+                    <Text text="{Type}" />
+                    <Text text="{Name}" />
+                    <Text text="{Status}" />
+                    <Text text="{Manager}" />
+                    <Text text="{Recipient}" />
+                    <CheckBox selected="{Optional}" enabled="false" />
+                    <Text text="{LastAction}" />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</core:FragmentDefinition>

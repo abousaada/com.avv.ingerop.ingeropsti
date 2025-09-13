@@ -1,0 +1,28 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+    <Table id="urlTable"
+           inset="false"
+           mode="None"
+           items="{/Urls}">
+
+        <!-- Columns -->
+        <columns>
+            <Column>
+                <Text text="URL" />
+            </Column>
+            <Column>
+                <Text text="Dernière action" />
+            </Column>
+        </columns>
+
+        <!-- Row template -->
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <!-- URL as clickable link -->
+                    <Link text="{Url}" href="{Url}" target="_blank" />
+                    <Text text="{LastAction}" />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</core:FragmentDefinition>

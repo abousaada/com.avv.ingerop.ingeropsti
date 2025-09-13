@@ -157,6 +157,30 @@
               "sap.ui.generic.app": {
                 "title": "Budget"
               }
+            },
+            "AfterFacet|ZC_STI|DescriptionFacet": {
+              "className": "sap.ui.core.Fragment",
+              "fragmentName": "com.avv.ingerop.ingeropsti.ext.fragment.Description",
+              "type": "XML",
+              "sap.ui.generic.app": {
+                "title": "Description"
+              }
+            },
+            "AfterFacet|ZC_STI|WorkflowFacet": {
+              "className": "sap.ui.core.Fragment",
+              "fragmentName": "com.avv.ingerop.ingeropsti.ext.fragment.Workflow",
+              "type": "XML",
+              "sap.ui.generic.app": {
+                "title": "Workflow"
+              }
+            },
+            "AfterFacet|ZC_STI|LienFacet": {
+              "className": "sap.ui.core.Fragment",
+              "fragmentName": "com.avv.ingerop.ingeropsti.ext.fragment.Lien",
+              "type": "XML",
+              "sap.ui.generic.app": {
+                "title": "Lien joint"
+              }
             }
           }
         }
