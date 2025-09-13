@@ -417,6 +417,8 @@
                 </Key>
                 <Property Name="id_formulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_no_e" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:heading="" sap:quickinfo="Character field length 24" sap:value-list="standard"/>
+                <Property Name="Criticality" Type="Edm.Byte" sap:label=""/>
+                <Property Name="status" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="business_e_t" Type="Edm.String" MaxLength="40" sap:label="Description" sap:heading="" sap:quickinfo="PS: Short description (1st text line)" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_e_cmp" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Company code" sap:heading="" sap:quickinfo="Company code for WBS element" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
                 <Property Name="business_e_SDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Basic start" sap:quickinfo="WBS element: Basic start date"/>
@@ -536,7 +538,7 @@
                 <EntitySet Name="I_SegmentStdVH" EntityType="ZSTI_SRV.I_SegmentStdVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_FGA_MISSION" EntityType="ZSTI_SRV.ZC_FGA_MISSIONType" sap:content-version="1"/>
                 <EntitySet Name="ZC_FGA_VH" EntityType="ZSTI_SRV.ZC_FGA_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
-                <EntitySet Name="ZC_STI" EntityType="ZSTI_SRV.ZC_STIType" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="ZC_STI" EntityType="ZSTI_SRV.ZC_STIType" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_BUDG" EntityType="ZSTI_SRV.ZC_STI_BUDGType" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_CEPC_BUKRS" EntityType="ZSTI_SRV.ZC_STI_CEPC_BUKRSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_MISSION" EntityType="ZSTI_SRV.ZC_STI_MISSIONType" sap:content-version="1"/>

@@ -362,7 +362,13 @@
                 <Annotation Term="UI.Identification">
                     <Collection>
                         <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Criticality"/>
+                        </Record>
+                        <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_e"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="status"/>
                         </Record>
                     </Collection>
                 </Annotation>
@@ -428,7 +434,13 @@
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="Criticality"/>
+                        </Record>
+                        <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="id_formulaire"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="status"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="proprio_sti"/>
@@ -490,6 +502,7 @@
                     <Record>
                         <PropertyValue Property="RequestAtLeast">
                             <Collection>
+                                <PropertyPath>Criticality</PropertyPath>
                                 <PropertyPath>id_formulaire</PropertyPath>
                             </Collection>
                         </PropertyValue>
@@ -497,8 +510,10 @@
                 </Annotation>
                 <Annotation Term="UI.SelectionFields">
                     <Collection>
+                        <PropertyPath>Criticality</PropertyPath>
                         <PropertyPath>id_formulaire</PropertyPath>
                         <PropertyPath>business_no_e</PropertyPath>
+                        <PropertyPath>status</PropertyPath>
                         <PropertyPath>business_e_t</PropertyPath>
                         <PropertyPath>business_e_cmp</PropertyPath>
                         <PropertyPath>business_e_cdp</PropertyPath>
@@ -514,15 +529,6 @@
                         <PropertyPath>business_p_mis</PropertyPath>
                     </Collection>
                 </Annotation>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_STI_MISSIONType/Regroupement">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_STI_MISSIONType/statutmission">
-                <Annotation Term="UI.Hidden"/>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_STI_MISSIONType/description">
-                <Annotation Term="UI.Hidden"/>
             </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STI_MISSIONType">
                 <Annotation Term="UI.LineItem">

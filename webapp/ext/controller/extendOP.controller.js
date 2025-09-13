@@ -3,89 +3,90 @@ sap.ui.define(
         "sap/ui/core/mvc/ControllerExtension",
         "sap/ui/core/mvc/OverrideExecution",
         "sap/ui/model/json/JSONModel",
+        "sap/m/MessageToast"
     ],
     function (
-        ControllerExtension, OverrideExecution, JSONModel
+        ControllerExtension, OverrideExecution, JSONModel, MessageToast
     ) {
         "use strict";
+        //return ControllerExtension.extend("com.avv.ingerop.ingeropsti.ext.controller.extendOP", {
+        return {
 
-        return ControllerExtension.extend("com.avv.ingerop.ingeropsti.ext.controller.extendOP", {
+            //override: {
 
-            override: {
+            onInit: async function () {
+                this._getExtensionAPI().attachPageDataLoaded(this._onObjectExtMatched.bind(this));
 
-                onInit: async function () {
-                    this._getExtensionAPI().attachPageDataLoaded(this._onObjectExtMatched.bind(this));
+                this._setupEnterKeyHandlers();
+            },
 
-                    this._setupEnterKeyHandlers();
-                },
+            beforeSaveExtension: async function () {
+                try {
+                    const oView = this.base.getView();
+                    const oContext = oView.getBindingContext();
+                    const oModel = oContext.getModel();
+                    const sPath = oContext.getPath();
 
-                beforeSaveExtension: async function () {
+                    if (!oContext) {
+                        sap.m.MessageBox.error("Context Error");
+                        return Promise.reject("No binding context");
+                    }
+
+                    const oPayload = oContext.getObject();
+
+                    var business_no_p = oModel.getProperty(sPath + "/business_no_p");
+                    if (!business_no_p) {
+                        await this.onGenerateId();
+                        business_no_p = oModel.getProperty(sPath + "/business_no_p");
+                        oPayload.business_no_p = business_no_p;
+                    }
+
+                    const aBudgetLines = this.getView().getModel("budget").getProperty("/results");
+                    oPayload.to_BUDG = aBudgetLines.map(line => ({
+                        BUSINESS_NO_E: oPayload.business_no_e,
+                        business_no_p: oPayload.business_no_p,
+                        IdFormulaire: oPayload.id_formulaire,
+                        Mission_e: line.Mission_e,
+                        Mission_p: line.Mission_p,
+                        Libelle: line.Libelle,
+                        StartDate: line.StartDate,
+                        EndDate: line.EndDate,
+                        BudgetAlloue: line.BudgetAlloue,
+                        Currency: line.Currency
+                    }));
+
                     try {
-                        const oView = this.base.getView();
-                        const oContext = oView.getBindingContext();
-                        const oModel = oContext.getModel();
-                        const sPath = oContext.getPath();
+                        const updatedSTI = await this.deepUpsertSTI(oPayload);
 
-                        if (!oContext) {
-                            sap.m.MessageBox.error("Context Error");
-                            return Promise.reject("No binding context");
+                        if (updatedSTI) {
+                            sap.m.MessageBox.show("STI created successfully: " + updatedSTI.id_formulaire, {
+                                icon: sap.m.MessageBox.Icon.SUCCESS,
+                                title: "Success",
+                                actions: [sap.m.MessageBox.Action.OK],
+                                onClose: function () {
+                                    oView.getModel().refresh(true);
+                                    const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                                    oRouter.navTo("ListReport");
+                                }
+                            });
+
                         }
-
-                        const oPayload = oContext.getObject();
-
-                        var business_no_p = oModel.getProperty(sPath + "/business_no_p");
-                        if (!business_no_p) {
-                            await this.onGenerateId();
-                            business_no_p = oModel.getProperty(sPath + "/business_no_p");
-                            oPayload.business_no_p = business_no_p;
-                        }
-
-                        const aBudgetLines = this.getView().getModel("budget").getProperty("/results");
-                        oPayload.to_BUDG = aBudgetLines.map(line => ({
-                            BUSINESS_NO_E: oPayload.business_no_e,
-                            business_no_p: oPayload.business_no_p,
-                            IdFormulaire: oPayload.id_formulaire,
-                            Mission_e: line.Mission_e,
-                            Mission_p: line.Mission_p,
-                            Libelle: line.Libelle,
-                            StartDate: line.StartDate,
-                            EndDate: line.EndDate,
-                            BudgetAlloue: line.BudgetAlloue,
-                            Currency: line.Currency
-                        }));
-
-                        try {
-                            const updatedSTI = await this.deepUpsertSTI(oPayload);
-
-                            if (updatedSTI) {
-                                sap.m.MessageBox.show("STI created successfully: " + updatedSTI.id_formulaire, {
-                                    icon: sap.m.MessageBox.Icon.SUCCESS,
-                                    title: "Success",
-                                    actions: [sap.m.MessageBox.Action.OK],
-                                    onClose: function () {
-                                        oView.getModel().refresh(true);
-                                        const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
-                                        oRouter.navTo("ListReport");
-                                    }
-                                });
-
-                            }
-
-                        } catch (error) {
-                            console.error(error);
-                            return Promise.reject(error);
-                        }
-
-                        return Promise.reject();
 
                     } catch (error) {
                         console.error(error);
                         return Promise.reject(error);
                     }
-                },
 
+                    return Promise.reject();
 
+                } catch (error) {
+                    console.error(error);
+                    return Promise.reject(error);
+                }
             },
+
+
+            //},
 
             _setupEnterKeyHandlers: function () {
                 var oView = this.getView();
@@ -387,7 +388,7 @@ sap.ui.define(
                     var sBusinessNoP = oModel.getProperty(sPath + "/business_no_p");
 
                     if (!sBusinessNoP) {
-                        
+
                         var sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
 
                         var sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
@@ -974,8 +975,12 @@ sap.ui.define(
                 this.prepareMissionsTreeData();
             },
 
+            onValidateSTI: function (oEvent) {
+                MessageToast.show("Validation réussie !");
+            }
 
-        });
+            //});
+        }
     }
 );
 

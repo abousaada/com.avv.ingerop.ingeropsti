@@ -37,7 +37,7 @@
             </table:rowMode>
             <table:columns>
                 <!-- Hierarchy Column -->
-                <table:Column width="20rem">
+                <table:Column width="18rem">
                     <Label text="Hierarchy" />
                     <table:template>
                         <HBox>
@@ -54,8 +54,8 @@
                 </table:Column>
 
                 <!-- Libellé Column -->
-                <table:Column width="12rem">
-                    <Label text="Libellé" />
+                <table:Column width="7rem">
+                    <Label text="Mission" />
                     <table:template>
                         <Text
                             text="{missions>MissionCode}"
@@ -64,8 +64,30 @@
                     </table:template>
                 </table:Column>
 
+                <!-- Description Column -->
+                <table:Column width="11rem">
+                    <Label text="Description" />
+                    <table:template>
+                        <Text
+                            text="{missions>description}"
+                            visible="{= ${missions>type} === 'mission'}"
+                        />
+                    </table:template>
+                </table:Column>
+
+                <!-- Regroupement Column -->
+                <table:Column width="7rem">
+                    <Label text="Regroupement" />
+                    <table:template>
+                        <Text
+                            text="{missions>Regroupement}"
+                            visible="{= ${missions>type} === 'mission'}"
+                        />
+                    </table:template>
+                </table:Column>
+
                 <!-- Budget global (recette) Column -->
-                <table:Column width="10rem">
+                <table:Column width="8rem">
                     <Label text="Budget global" />
                     <table:template>
                         <ObjectNumber
@@ -78,7 +100,7 @@
                 </table:Column>
 
                 <!-- Budget déjà en STI Column -->
-                <table:Column width="10rem">
+                <table:Column width="8rem">
                     <Label text="Budget STI" />
                     <table:template>
                         <ObjectNumber
@@ -91,7 +113,7 @@
                 </table:Column>
 
                 <!-- Budget disponible Column -->
-                <table:Column width="10rem">
+                <table:Column width="8rem">
                     <Label text="Budget disponible" />
                     <table:template>
                         <ObjectNumber
@@ -121,7 +143,7 @@
                 <!-- Summary Columns for Parent Nodes -->
 
                 <!-- Regroupement Summary -->
-                <table:Column width="10rem">
+                <table:Column width="8rem">
                     <Label text="Total Regroupement" />
                     <table:template>
                         <ObjectNumber
@@ -134,7 +156,7 @@
                 </table:Column>
 
                 <!-- BusinessNo Summary -->
-                <table:Column width="10rem">
+                <table:Column width="8rem">
                     <Label text="Total Business" />
                     <table:template>
                         <ObjectNumber

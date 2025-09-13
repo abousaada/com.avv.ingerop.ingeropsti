@@ -122,7 +122,22 @@
             }
           },
           "sap.suite.ui.generic.template.ObjectPage.view.Details": {
-            "controllerName": "com.avv.ingerop.ingeropsti.ext.controller.extendOP"
+            "controllerName": "com.avv.ingerop.ingeropsti.ext.controller.extendOP",
+            "sap.ui.generic.app": {
+              "ZC_STI": {
+                "EntitySet": "ZC_STI",
+                "Header": {
+                  "Actions": {
+                    "btnValidate": {
+                      "id": "btnValidateButton",
+                      "text": "Valider",
+                      "press": "onValidateSTI",
+                      "requiresSelection": false
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "sap.ui.viewExtensions": {
@@ -185,7 +200,10 @@
             "entitySet": "ZC_STI",
             "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
             "component": {
-              "name": "sap.suite.ui.generic.template.ObjectPage"
+              "name": "sap.suite.ui.generic.template.ObjectPage",
+              "settings": {
+                "showRelatedApps": true
+              }
             }
           }
         }
