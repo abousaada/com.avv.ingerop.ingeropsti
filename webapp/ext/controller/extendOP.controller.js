@@ -53,7 +53,8 @@ sap.ui.define(
                         StartDate: line.StartDate,
                         EndDate: line.EndDate,
                         BudgetAlloue: line.BudgetAlloue,
-                        Currency: line.Currency
+                        Currency: line.Currency,
+                        Regroupement: line.Regroupement
                     }));
 
                     if (!status) {
@@ -143,6 +144,9 @@ sap.ui.define(
                 if (!oContext) {
                     return;
                 }
+
+                // Initialize status to 'DRAFT' in create mode
+                oModel.setProperty(sPath + "/status", 'En cours');
 
                 const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
 

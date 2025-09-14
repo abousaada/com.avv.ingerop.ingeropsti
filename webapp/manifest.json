@@ -228,7 +228,8 @@
               "settings": {
                 "showRelatedApps": true
               }
-            }
+            },
+            "pages": {}
           }
         }
       }
