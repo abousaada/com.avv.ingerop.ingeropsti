@@ -144,9 +144,11 @@ sap.ui.define(
                 if (!oContext) {
                     return;
                 }
-
-                // Initialize status to 'DRAFT' in create mode
-                //oModel.setProperty(sPath + "/status", 'En cours');
+                
+                const sStatus = oModel.getProperty(sPath + "/status");
+                if (sStatus === 'DRAFT') {
+                    oModel.setProperty(sPath + "/status", 'En cours');
+                }
 
                 const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
 
@@ -522,7 +524,7 @@ sap.ui.define(
                 return ids;
             },
 
-            
+
             async getMissions() {
                 function escapeODataKey(val) {
                     return String(val).replace(/'/g, "''"); // OData rule: double quotes inside keys

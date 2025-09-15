@@ -440,6 +440,8 @@
                 <Property Name="proprio_sti" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="stidescr" Type="Edm.String" MaxLength="50" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="business_p_mail" Type="Edm.String" MaxLength="50" sap:label="Description" sap:heading="" sap:quickinfo="Text Field"/>
+                <Property Name="BudgetAlloue" Type="Edm.Decimal" Precision="15" Scale="2"/>
+                <Property Name="TypeBudg" Type="Edm.String" MaxLength="8"/>
                 <NavigationProperty Name="to_BUDG" Relationship="ZSTI_SRV.assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" FromRole="FromRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" ToRole="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 <NavigationProperty Name="to_Missions" Relationship="ZSTI_SRV.assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" FromRole="FromRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" ToRole="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
             </EntityType>
@@ -461,7 +463,6 @@
                 <Property Name="BudgetAlloue" Type="Edm.Int64" sap:label=""/>
                 <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
                 <Property Name="Regroupement" Type="Edm.String" MaxLength="40" sap:label="Regroupement mission"/>
-                <Property Name="TypeBudg" Type="Edm.String" MaxLength="8"/>
                 <NavigationProperty Name="to_STI" Relationship="ZSTI_SRV.assoc_333E6DC35A0196A751DFF12F791D6481" FromRole="FromRole_assoc_333E6DC35A0196A751DFF12F791D6481" ToRole="ToRole_assoc_333E6DC35A0196A751DFF12F791D6481"/>
             </EntityType>
             <EntityType Name="ZC_STI_CEPC_BUKRSType" sap:content-version="1">
