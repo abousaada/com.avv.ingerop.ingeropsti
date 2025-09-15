@@ -222,6 +222,9 @@
             <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_EDate">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_currency">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_curr">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>

@@ -146,7 +146,7 @@ sap.ui.define(
                 }
 
                 // Initialize status to 'DRAFT' in create mode
-                oModel.setProperty(sPath + "/status", 'En cours');
+                //oModel.setProperty(sPath + "/status", 'En cours');
 
                 const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
 
@@ -522,44 +522,7 @@ sap.ui.define(
                 return ids;
             },
 
-            onGenerateId_old: function () {
-                return new Promise((resolve, reject) => {
-
-                    const oContext = this._getController().getView().getBindingContext();
-                    const sPath = oContext.getPath();
-                    var oModel = this.getView().getModel();
-
-                    var sBusinessUfo = oModel.getProperty(sPath + "/business_p_ufo");
-
-                    if (!sBusinessUfo) {
-                        sap.m.MessageBox.error("Business UFO field is empty");
-                        return;
-                    }
-
-                    var mParams = {
-                        IV_PROJECT_TYPE: "PO",
-                        IV_UFO: sBusinessUfo
-                    };
-
-                    oModel.callFunction("/ZGENERATE_IDS", {
-                        method: "POST",
-                        urlParameters: mParams,
-
-                        success: function (oData) {
-                            var sGeneratedId = oData.ZGENERATE_IDS.Id;
-                            oModel.setProperty(sPath + "/business_no_p", sGeneratedId);
-                            resolve(sGeneratedId);
-                        },
-                        error: function (oError) {
-                            sap.m.MessageBox.error("Error: " + oError.message);
-                            reject(oError);
-                        }
-
-                    });
-
-                });
-            },
-
+            
             async getMissions() {
                 function escapeODataKey(val) {
                     return String(val).replace(/'/g, "''"); // OData rule: double quotes inside keys

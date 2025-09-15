@@ -37,13 +37,16 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
         onAddBudgetLine: function (oEvent) {
             const oView = this.getView();
             const oContext = oView.getBindingContext();
+
             const sModel = oContext.getModel();
             const sPath = oContext.getPath();
 
             var business_no_p = sModel.getProperty(sPath + "/business_no_p");
             
+
             var business_sdate_e = sModel.getProperty(sPath + "/business_e_SDate");
             var business_edate_e = sModel.getProperty(sPath + "/business_e_EDate");
+            var business_e_currency  = sModel.getProperty(sPath + "/business_e_currency");
 
             var oBudgetModel = this.getView().getModel("budget");
             var aMissions = this.getView().getModel("missions").getProperty("/results");
@@ -82,7 +85,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
                 EndDate: business_edate_e,
                 business_no_p: business_no_p,
                 BudgetAlloue: '0',
-                Currency: 'EUR',
+                Currency: business_e_currency,
                 isNew: true 
             };
 

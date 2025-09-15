@@ -125,7 +125,7 @@
                             type="Number"
                             placeholder="0.00"
                         />
-                        <Text text="{viewModel>/business_e_curr}" />
+                        <Text text="{budget>Currency}" />
                         <Button
                             icon="sap-icon://delete"
                             type="Reject"
