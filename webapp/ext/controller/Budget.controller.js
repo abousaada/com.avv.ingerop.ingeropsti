@@ -54,9 +54,11 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             // Get default mission if available
             var sMission_e = "";
             var sRegroupement =  "";
+            var sMissionCode =  "";
             if (aMissions.length > 0) {
                 sMission_e = aMissions[0].MissionId;
                 sRegroupement = aMissions[0].Regroupement;
+                sMissionCode = aMissions[0].MissionCode;
             }
 
             var oModel = this.getView().getModel("budget");
@@ -81,6 +83,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
                 Mission_e: sMission_e,
                 Mission_p: newMissionP,
                 Regroupement: sRegroupement,
+                MissionCode: sMissionCode,
                 StartDate: business_sdate_e,
                 EndDate: business_edate_e,
                 business_no_p: business_no_p,
@@ -124,6 +127,8 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
                     // Update both Mission_e and Regroupement fields
                     oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Mission_e", sSelectedKey);
                     oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Regroupement", oSelectedMission.Regroupement);
+                    oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/MissionCode", oSelectedMission.MissionCode);
+
                 }
             }
         },

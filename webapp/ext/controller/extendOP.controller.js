@@ -54,6 +54,7 @@ sap.ui.define(
                         EndDate: line.EndDate,
                         BudgetAlloue: line.BudgetAlloue,
                         Currency: line.Currency,
+                        MissionCode: line.MissionCode,
                         Regroupement: line.Regroupement
                     }));
 

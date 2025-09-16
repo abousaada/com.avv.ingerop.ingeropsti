@@ -46,6 +46,9 @@
                     <Text text="Libellé" />
                 </Column>
                 <Column>
+                    <Text text="MissionCode" />
+                </Column>
+                <Column>
                     <Text text="Regroupement" />
                 </Column>
                 <Column>
@@ -93,6 +96,7 @@
                                 formatter: '.isLineEditable'
                             }"
                         />
+                        <Text text="{budget>MissionCode}" />
                         <Text text="{budget>Regroupement}" />
                         <DatePicker
                             value="{path: 'budget>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
