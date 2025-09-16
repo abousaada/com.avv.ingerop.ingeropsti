@@ -80,6 +80,8 @@ sap.ui.define(
                                 title: "Success",
                                 actions: [sap.m.MessageBox.Action.OK],
                                 onClose: function () {
+                                    this._recalculateMissionBudgets();
+                                    
                                     oView.getModel().refresh(true);
                                     const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
                                     oRouter.navTo("ListReport");
@@ -99,6 +101,7 @@ sap.ui.define(
                     console.error(error);
                     return Promise.reject(error);
                 }
+                
             },
 
 
