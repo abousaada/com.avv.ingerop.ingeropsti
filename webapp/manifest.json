@@ -226,7 +226,12 @@
             "component": {
               "name": "sap.suite.ui.generic.template.ObjectPage",
               "settings": {
-                "showRelatedApps": true
+                "showRelatedApps": true,
+                "relatedAppsSettings": {
+                  "0": {
+                    "semanticObject": "ZFGA"
+                  }
+                }
               }
             },
             "pages": {}
