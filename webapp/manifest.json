@@ -228,10 +228,10 @@
               "settings": {
                 "showRelatedApps": true,
                 "relatedAppsSettings": {
-                  "0": {
+                  "ZFGA": {
                     "semanticObject": "ZFGA"
                   },
-                  "1": {
+                  "ZEMX": {
                     "semanticObject": "ZEMX"
                   }
                 }
