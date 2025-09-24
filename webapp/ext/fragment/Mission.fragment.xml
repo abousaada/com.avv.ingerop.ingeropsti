@@ -86,6 +86,17 @@
                     </table:template>
                 </table:Column>
 
+                <!-- Status Column -->
+                <table:Column width="5rem">
+                    <Label text="Status" />
+                    <table:template>
+                        <Text
+                            text="{missions>statutmission}"
+                            visible="{= ${missions>type} === 'mission'}"
+                        />
+                    </table:template>
+                </table:Column>
+
                 <!-- Budget global (recette) Column -->
                 <table:Column width="8rem">
                     <Label text="Budget global" />

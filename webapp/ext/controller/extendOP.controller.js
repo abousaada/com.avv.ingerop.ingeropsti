@@ -55,7 +55,8 @@ sap.ui.define(
                         BudgetAlloue: line.BudgetAlloue,
                         Currency: line.Currency,
                         MissionCode: line.MissionCode,
-                        Regroupement: line.Regroupement
+                        Regroupement: line.Regroupement,
+                        statutmission: line.statutmission
                     }));
 
                     if (!status) {
@@ -82,7 +83,7 @@ sap.ui.define(
                                 actions: [sap.m.MessageBox.Action.OK],
                                 onClose: function () {
                                     this._recalculateMissionBudgets();
-                                    
+
                                     oView.getModel().refresh(true);
                                     const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
                                     oRouter.navTo("ListReport");
@@ -102,7 +103,7 @@ sap.ui.define(
                     console.error(error);
                     return Promise.reject(error);
                 }
-                
+
             },
 
 
@@ -148,7 +149,7 @@ sap.ui.define(
                 if (!oContext) {
                     return;
                 }
-                
+
                 const sStatus = oModel.getProperty(sPath + "/status");
                 if (sStatus === 'DRAFT') {
                     oModel.setProperty(sPath + "/status", 'En cours');
@@ -737,6 +738,12 @@ sap.ui.define(
                 const businessNoMap = new Map();
                 const regroupementMap = new Map();
 
+                const missionStatusMap = {
+                    "A": "Acquis",
+                    "N": "Non Acquis",
+                    "R": "Réclamé"
+                };
+
                 if (!missions) return treeData;
 
                 // First pass: Group by BusinessNo
@@ -780,6 +787,9 @@ sap.ui.define(
                         businessNoMap.get(businessNo).children.push(regroupementNode);
                     }
 
+                    const statusCode = mission.statutmission;
+                    const statusDescription = missionStatusMap[statusCode] || statusCode;
+
                     // Add mission as child of regroupement
                     const missionNode = {
                         name: mission.MissionId,
@@ -794,7 +804,8 @@ sap.ui.define(
                         SubcontractedBudgetPercentage: mission.SubcontractedBudgetPercentage,
                         BusinessNo: mission.BusinessNo,
                         Regroupement: mission.Regroupement,
-                        description: mission.description
+                        description: mission.description,
+                        statutmission: statusDescription
                     };
 
                     // Add mission values to regroupement totals

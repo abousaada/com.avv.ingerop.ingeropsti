@@ -128,6 +128,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
                     oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Mission_e", sSelectedKey);
                     oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Regroupement", oSelectedMission.Regroupement);
                     oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/MissionCode", oSelectedMission.MissionCode);
+                    oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/statutmission", oSelectedMission.statutmission);
 
                 }
             }
