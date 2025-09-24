@@ -54,7 +54,7 @@
                 </table:Column>
 
                 <!-- Libellé Column -->
-                <table:Column width="7rem">
+                <table:Column width="5rem">
                     <Label text="Mission" />
                     <table:template>
                         <Text

@@ -56,7 +56,7 @@ sap.ui.define(
                         Currency: line.Currency,
                         MissionCode: line.MissionCode,
                         Regroupement: line.Regroupement,
-                        statutmission: line.statutmission
+                        //statutmission: line.statutmission || 'A' 
                     }));
 
                     if (!status) {

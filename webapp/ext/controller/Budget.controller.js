@@ -55,10 +55,13 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             var sMission_e = "";
             var sRegroupement =  "";
             var sMissionCode =  "";
+            var sStatutmission =  "";
+
             if (aMissions.length > 0) {
                 sMission_e = aMissions[0].MissionId;
                 sRegroupement = aMissions[0].Regroupement;
                 sMissionCode = aMissions[0].MissionCode;
+                sStatutmission = aMissions[0].statutmission;
             }
 
             var oModel = this.getView().getModel("budget");
@@ -83,6 +86,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
                 Mission_e: sMission_e,
                 Mission_p: newMissionP,
                 Regroupement: sRegroupement,
+                astatutmission: sStatutmission,
                 MissionCode: sMissionCode,
                 StartDate: business_sdate_e,
                 EndDate: business_edate_e,
