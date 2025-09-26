@@ -407,7 +407,7 @@
                 <Property Name="DailyAvgRate" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Character Field with Length 10" sap:heading=""/>
                 <Property Name="LastUpdate" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Char20" sap:heading="" sap:quickinfo="Char 20"/>
                 <Property Name="GrpConvention" Type="Edm.String" MaxLength="50" sap:label="Description" sap:heading="" sap:quickinfo="Text Field"/>
-                <Property Name="Notes" Type="Edm.String" MaxLength="1333" sap:label=""/>
+                <Property Name="IsAffaireMere" Type="Edm.Boolean" sap:label="Active" sap:heading="" sap:quickinfo="Boolean"/>
                 <Property Name="DataSource" Type="Edm.String" MaxLength="4"/>
             </EntityType>
             <EntityType Name="ZC_STIType" sap:content-version="1">
@@ -441,7 +441,10 @@
                 <Property Name="stidescr" Type="Edm.String" MaxLength="50" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="business_p_mail" Type="Edm.String" MaxLength="50" sap:label="Description" sap:heading="" sap:quickinfo="Text Field"/>
                 <Property Name="BudgetAlloue" Type="Edm.Decimal" Precision="15" Scale="2"/>
+                <Property Name="Cumul" Type="Edm.Decimal" Precision="24" Scale="3" sap:label="Amount" sap:quickinfo="Amount in document currency"/>
+                <Property Name="glaccountPxSTI" Type="Edm.String" MaxLength="255"/>
                 <Property Name="TypeBudg" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:label="char8" sap:quickinfo="Character field, 8 characters long"/>
+                <Property Name="p_period" Type="Edm.String" MaxLength="2"/>
                 <NavigationProperty Name="to_BUDG" Relationship="ZSTI_SRV.assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" FromRole="FromRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" ToRole="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 <NavigationProperty Name="to_Missions" Relationship="ZSTI_SRV.assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" FromRole="FromRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" ToRole="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
             </EntityType>
@@ -450,12 +453,11 @@
                     <PropertyRef Name="BUSINESS_NO_E"/>
                     <PropertyRef Name="IdFormulaire"/>
                     <PropertyRef Name="Mission_e"/>
-                    <PropertyRef Name="Mission_p"/>
                 </Key>
                 <Property Name="BUSINESS_NO_E" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
                 <Property Name="IdFormulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="Mission_e" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
-                <Property Name="Mission_p" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
+                <Property Name="Mission_p" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="business_no_p" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
                 <Property Name="StartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Basic start" sap:quickinfo="WBS element: Basic start date"/>
                 <Property Name="EndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Basic finish date" sap:quickinfo="WBS element: Basic finish date"/>
@@ -517,6 +519,9 @@
             <ComplexType Name="ZGeneratedIdType">
                 <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="50" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </ComplexType>
+            <ComplexType Name="ZGEN_ID">
+                <Property Name="ZGenId" Type="Edm.Int16" Nullable="false" sap:label="Signed INT2 / int16" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </ComplexType>
             <Association Name="assoc_333E6DC35A0196A751DFF12F791D6481" sap:content-version="1">
                 <End Type="ZSTI_SRV.ZC_STI_BUDGType" Multiplicity="1" Role="FromRole_assoc_333E6DC35A0196A751DFF12F791D6481"/>
                 <End Type="ZSTI_SRV.ZC_STIType" Multiplicity="1" Role="ToRole_assoc_333E6DC35A0196A751DFF12F791D6481"/>
@@ -566,6 +571,7 @@
                     <Parameter Name="IV_UFO" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
+                <FunctionImport Name="ZGET_ID" ReturnType="ZSTI_SRV.ZGEN_ID" m:HttpMethod="POST"/>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
             <Annotations Target="ZSTI_SRV.I_CompanyCodeType/CreditControlArea" xmlns="http://docs.oasis-open.org/odata/ns/edm">
@@ -1031,7 +1037,7 @@
                                     <PropertyValue Property="ValueListProperty" String="GrpConvention"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="Notes"/>
+                                    <PropertyValue Property="ValueListProperty" String="IsAffaireMere"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
                                     <PropertyValue Property="ValueListProperty" String="DataSource"/>

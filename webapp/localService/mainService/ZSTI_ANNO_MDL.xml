@@ -228,6 +228,9 @@
             <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_curr">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/glaccountPxSTI">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType">
                 <Annotation Term="UI.Facets">
                     <Collection>

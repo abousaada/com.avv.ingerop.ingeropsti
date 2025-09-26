@@ -35,6 +35,8 @@ sap.ui.define(
 
                     const oPayload = oContext.getObject();
 
+                    //const nextId = await this._callZGET_IDAction();
+
                     var business_no_p = oModel.getProperty(sPath + "/business_no_p");
                     if (!business_no_p) {
                         await this.onGenerateId();
@@ -119,7 +121,18 @@ sap.ui.define(
                             this._onEnterKeyPressed(oEvent);
                             this._recalculateMissionBudgets();
                         }
+
                     }.bind(this));
+
+                    const aBudgetInputs = oView.findAggregatedObjects(true, (oCtrl) => {
+                        return oCtrl.isA("sap.m.Input") &&
+                            oCtrl.getParent() &&
+                            oCtrl.getParent().getParent() &&
+                            oCtrl.getParent().getParent().isA("sap.m.ColumnListItem") &&
+                            (oCtrl.getTooltip() === "Budget sous-traité (recette)" ||
+                                oCtrl.getValue() && oCtrl.getValue().toString().includes("BudgetAlloue"));
+                    });
+
                 }.bind(this));
             },
 
@@ -158,7 +171,7 @@ sap.ui.define(
                 const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
 
                 if (bIsCreate) {
-                    const sNewFormulaireId = this._calculateFormulaireId();
+                    const sNewFormulaireId = await this._calculateFormulaireId();
 
                     oModel.setProperty(sPath + "/id_formulaire", sNewFormulaireId);
 
@@ -331,8 +344,13 @@ sap.ui.define(
                 aSmartFields.forEach((oSmartField) => oSmartField.setEditable(bEditable));
             },
 
-            _calculateFormulaireId: function () {
-                try {
+            _calculateFormulaireId: async function () {
+
+                var nextId = await this._callZGET_IDAction();
+
+                return nextId.toString().padStart(10, '0');
+
+                /*try {
                     const oModel = this.getView().getModel();
                     //const oData = oModel.getData();
                     const oData = oModel.getProperty("/");
@@ -357,7 +375,7 @@ sap.ui.define(
                     console.error("Error calculating formulaire ID:", error);
                     // Fallback to random ID but ensure 10 characters
                     return Math.random().toString(36).substr(2, 10);
-                }
+                }*/
             },
 
             _extractAllFormulaireIds: function (data, ids = []) {
@@ -473,7 +491,8 @@ sap.ui.define(
 
                     if (existingIds.length === 0) {
                         // If no existing IDs, start with -000
-                        return baseId + "-000";
+                        //return baseId + "-000";
+                        return baseId + "-###";
                     }
 
                     // Filter IDs that match the base pattern (before the last 3 digits)
@@ -484,7 +503,8 @@ sap.ui.define(
 
                     if (matchingIds.length === 0) {
                         // If no matching IDs, start with -000
-                        return baseId + "-000";
+                        //return baseId + "-000";
+                        return baseId + "-###";
                     }
 
                     // Extract and parse the last 3 digits (after the last hyphen)
@@ -500,16 +520,19 @@ sap.ui.define(
                     if (maxId >= 999) {
                         // Handle overflow
                         sap.m.MessageBox.warning("Maximum sequence reached (999) for this business ID");
-                        return baseId + "-999";
+                        //return baseId + "-999";
+                        return baseId + "-###";
+
                     }
 
                     const nextId = maxId + 1;
-                    return baseId + "-" + nextId.toString().padStart(3, '0');
+                    return baseId + "-###" //+ nextId.toString().padStart(3, '0');
 
                 } catch (error) {
                     console.error("Error calculating business_no_p ID:", error);
                     // Fallback to base ID with -000
-                    return baseId + "-000";
+                    //return baseId + "-000";
+                    return baseId + "-###";
                 }
             },
 
@@ -884,8 +907,73 @@ sap.ui.define(
                 }
             },
 
-
             _recalculateMissionBudgets: function () {
+                var oView = this.getView();
+                var budgetData = oView.getModel("budget").getProperty("/results");
+                var missionsData = oView.getModel("missions").getProperty("/results");
+
+                // Collect missions that exceed their available budget
+                var overBudgetMissions = [];
+
+                // Temporary object to hold updated values
+                var updatedMissions = [];
+
+                missionsData.forEach(mission => {
+                    const missionId = mission.MissionId;
+
+                    // Sum of BudgetAlloue for this mission
+                    const budgetInSTI = budgetData
+                        .filter(b => b.Mission_e === missionId)
+                        .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
+
+                    const available = parseFloat(mission.GlobalBudget) - budgetInSTI;
+
+                    if (available < 0) {
+                        overBudgetMissions.push({
+                            MissionId: mission.MissionId,
+                            description: mission.description,
+                            available: available.toFixed(2),
+                            budgetInSTI: budgetInSTI.toFixed(2)
+                        });
+                    } else {
+                        // Only store missions that are valid
+                        updatedMissions.push({
+                            ...mission,
+                            BudgetInSTI: budgetInSTI.toFixed(2),
+                            AvailableBudget: available.toFixed(2),
+                            SubcontractedBudgetPercentage: mission.GlobalBudget === "0.00" ?
+                                "0%" : ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%"
+                        });
+                    }
+                });
+
+                if (overBudgetMissions.length > 0) {
+                    // Build a single message listing all over-budget missions
+                    var message = overBudgetMissions.map(m =>
+                        `Mission '${m.description}' (${m.MissionId}) dépasse le budget disponible.\n` +
+                        `Budget alloué: ${m.budgetInSTI}, Disponible: ${m.available}`
+                    ).join("\n\n");
+
+                    sap.m.MessageBox.warning(message, {
+                        title: "Attention",
+                        actions: [sap.m.MessageBox.Action.OK]
+                    });
+
+                    // Stop updating totals because some missions are over budget
+                    return;
+                }
+
+                // Update only if all missions are within budget
+                oView.getModel("missions").setProperty("/results", updatedMissions);
+
+                // Refresh missions model
+                oView.getModel("missions").refresh(true);
+
+                // Rebuild tree totals (regroupement / business)
+                this.prepareMissionsTreeData();
+            },
+
+            _recalculateMissionBudgets1: function () {
                 var budgetData = this.getView().getModel("budget").getProperty("/results");
                 var missionsData = this.getView().getModel("missions").getProperty("/results");
 
@@ -905,6 +993,17 @@ sap.ui.define(
                     } else {
                         mission.SubcontractedBudgetPercentage = ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
                     }
+
+                    if (parseFloat(mission.AvailableBudget) < 0) {
+                        sap.m.MessageBox.warning(
+                            "Le budget sous-traité dépasse le budget disponible pour la mission '" +
+                            mission.description + "' (" + mission.MissionId + ").",
+                            {
+                                title: "Attention",
+                                actions: [sap.m.MessageBox.Action.OK]
+                            }
+                        );
+                    }
                 });
 
                 // Refresh missions model
@@ -916,9 +1015,45 @@ sap.ui.define(
 
             onValidateSTI: function (oEvent) {
                 this.beforeSaveExtension('INAPPROVAL');
-            }
+            },
 
             //});
+
+
+            _callZGET_IDAction: function () {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const oModel = this.getView().getModel();
+
+                        // Prepare the parameter object
+                        const oParams = {
+                            // Add your parameters here based on the action definition
+                            // Example:
+                            // iv_ufo: parameters.ufo,
+                            // iv_business_no_e: parameters.businessNoE
+                        };
+
+                        // Call the action with parameters
+                        oModel.callFunction("/ZGET_ID", {
+                            method: "POST", // Usually POST for actions with parameters
+                            //urlParameters: oParams,
+                            success: (oData) => {
+                                console.log("ZGET_ID action successful:", oData);
+                                resolve(oData.ZGET_ID.ZGenId);
+                            },
+                            error: (oError) => {
+                                console.error("Error calling ZGET_ID action:", oError);
+                                reject(oError);
+                            }
+                        });
+                    } catch (error) {
+                        console.error("Unexpected error in _callZGET_IDAction:", error);
+                        reject(error);
+                    }
+                });
+            },
+
+
         }
     }
 );
