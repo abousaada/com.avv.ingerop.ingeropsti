@@ -34,7 +34,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
         //
         //	}
 
-        onAddBudgetLine: function (oEvent) {
+        onAddBudgetLine: async function (oEvent) {
             const oView = this.getView();
             const oContext = oView.getBindingContext();
 
@@ -42,7 +42,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             const sPath = oContext.getPath();
 
             var business_no_p = sModel.getProperty(sPath + "/business_no_p");
-            
+            var IdFormulaire = sModel.getProperty(sPath + "/IdFormulaire");
 
             var business_sdate_e = sModel.getProperty(sPath + "/business_e_SDate");
             var business_edate_e = sModel.getProperty(sPath + "/business_e_EDate");
@@ -82,6 +82,8 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
             var formattedSuffix = newSuffix.toString().padStart(2, '0');
             var newMissionP = business_no_p + formattedSuffix;
 
+            var nextIdM = await this._callZGET_IDAction('m',IdFormulaire);
+
             var oNewLine = {
                 Mission_e: sMission_e,
                 Mission_p: newMissionP,
@@ -93,6 +95,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'], function (Controller) {
                 business_no_p: business_no_p,
                 BudgetAlloue: '0',
                 Currency: business_e_currency,
+                nextIdM: nextIdM,
                 isNew: true 
             };
 

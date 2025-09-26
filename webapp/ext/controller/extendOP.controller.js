@@ -58,6 +58,7 @@ sap.ui.define(
                         Currency: line.Currency,
                         MissionCode: line.MissionCode,
                         Regroupement: line.Regroupement,
+                        Mission_p_sec: line.nextIdM,
                         //statutmission: line.statutmission || 'A' 
                     }));
 
@@ -346,7 +347,7 @@ sap.ui.define(
 
             _calculateFormulaireId: async function () {
 
-                var nextId = await this._callZGET_IDAction();
+                var nextId = await this._callZGET_IDAction('f','');
 
                 return nextId.toString().padStart(10, '0');
 
@@ -1020,17 +1021,15 @@ sap.ui.define(
             //});
 
 
-            _callZGET_IDAction: function () {
+            _callZGET_IDAction: function (type, idFormulaire) {
                 return new Promise((resolve, reject) => {
                     try {
                         const oModel = this.getView().getModel();
 
                         // Prepare the parameter object
                         const oParams = {
-                            // Add your parameters here based on the action definition
-                            // Example:
-                            // iv_ufo: parameters.ufo,
-                            // iv_business_no_e: parameters.businessNoE
+                            iv_type: type,
+                            iv_IdFormulaire: idFormulaire
                         };
 
                         // Call the action with parameters
