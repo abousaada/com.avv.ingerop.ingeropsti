@@ -29,7 +29,7 @@ sap.ui.define(
 
                 onBeforeRebindTableExtension: function (oEvent) {
 
-                }
+                },
 
             },
         });

@@ -16,7 +16,6 @@ sap.ui.define(
 
             onInit: async function () {
                 this._getExtensionAPI().attachPageDataLoaded(this._onObjectExtMatched.bind(this));
-
                 this._setupEnterKeyHandlers();
             },
 
