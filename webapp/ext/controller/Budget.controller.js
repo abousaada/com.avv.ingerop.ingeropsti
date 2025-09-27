@@ -105,7 +105,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                     business_no_p: business_no_p,
                     BudgetAlloue: '0',
                     Currency: business_e_currency,
-                    nextIdM: nextIdM,
+                    Mission_p_sec: nextIdM,
                     isNew: true
                 };
 
@@ -113,18 +113,6 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                 oModel.setProperty("/results", aData);
             },
 
-            /* onMissionChange: function (oEvent) {
-                var oSelect = oEvent.getSource();
-                var oRow = oSelect.getParent();
-                var oBindingContext = oRow.getBindingContext("budget");
-                var oSelectedItem = oEvent.getParameter("selectedItem");
-                var sSelectedKey = oSelectedItem ? oSelectedItem.getKey() : null;
-    
-                if (oBindingContext) {
-                    oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Mission_e", sSelectedKey);
-                    
-                }
-            },*/
 
             onMissionChange: function (oEvent) {
                 var oSelect = oEvent.getSource();

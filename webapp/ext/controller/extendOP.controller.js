@@ -935,8 +935,7 @@ sap.ui.define(
 
                     // Filter budget lines: only include NEW ones (not yet saved)
                     const newBudgetLines = budgetData.filter(b => {
-                        return b.Mission_e === missionId &&
-                            (!b.Mission_p_sec || b.Mission_p_sec === "" || b.Mission_p_sec === "###");
+                        return b.Mission_e === missionId && b.isNew;
                     });
 
                     // Sum of ONLY NEW manually added BudgetAlloue for this mission

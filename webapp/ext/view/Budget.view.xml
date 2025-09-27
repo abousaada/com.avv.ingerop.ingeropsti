@@ -134,6 +134,10 @@
                             icon="sap-icon://delete"
                             type="Reject"
                             press="onDeleteBudgetLine"
+                            visible="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                         />
                     </cells>
                 </ColumnListItem>
