@@ -347,7 +347,7 @@ sap.ui.define(
 
             _calculateFormulaireId: async function () {
 
-                var nextId = await this._callZGET_IDAction('f','');
+                var nextId = await this._callZGET_IDAction('f', '');
 
                 return nextId.toString().padStart(10, '0');
 
@@ -439,7 +439,7 @@ sap.ui.define(
                         var sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
 
                         if (!sBusinessUfo) {
-                            sap.m.MessageBox.error("Business UFO field is empty");
+                            sap.m.MessageBox.error("Le champ Business UFO est vide");
                             return;
                         }
 
@@ -913,6 +913,12 @@ sap.ui.define(
                 var budgetData = oView.getModel("budget").getProperty("/results");
                 var missionsData = oView.getModel("missions").getProperty("/results");
 
+                // Check if budget table is empty
+                if (!budgetData || budgetData.length === 0) {
+                    console.log("Budget table is empty - preserving existing mission values");
+                    return; // Exit early without recalculating
+                }
+
                 // Collect missions that exceed their available budget
                 var overBudgetMissions = [];
 
@@ -1028,14 +1034,14 @@ sap.ui.define(
 
                         // Prepare the parameter object
                         const oParams = {
-                            iv_type: type,
+                            IV_TYPE: type,
                             iv_IdFormulaire: idFormulaire
                         };
 
                         // Call the action with parameters
                         oModel.callFunction("/ZGET_ID", {
                             method: "POST", // Usually POST for actions with parameters
-                            //urlParameters: oParams,
+                            urlParameters: oParams,
                             success: (oData) => {
                                 console.log("ZGET_ID action successful:", oData);
                                 resolve(oData.ZGET_ID.ZGenId);
