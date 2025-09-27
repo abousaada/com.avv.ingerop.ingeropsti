@@ -57,7 +57,7 @@ sap.ui.define(
                         Currency: line.Currency,
                         MissionCode: line.MissionCode,
                         Regroupement: line.Regroupement,
-                        Mission_p_sec: line.nextIdM,
+                        Mission_p_sec: line.Mission_p_sec,
                         //statutmission: line.statutmission || 'A' 
                     }));
 
