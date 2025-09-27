@@ -147,22 +147,6 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                 return bEditable && Array.isArray(aMissions) && aMissions.length > 0;
             },
 
-            onDeleteBudgetLine: function (oEvent) {
-                var oButton = oEvent.getSource();
-                var oContext = oButton.getBindingContext("budget");
-
-                if (!oContext) return;
-
-                var sPath = oContext.getPath();
-                var oModel = this.getView().getModel("budget");
-                var aData = oModel.getProperty("/results");
-                var iIndex = parseInt(sPath.split("/").pop());
-
-                aData.splice(iIndex, 1);
-                oModel.setProperty("/results", aData);
-            },
-
-
             onAfterRendering: function () {
                 var oTable = this.byId("budgetTable");
                 var aItems = oTable.getItems();
@@ -202,6 +186,10 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                 aData.splice(iIndex, 1);
 
                 oModel.setProperty("/results", aData);
+
+                sap.ui.getCore().getEventBus().publish("budget", "budgetLineDeleted");
+
+
             },
 
             _callZGET_IDAction: function (type, idFormulaire) {
