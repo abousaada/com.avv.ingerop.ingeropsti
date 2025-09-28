@@ -907,7 +907,8 @@ sap.ui.define(
                         BusinessNo: mission.BusinessNo,
                         Regroupement: mission.Regroupement,
                         description: mission.description,
-                        statutmission: statusDescription
+                        statutmission: statusDescription,
+                        OriginalBudgetInSTI: mission.OriginalBudgetInSTI
                     };
 
                     // Add mission values to regroupement totals
@@ -1006,7 +1007,7 @@ sap.ui.define(
 
                     // Get the ORIGINAL database value (not the calculated one)
                     //const originalDatabaseBudget = parseFloat(mission.OriginalBudgetInSTI || mission.BudgetInSTI || 0);
-                    const originalDatabaseBudget = parseFloat(mission.OriginalBudgetInSTI|| 0);
+                    const originalDatabaseBudget = parseFloat(mission.OriginalBudgetInSTI || 0);
 
                     // If we haven't stored the original value yet, store it now
                     /*if (!mission.OriginalBudgetInSTI) {

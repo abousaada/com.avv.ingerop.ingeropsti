@@ -119,6 +119,8 @@
                             unit="EUR"
                             visible="{= ${missions>type} === 'mission'}"
                             state="None"
+                            tooltip="{= 'Original: ' + ${missions>OriginalBudgetInSTI} + ' EUR | Draft: ' + ${missions>BudgetInSTI} + ' EUR'}"
+
                         />
                     </table:template>
                 </table:Column>
