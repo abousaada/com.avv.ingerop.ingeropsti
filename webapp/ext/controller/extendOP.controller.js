@@ -218,8 +218,8 @@ sap.ui.define(
                     mission.OriginalBudgetInSTI = originalDatabaseBudgetInSTI;
 
                     // Sum of BudgetAlloue for this mission from CURRENT budget table
-                    const currentTableBudget = budget
-                        .filter(b => b.Mission_e === missionId)
+                    const currentTableBudget = budget //&& b.isNew
+                        .filter(b => b.Mission_e === missionId && (b.AFFAIRE_TYPE === "" || !b.AFFAIRE_TYPE))
                         .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
 
                     // TOTAL BudgetInSTI = Database value + Current table values

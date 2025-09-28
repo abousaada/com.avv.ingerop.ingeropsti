@@ -140,7 +140,7 @@
                       "text": "Valider",
                       "press": "onValidateSTI",
                       "requiresSelection": false
-                    }                    
+                    }
                   }
                 }
               }
