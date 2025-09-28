@@ -211,7 +211,7 @@
               }
             },
             "tableSettings": {
-              "type": "ResponsiveTable",
+              "type": "GridTable",
               "multiSelect": false
             },
             "dataLoadSettings": {

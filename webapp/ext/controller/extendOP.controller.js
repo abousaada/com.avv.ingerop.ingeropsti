@@ -87,11 +87,19 @@ sap.ui.define(
                                 title: "Success",
                                 actions: [sap.m.MessageBox.Action.OK],
                                 onClose: function () {
-                                    this._recalculateMissionBudgets();
+                                    //this._recalculateMissionBudgets();
 
                                     oView.getModel().refresh(true);
-                                    const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
-                                    oRouter.navTo("ListReport");
+                                    //const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                                    //oRouter.navTo("ListReport");
+
+                                    this._refreshAllData().then(() => {
+                                        // Only navigate away if needed
+                                        //if (status !== 'DRAFT') {
+                                            const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                                            oRouter.navTo("ListReport");
+                                        //}
+                                    });
                                 }
                             });
 
@@ -1117,7 +1125,36 @@ sap.ui.define(
                     }
                 });
             },
+            _refreshAllData: async function () {
+                try {
+                    const oView = this.getView();
 
+                    // Refresh the main model
+                    if (oView.getBindingContext()) {
+                        oView.getBindingContext().refresh();
+                    }
+
+                    // Refresh budget data
+                    var budget = await this.getBudget();
+                    oView.getModel("budget").setData({ results: budget });
+
+                    // Refresh missions data
+                    var missions = await this.getMissions();
+                    oView.getModel("missions").setData({ results: missions });
+
+                    // Recalculate budgets and refresh tree
+                    this._recalculateMissionBudgets();
+                    this.prepareMissionsTreeData();
+
+                    // Force UI refresh
+                    oView.getModel().refresh(true);
+
+                    sap.m.MessageToast.show("Data refreshed successfully");
+
+                } catch (error) {
+                    console.error("Error refreshing data:", error);
+                }
+            },
 
         }
     }

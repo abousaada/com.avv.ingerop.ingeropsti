@@ -1,0 +1,41 @@
+{
+    "fileName": "id_1759022181564_0_propertyChange",
+    "fileType": "change",
+    "changeType": "propertyChange",
+    "moduleName": "",
+    "reference": "com.avv.ingerop.ingeropsti",
+    "packageName": "",
+    "content": {
+        "property": "growingThreshold",
+        "newValue": 5
+    },
+    "selector": {
+        "id": "com.avv.ingerop.ingeropsti::sap.suite.ui.generic.template.ListReport.view.ListReport::ZC_STI--responsiveTable",
+        "idIsLocal": false,
+        "type": "sap.m.Table"
+    },
+    "layer": "CUSTOMER_BASE",
+    "texts": {},
+    "namespace": "apps/com.avv.ingerop.ingeropsti/changes/",
+    "projectId": "",
+    "creation": 1759022181564,
+    "originalLanguage": "",
+    "support": {
+        "generator": "changeUtils: SAPFioriTools",
+        "service": "",
+        "user": "",
+        "sapui5Version": "1.120.14",
+        "sourceChangeFileName": "",
+        "compositeCommand": ""
+    },
+    "oDataInformation": {},
+    "dependentSelector": {},
+    "validAppVersions": {
+        "from": "0.0.1",
+        "to": "0.0.1",
+        "creation": "0.0.1"
+    },
+    "jsOnly": false,
+    "variantReference": "",
+    "appDescriptorChange": false
+}
