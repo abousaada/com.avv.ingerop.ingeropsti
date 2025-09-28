@@ -436,7 +436,8 @@
                 <Property Name="business_p_cdp" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="" sap:value-list="standard"/>
                 <Property Name="business_p_bm" Type="Edm.String" MaxLength="25" sap:label=""/>
                 <Property Name="business_p_mis" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
-                <Property Name="business_p_projm" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="No. of Person Resp." sap:heading="" sap:quickinfo="Number of the Responsible Person (Project Manager)" sap:value-list="standard"/>
+                <Property Name="business_p_projm" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:text="business_p_projm_t" sap:label="No. of Person Resp." sap:heading="" sap:quickinfo="Number of the Responsible Person (Project Manager)" sap:value-list="standard"/>
+                <Property Name="business_p_projm_t" Type="Edm.String" MaxLength="25" sap:label="Name of Person Resp." sap:heading="" sap:quickinfo="Name of responsible person (Project manager)"/>
                 <Property Name="proprio_sti" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="stidescr" Type="Edm.String" MaxLength="50" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="business_p_mail" Type="Edm.String" MaxLength="50" sap:label="Description" sap:heading="" sap:quickinfo="Text Field"/>
