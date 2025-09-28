@@ -1174,14 +1174,14 @@ sap.ui.define(
                         }
 
                     }).catch(error => {
-                        console.error("Error refreshing secondary data:", error);
-                        sap.m.MessageToast.show("Error refreshing some data");
+                        console.error("Erreur lors du rafraîchissement des données secondaires :", error);
+                        sap.m.MessageToast.show("Erreur lors du rafraîchissement de certaines données");
                     }).finally(() => {
                         oView.setBusy(false);
                     });
 
                 } catch (error) {
-                    console.error("Error in _refreshScreenData:", error);
+                    console.error("Erreur dans _refreshScreenData :", error);
                     oView.setBusy(false);
                 }
             },
