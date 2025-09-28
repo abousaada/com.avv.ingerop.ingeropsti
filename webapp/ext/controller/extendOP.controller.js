@@ -1085,6 +1085,10 @@ sap.ui.define(
                 this.beforeSaveExtension('INAPPROVAL');
             },
 
+            onApproveSTI: function (oEvent) {
+                this.beforeSaveExtension('APPROVE');
+            },
+
             _callZGET_IDAction: function (type, idFormulaire) {
                 return new Promise((resolve, reject) => {
                     try {

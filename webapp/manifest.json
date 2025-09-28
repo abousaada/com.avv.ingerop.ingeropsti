@@ -128,12 +128,19 @@
                 "EntitySet": "ZC_STI",
                 "Header": {
                   "Actions": {
-                    "btnValidate": {
+                    "btnApprove": {
                       "id": "btnValidateButton",
+                      "text": "Approuver",
+                      "press": "onApproveSTI",
+                      "requiresSelection": false,
+                      "tooltip": "Approuver la demande STI"
+                    },
+                    "btnValidate": {
+                      "id": "btnApproveButton",
                       "text": "Valider",
                       "press": "onValidateSTI",
                       "requiresSelection": false
-                    }
+                    }                    
                   }
                 }
               }
