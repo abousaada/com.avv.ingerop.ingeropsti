@@ -1080,7 +1080,7 @@ sap.ui.define(
                 this.prepareMissionsTreeData();
             },
 
-            
+
             onValidateSTI: function (oEvent) {
                 this.beforeSaveExtension('INAPPROVAL');
             },
@@ -1160,9 +1160,7 @@ sap.ui.define(
                             oView.getModel("missions").setData({ results: missions });
                         }
 
-                        // Recalculate budgets and refresh tree
-                        this._recalculateMissionBudgets();
-                        this.prepareMissionsTreeData();
+
 
                         sap.m.MessageToast.show("Data refreshed successfully");
 
@@ -1171,6 +1169,10 @@ sap.ui.define(
                             const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
                             oRouter.navTo("ListReport");
                         }
+
+                        // Recalculate budgets and refresh tree
+                        //this._recalculateMissionBudgets();
+                        this.prepareMissionsTreeData();
 
                     }).catch(error => {
                         console.error("Erreur lors du rafraîchissement des données secondaires :", error);
