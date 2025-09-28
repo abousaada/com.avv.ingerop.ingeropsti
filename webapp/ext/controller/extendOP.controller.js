@@ -196,11 +196,48 @@ sap.ui.define(
 
                 this.getView().getModel("viewModel").setData(oEntityData);
 
-                var missions = await this.getMissions();
+                /*var missions = await this.getMissions();
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                 this.getView().setModel(oMissionsModel, "missions");
 
                 var budget = await this.getBudget();
+                var oBudgetModel = new sap.ui.model.json.JSONModel({ results: budget });
+                this.getView().setModel(oBudgetModel, "budget");*/
+
+                var missions = await this.getMissions();
+                var budget = await this.getBudget();
+
+                // --- Initial calculation to display the values immediately ---
+                missions.forEach(mission => {
+                    const missionId = mission.MissionId;
+
+                    // Get the ORIGINAL database BudgetInSTI value for this mission
+                    const originalDatabaseBudgetInSTI = parseFloat(mission.BudgetInSTI || 0);
+
+                    // Store the original database value for future calculations
+                    mission.OriginalBudgetInSTI = originalDatabaseBudgetInSTI;
+
+                    // Sum of BudgetAlloue for this mission from CURRENT budget table
+                    const currentTableBudget = budget
+                        .filter(b => b.Mission_e === missionId)
+                        .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
+
+                    // TOTAL BudgetInSTI = Database value + Current table values
+                    const totalBudgetInSTI = originalDatabaseBudgetInSTI + currentTableBudget;
+
+                    mission.BudgetInSTI = totalBudgetInSTI.toFixed(2);
+                    mission.AvailableBudget = (mission.GlobalBudget - totalBudgetInSTI).toFixed(2);
+
+                    if (mission.GlobalBudget === "0.00") {
+                        mission.SubcontractedBudgetPercentage = "0%";
+                    } else {
+                        mission.SubcontractedBudgetPercentage = ((totalBudgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
+                    }
+                });
+
+                var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
+                this.getView().setModel(oMissionsModel, "missions");
+
                 var oBudgetModel = new sap.ui.model.json.JSONModel({ results: budget });
                 this.getView().setModel(oBudgetModel, "budget");
 
@@ -213,8 +250,9 @@ sap.ui.define(
                 });
                 this.getView().setModel(oCurrencyModel, "currencies");
 
+
                 // --- Add dynamic BudgetInSTI calculation ---
-                this.getView().getModel("budget").attachPropertyChange(() => {
+                /*this.getView().getModel("budget").attachPropertyChange(() => {
                     var budgetData = this.getView().getModel("budget").getProperty("/results");
                     var missionsData = this.getView().getModel("missions").getProperty("/results");
 
@@ -244,10 +282,43 @@ sap.ui.define(
 
                     this.getView().getModel("missions").refresh();
 
-                });
+                });*/
+
+                // --- Add dynamic BudgetInSTI calculation ---
+                /*this.getView().getModel("budget").attachPropertyChange(() => {
+                    var budgetData = this.getView().getModel("budget").getProperty("/results");
+                    var missionsData = this.getView().getModel("missions").getProperty("/results");
+
+                    missionsData.forEach(mission => {
+                        const missionId = mission.MissionId;
+
+                        // Get the ORIGINAL database value (stored during initialization)
+                        const originalDatabaseBudgetInSTI = parseFloat(mission.OriginalBudgetInSTI || 0);
+
+                        // Sum of BudgetAlloue for this mission from CURRENT budget table
+                        const currentTableBudget = budgetData
+                            .filter(b => b.Mission_e === missionId)
+                            .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
+
+                        // TOTAL BudgetInSTI = Database value + Current table values
+                        const totalBudgetInSTI = originalDatabaseBudgetInSTI + currentTableBudget;
+
+                        // Update mission values
+                        mission.BudgetInSTI = totalBudgetInSTI.toFixed(2);
+                        mission.AvailableBudget = (mission.GlobalBudget - totalBudgetInSTI).toFixed(2);
+
+                        if (mission.GlobalBudget === "0.00") {
+                            mission.SubcontractedBudgetPercentage = "0%";
+                        } else {
+                            mission.SubcontractedBudgetPercentage = ((totalBudgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
+                        }
+                    });
+
+                    this.getView().getModel("missions").refresh();
+                });*/
 
                 // --- Initial calculation to display the values immediately ---
-                missions.forEach(mission => {
+                /*missions.forEach(mission => {
                     const missionId = mission.MissionId;
 
                     // Sum of BudgetAlloue for this mission
@@ -262,7 +333,7 @@ sap.ui.define(
                     else {
                         mission.SubcontractedBudgetPercentage = ((budgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%";
                     }
-                });
+                });*/
 
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                 this.getView().setModel(oMissionsModel, "missions");
@@ -320,6 +391,7 @@ sap.ui.define(
                 this._setFieldEditableState("business_p_projm", bIsCreate);
 
                 this.prepareMissionsTreeData();
+
 
             },
 
@@ -760,6 +832,7 @@ sap.ui.define(
                 // Calculate and update row count after building the tree
                 var rowCount = this.countRows(treeData);
                 this.updateRowCount(rowCount);
+
             },
 
             _transformMissionsToTree: function (missions) {
@@ -932,16 +1005,17 @@ sap.ui.define(
                     const missionId = mission.MissionId;
 
                     // Get the ORIGINAL database value (not the calculated one)
-                    const originalDatabaseBudget = parseFloat(mission.OriginalBudgetInSTI || mission.BudgetInSTI || 0);
+                    //const originalDatabaseBudget = parseFloat(mission.OriginalBudgetInSTI || mission.BudgetInSTI || 0);
+                    const originalDatabaseBudget = parseFloat(mission.OriginalBudgetInSTI|| 0);
 
                     // If we haven't stored the original value yet, store it now
-                    if (!mission.OriginalBudgetInSTI) {
+                    /*if (!mission.OriginalBudgetInSTI) {
                         mission.OriginalBudgetInSTI = originalDatabaseBudget;
-                    }
+                    }*/
 
                     // Filter budget lines: only include NEW ones (not yet saved)
                     const newBudgetLines = budgetData.filter(b => {
-                        return b.Mission_e === missionId && b.isNew;
+                        return b.Mission_e === missionId //&& b.isNew;
                     });
 
                     // Sum of ONLY NEW manually added BudgetAlloue for this mission
