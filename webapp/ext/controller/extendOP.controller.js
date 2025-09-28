@@ -908,7 +908,7 @@ sap.ui.define(
                         Regroupement: mission.Regroupement,
                         description: mission.description,
                         statutmission: statusDescription,
-                        OriginalBudgetInSTI: mission.OriginalBudgetInSTI
+                        OriginalBudgetInSTI: mission.OriginalBudgetInSTI || mission.BudgetInSTI
                     };
 
                     // Add mission values to regroupement totals
@@ -995,6 +995,13 @@ sap.ui.define(
                 // Check if budget table is empty
                 if (!budgetData || budgetData.length === 0) {
                     console.log("Budget table is empty - preserving existing mission values");
+                    // Even when budget is empty, ensure OriginalBudgetInSTI is set
+                    missionsData.forEach(mission => {
+                        if (mission.OriginalBudgetInSTI === undefined) {
+                            mission.OriginalBudgetInSTI = parseFloat(mission.BudgetInSTI || 0);
+                        }
+                    });
+                    oView.getModel("missions").refresh(true);
                     return;
                 }
 
@@ -1073,94 +1080,7 @@ sap.ui.define(
                 this.prepareMissionsTreeData();
             },
 
-            _recalculateMissionBudgets1: function () {
-                var oView = this.getView();
-                var budgetData = oView.getModel("budget").getProperty("/results");
-                var missionsData = oView.getModel("missions").getProperty("/results");
-
-                // Check if budget table is empty
-                if (!budgetData || budgetData.length === 0) {
-                    console.log("Budget table is empty - preserving existing mission values");
-                    return;
-                }
-
-                missionsData.forEach(mission => {
-                    // Reset to original database value
-                    if (mission.OriginalBudgetInSTI !== undefined) {
-                        mission.BudgetInSTI = mission.OriginalBudgetInSTI;
-                    }
-                });
-
-                // Collect missions that exceed their available budget
-                var overBudgetMissions = [];
-                var updatedMissions = [];
-
-                missionsData.forEach(mission => {
-                    const missionId = mission.MissionId;
-
-                    // Get the ORIGINAL database value (not the calculated one)
-                    // Use a separate property to store the original database value
-                    const originalDatabaseBudget = parseFloat(mission.OriginalBudgetInSTI || mission.BudgetInSTI || 0);
-
-                    // If we haven't stored the original value yet, store it now
-                    if (!mission.OriginalBudgetInSTI) {
-                        mission.OriginalBudgetInSTI = originalDatabaseBudget;
-                    }
-
-
-                    // Sum of CURRENT manually added BudgetAlloue for this mission
-                    const currentManualBudget = budgetData
-                        .filter(b => b.Mission_e === missionId)
-                        .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
-
-                    // Total BudgetInSTI = original database value + current manual values
-                    const totalBudgetInSTI = originalDatabaseBudget + currentManualBudget;
-
-                    const available = parseFloat(mission.GlobalBudget) - totalBudgetInSTI;
-
-                    if (available < 0) {
-                        overBudgetMissions.push({
-                            MissionId: mission.MissionId,
-                            description: mission.description,
-                            available: available.toFixed(2),
-                            totalBudgetInSTI: totalBudgetInSTI.toFixed(2),
-                            originalDatabaseBudget: originalDatabaseBudget.toFixed(2),
-                            currentManualBudget: currentManualBudget.toFixed(2)
-                        });
-                    } else {
-                        updatedMissions.push({
-                            ...mission,
-                            // Preserve the original database value
-                            OriginalBudgetInSTI: originalDatabaseBudget,
-                            // Store the calculated total separately
-                            BudgetInSTI: totalBudgetInSTI.toFixed(2),
-                            AvailableBudget: available.toFixed(2),
-                            SubcontractedBudgetPercentage: mission.GlobalBudget === "0.00" ?
-                                "0%" : ((totalBudgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%"
-                        });
-                    }
-                });
-
-                if (overBudgetMissions.length > 0) {
-                    var message = overBudgetMissions.map(m =>
-                        `Mission '${m.description}' (${m.MissionId}) dépasse le budget disponible.\n` +
-                        `Budget base: ${m.originalDatabaseBudget}, Budget manuel: ${m.currentManualBudget}\n` +
-                        `Budget total: ${m.totalBudgetInSTI}, Disponible: ${m.available}`
-                    ).join("\n\n");
-
-                    sap.m.MessageBox.warning(message, {
-                        title: "Attention",
-                        actions: [sap.m.MessageBox.Action.OK]
-                    });
-                    return;
-                }
-
-                oView.getModel("missions").setProperty("/results", updatedMissions);
-                oView.getModel("missions").refresh(true);
-                this.prepareMissionsTreeData();
-            },
-
-
+            
             onValidateSTI: function (oEvent) {
                 this.beforeSaveExtension('INAPPROVAL');
             },
