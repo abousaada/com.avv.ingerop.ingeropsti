@@ -24,6 +24,7 @@ sap.ui.define(
 
             beforeSaveExtension: async function (status) {
                 try {
+                    const that = this;
                     //const oView = this.base.getView();
                     const oView = this.getView();
                     const oContext = oView.getBindingContext();
@@ -87,19 +88,13 @@ sap.ui.define(
                                 title: "Success",
                                 actions: [sap.m.MessageBox.Action.OK],
                                 onClose: function () {
-                                    //this._recalculateMissionBudgets();
+                                    that._recalculateMissionBudgets();
 
                                     oView.getModel().refresh(true);
-                                    //const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
-                                    //oRouter.navTo("ListReport");
+                                    const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                                    oRouter.navTo("ListReport");
 
-                                    this._refreshAllData().then(() => {
-                                        // Only navigate away if needed
-                                        //if (status !== 'DRAFT') {
-                                            const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
-                                            oRouter.navTo("ListReport");
-                                        //}
-                                    });
+                                    that._refreshScreenData(oView, status);
                                 }
                             });
 
@@ -1125,37 +1120,71 @@ sap.ui.define(
                     }
                 });
             },
-            _refreshAllData: async function () {
-                try {
-                    const oView = this.getView();
 
-                    // Refresh the main model
-                    if (oView.getBindingContext()) {
-                        oView.getBindingContext().refresh();
+
+            _refreshScreenData: function (oView, status) {
+                try {
+                    // Show busy indicator
+                    oView.setBusy(true);
+
+                    // Get the main model and context
+                    const oModel = oView.getModel();
+                    const oContext = oView.getBindingContext();
+
+                    if (!oContext) {
+                        console.warn("No binding context available for refresh");
+                        oView.setBusy(false);
+                        return;
                     }
 
-                    // Refresh budget data
-                    var budget = await this.getBudget();
-                    oView.getModel("budget").setData({ results: budget });
+                    // Refresh the main entity by re-reading it
+                    const sPath = oContext.getPath();
 
-                    // Refresh missions data
-                    var missions = await this.getMissions();
-                    oView.getModel("missions").setData({ results: missions });
+                    // Use model's refresh method correctly
+                    oModel.refresh(true); // This refreshes the entire model
 
-                    // Recalculate budgets and refresh tree
-                    this._recalculateMissionBudgets();
-                    this.prepareMissionsTreeData();
+                    // If you need to refresh a specific binding, use:
+                    // oView.getBindingContext().getModel().refresh(true);
 
-                    // Force UI refresh
-                    oView.getModel().refresh(true);
+                    // Refresh budget and missions data
+                    Promise.all([
+                        this.getBudget(),
+                        this.getMissions()
+                    ]).then(([budget, missions]) => {
+                        // Update the budget model
+                        if (oView.getModel("budget")) {
+                            oView.getModel("budget").setData({ results: budget });
+                        }
 
-                    sap.m.MessageToast.show("Data refreshed successfully");
+                        // Update the missions model
+                        if (oView.getModel("missions")) {
+                            oView.getModel("missions").setData({ results: missions });
+                        }
+
+                        // Recalculate budgets and refresh tree
+                        this._recalculateMissionBudgets();
+                        this.prepareMissionsTreeData();
+
+                        sap.m.MessageToast.show("Data refreshed successfully");
+
+                        // Navigate if needed
+                        if (status !== 'DRAFT') {
+                            const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                            oRouter.navTo("ListReport");
+                        }
+
+                    }).catch(error => {
+                        console.error("Error refreshing secondary data:", error);
+                        sap.m.MessageToast.show("Error refreshing some data");
+                    }).finally(() => {
+                        oView.setBusy(false);
+                    });
 
                 } catch (error) {
-                    console.error("Error refreshing data:", error);
+                    console.error("Error in _refreshScreenData:", error);
+                    oView.setBusy(false);
                 }
             },
-
         }
     }
 );
