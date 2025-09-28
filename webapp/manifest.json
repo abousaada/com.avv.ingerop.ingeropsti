@@ -212,7 +212,7 @@
             },
             "tableSettings": {
               "type": "GridTable",
-              "multiSelect": false
+              "multiSelect": true
             },
             "dataLoadSettings": {
               "loadDataOnAppLaunch": "always"
