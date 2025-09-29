@@ -133,7 +133,7 @@
                             number="{missions>AvailableBudget}"
                             unit="EUR"
                             visible="{= ${missions>type} === 'mission'}"
-                            state="{= parseFloat(${missions>AvailableBudget}) > 0 ? 'Success' : 'Error'}"
+                            state="{= parseFloat(${missions>OriginalBudget}) > 0 ? 'Success' : 'Error'}"
                         />
                     </table:template>
                 </table:Column>

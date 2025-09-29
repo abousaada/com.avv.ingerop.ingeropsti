@@ -493,6 +493,7 @@
                 <Property Name="BudgetInSTI" Type="Edm.Decimal" Precision="15" Scale="2" sap:label=""/>
                 <Property Name="AvailableBudget" Type="Edm.Decimal" Precision="15" Scale="2" sap:label=""/>
                 <Property Name="SubcontractedBudgetPercentage" Type="Edm.Decimal" Precision="5" Scale="2" sap:label=""/>
+                <Property Name="OriginalBudget" Type="Edm.Decimal" Precision="15" Scale="2"/>
                 <Property Name="Regroupement" Type="Edm.String" MaxLength="40" sap:label="Regroupement mission"/>
                 <Property Name="statutmission" Type="Edm.String" MaxLength="1" sap:label="Statut mission"/>
                 <Property Name="description" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
@@ -579,12 +580,12 @@
                     <End EntitySet="ZC_STI_BUDG" Role="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 </AssociationSet>
                 <FunctionImport Name="ZGENERATE_IDS" ReturnType="ZSTI_SRV.ZGeneratedIdType" m:HttpMethod="POST">
-                    <Parameter Name="IV_UFO" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_UFO" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
                 <FunctionImport Name="ZGET_ID" ReturnType="ZSTI_SRV.ZGEN_ID" m:HttpMethod="POST">
-                    <Parameter Name="IV_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="iv_IdFormulaire" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
