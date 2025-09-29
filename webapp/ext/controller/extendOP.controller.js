@@ -218,8 +218,8 @@ sap.ui.define(
                     mission.OriginalBudgetInSTI = originalDatabaseBudgetInSTI;
 
                     // Sum of BudgetAlloue for this mission from CURRENT budget table
-                    const currentTableBudget = budget //&& b.isNew
-                        .filter(b => b.Mission_e === missionId && (b.AFFAIRE_TYPE === "" || !b.AFFAIRE_TYPE))
+                    const currentTableBudget = budget //
+                        .filter(b => b.Mission_e === missionId && b.isNew && (b.AFFAIRE_TYPE === "" || !b.AFFAIRE_TYPE))
                         .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
 
                     // TOTAL BudgetInSTI = Database value + Current table values
@@ -908,7 +908,8 @@ sap.ui.define(
                         Regroupement: mission.Regroupement,
                         description: mission.description,
                         statutmission: statusDescription,
-                        OriginalBudgetInSTI: mission.OriginalBudgetInSTI || mission.BudgetInSTI
+                        OriginalBudgetInSTI: mission.OriginalBudgetInSTI || mission.BudgetInSTI,
+                        OriginalBudget: mission.OriginalBudget
                     };
 
                     // Add mission values to regroupement totals
@@ -1023,7 +1024,7 @@ sap.ui.define(
 
                     // Filter budget lines: only include NEW ones (not yet saved)
                     const newBudgetLines = budgetData.filter(b => {
-                        return b.Mission_e === missionId //&& b.isNew;
+                        return b.Mission_e === missionId && b.isNew;
                     });
 
                     // Sum of ONLY NEW manually added BudgetAlloue for this mission
