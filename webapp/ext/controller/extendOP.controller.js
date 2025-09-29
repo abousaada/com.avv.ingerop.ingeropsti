@@ -23,6 +23,7 @@ sap.ui.define(
             },
 
             beforeSaveExtension: async function (status) {
+
                 try {
                     const that = this;
                     //const oView = this.base.getView();
@@ -30,6 +31,8 @@ sap.ui.define(
                     const oContext = oView.getBindingContext();
                     const oModel = oContext.getModel();
                     const sPath = oContext.getPath();
+
+                    oView.setBusy(true);
 
                     if (!oContext) {
                         sap.m.MessageBox.error("Context Error");
@@ -95,6 +98,8 @@ sap.ui.define(
                                     oRouter.navTo("ListReport");
 
                                     that._refreshScreenData(oView, status);
+
+                                    oView.setBusy(false);
                                 }
                             });
 
@@ -110,6 +115,9 @@ sap.ui.define(
                 } catch (error) {
                     console.error(error);
                     return Promise.reject(error);
+                } finally {
+                    
+                    oView.setBusy(false);
                 }
 
             },
@@ -1123,83 +1131,83 @@ sap.ui.define(
 
 
             _refreshScreenData: function (oView, status) {
-    try {
-        oView.setBusy(true);
+                try {
+                    oView.setBusy(true);
 
-        const oModel = oView.getModel();
-        const oContext = oView.getBindingContext();
+                    const oModel = oView.getModel();
+                    const oContext = oView.getBindingContext();
 
-        if (!oContext) {
-            console.warn("No binding context available for refresh");
-            oView.setBusy(false);
-            return;
-        }
+                    if (!oContext) {
+                        console.warn("No binding context available for refresh");
+                        oView.setBusy(false);
+                        return;
+                    }
 
-        // Store current mission data with OriginalBudgetInSTI before refresh
-        const currentMissions = oView.getModel("missions")?.getProperty("/results") || [];
-        const missionsWithOriginalValues = currentMissions.map(mission => ({
-            ...mission,
-            // Preserve the OriginalBudgetInSTI that was calculated during initialization
-            OriginalBudgetInSTI: mission.OriginalBudgetInSTI || parseFloat(mission.BudgetInSTI || 0)
-        }));
-
-        // Refresh main model
-        oModel.refresh(true);
-
-        // Refresh budget and missions data
-        Promise.all([
-            this.getBudget(),
-            this.getMissions()
-        ]).then(([budget, missions]) => {
-            // Update budget model
-            if (oView.getModel("budget")) {
-                oView.getModel("budget").setData({ results: budget });
-            }
-
-            // Update missions model - preserve OriginalBudgetInSTI
-            if (oView.getModel("missions")) {
-                // Merge refreshed missions with preserved original values
-                const updatedMissions = missions.map(mission => {
-                    // Find corresponding mission in preserved data
-                    const preservedMission = missionsWithOriginalValues.find(m => 
-                        m.MissionId === mission.MissionId
-                    );
-                    
-                    return {
+                    // Store current mission data with OriginalBudgetInSTI before refresh
+                    const currentMissions = oView.getModel("missions")?.getProperty("/results") || [];
+                    const missionsWithOriginalValues = currentMissions.map(mission => ({
                         ...mission,
-                        // Preserve the OriginalBudgetInSTI from before refresh
-                        OriginalBudgetInSTI: preservedMission ? 
-                            preservedMission.OriginalBudgetInSTI : 
-                            parseFloat(mission.BudgetInSTI || 0)
-                    };
-                });
+                        // Preserve the OriginalBudgetInSTI that was calculated during initialization
+                        OriginalBudgetInSTI: mission.OriginalBudgetInSTI || parseFloat(mission.BudgetInSTI || 0)
+                    }));
 
-                oView.getModel("missions").setData({ results: updatedMissions });
-            }
+                    // Refresh main model
+                    oModel.refresh(true);
 
-            sap.m.MessageToast.show("Data refreshed successfully");
+                    // Refresh budget and missions data
+                    Promise.all([
+                        this.getBudget(),
+                        this.getMissions()
+                    ]).then(([budget, missions]) => {
+                        // Update budget model
+                        if (oView.getModel("budget")) {
+                            oView.getModel("budget").setData({ results: budget });
+                        }
 
-            // Recalculate budgets with preserved original values
-            this._recalculateMissionBudgets();
-            this.prepareMissionsTreeData();
+                        // Update missions model - preserve OriginalBudgetInSTI
+                        if (oView.getModel("missions")) {
+                            // Merge refreshed missions with preserved original values
+                            const updatedMissions = missions.map(mission => {
+                                // Find corresponding mission in preserved data
+                                const preservedMission = missionsWithOriginalValues.find(m =>
+                                    m.MissionId === mission.MissionId
+                                );
 
-            if (status !== 'DRAFT') {
-                const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
-                oRouter.navTo("ListReport");
-            }
+                                return {
+                                    ...mission,
+                                    // Preserve the OriginalBudgetInSTI from before refresh
+                                    OriginalBudgetInSTI: preservedMission ?
+                                        preservedMission.OriginalBudgetInSTI :
+                                        parseFloat(mission.BudgetInSTI || 0)
+                                };
+                            });
 
-        }).catch(error => {
-            console.error("Error refreshing secondary data:", error);
-            sap.m.MessageToast.show("Error refreshing some data");
-        }).finally(() => {
-            oView.setBusy(false);
-        });
+                            oView.getModel("missions").setData({ results: updatedMissions });
+                        }
 
-    } catch (error) {
-        console.error("Error in _refreshScreenData:", error);
-        oView.setBusy(false);
-    }
-},
+                        sap.m.MessageToast.show("Data refreshed successfully");
+
+                        // Recalculate budgets with preserved original values
+                        this._recalculateMissionBudgets();
+                        this.prepareMissionsTreeData();
+
+                        if (status !== 'DRAFT') {
+                            const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                            oRouter.navTo("ListReport");
+                        }
+
+                    }).catch(error => {
+                        console.error("Error refreshing secondary data:", error);
+                        sap.m.MessageToast.show("Error refreshing some data");
+                    }).finally(() => {
+                        oView.setBusy(false);
+                    });
+
+                } catch (error) {
+                    console.error("Error in _refreshScreenData:", error);
+                    oView.setBusy(false);
+                }
+            },
             _refreshScreenData1: function (oView, status) {
                 try {
                     // Show busy indicator
