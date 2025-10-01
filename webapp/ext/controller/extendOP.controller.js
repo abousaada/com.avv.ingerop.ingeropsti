@@ -86,7 +86,7 @@ sap.ui.define(
                                 message = "Le formulaire a été envoyé pour validation";
                             }
 
-                            sap.m.MessageBox.show("STI created successfully: " + updatedSTI.id_formulaire, {
+                            sap.m.MessageBox.show(message + updatedSTI.id_formulaire, {
                                 icon: sap.m.MessageBox.Icon.SUCCESS,
                                 title: "Success",
                                 actions: [sap.m.MessageBox.Action.OK],
