@@ -80,10 +80,10 @@ sap.ui.define(
 
                             var message;
 
-                            if (status = 'DRAFT') {
-                                message = "Le formulaire créé avec succès";
+                            if (status === 'DRAFT') {
+                                message = "Le formulaire créé avec succès ";
                             } else {
-                                message = "Le formulaire a été envoyé pour validation";
+                                message = "Le formulaire a été envoyé pour validation ";
                             }
 
                             sap.m.MessageBox.show(message + updatedSTI.id_formulaire, {
