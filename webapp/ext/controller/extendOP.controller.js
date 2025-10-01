@@ -78,12 +78,12 @@ sap.ui.define(
 
                         if (updatedSTI) {
 
-                            var message = "STI created successfully";
+                            var message;
 
                             if (status = 'DRAFT') {
-                                message = "STI créée avec succès";
+                                message = "Le formulaire créé avec succès";
                             } else {
-                                message = "STI validée avec succès";
+                                message = "Le formulaire a été envoyé pour validation";
                             }
 
                             sap.m.MessageBox.show("STI created successfully: " + updatedSTI.id_formulaire, {
