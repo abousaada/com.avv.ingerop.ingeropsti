@@ -179,8 +179,8 @@ sap.ui.define(
 
                 const sStatus = oModel.getProperty(sPath + "/status");
 
-                // Set editable based on status - only editable when status is 'DRAFT'
-                const bCanEdit = (sStatus === "DRAFT");
+                // Editable if status is 'DRAFT' or empty/null
+                const bCanEdit = !sStatus || sStatus === "DRAFT";
 
                 let oUIModel = oView.getModel("ui");
                 if (!oUIModel) {
