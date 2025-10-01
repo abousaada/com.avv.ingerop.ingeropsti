@@ -568,6 +568,9 @@
                     </Collection>
                 </Annotation>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZI_STI_STATUS_VHType/language">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
         </Schema>
     </edmx:DataServices>
 </edmx:Edmx>

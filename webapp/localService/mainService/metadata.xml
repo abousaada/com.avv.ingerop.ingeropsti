@@ -419,7 +419,7 @@
                 <Property Name="id_formulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_no_e" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:heading="" sap:quickinfo="Character field length 24" sap:value-list="standard"/>
                 <Property Name="Criticality" Type="Edm.Byte" sap:label=""/>
-                <Property Name="status" Type="Edm.String" MaxLength="14" sap:label="" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="status" Type="Edm.String" MaxLength="14" sap:label="" sap:creatable="false" sap:updatable="false" sap:value-list="fixed-values"/>
                 <Property Name="business_e_t" Type="Edm.String" MaxLength="40" sap:label="Description" sap:heading="" sap:quickinfo="PS: Short description (1st text line)" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_e_cmp" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Company code" sap:heading="" sap:quickinfo="Company code for WBS element" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
                 <Property Name="business_e_SDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Basic start" sap:heading="" sap:quickinfo="WBS element: Basic start date"/>
@@ -500,13 +500,6 @@
                 <Property Name="statutmission" Type="Edm.String" MaxLength="1" sap:label="Statut mission"/>
                 <Property Name="description" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
             </EntityType>
-            <EntityType Name="ZC_STI_STATUS_VHType" sap:value-list="true" sap:content-version="1">
-                <Key>
-                    <PropertyRef Name="value"/>
-                </Key>
-                <Property Name="value" Type="Edm.String" Nullable="false" MaxLength="20"/>
-                <Property Name="text" Type="Edm.String" MaxLength="60"/>
-            </EntityType>
             <EntityType Name="ZI_FGA_PROFITCENTER_VHType" sap:label="Aide à la recherche Centre de profit" sap:value-list="true" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="ProfitCenter"/>
@@ -528,6 +521,15 @@
                 </Key>
                 <Property Name="UFO" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="UFO Délégué" sap:quickinfo="Set Name"/>
                 <Property Name="description" Type="Edm.String" MaxLength="40" sap:label="UFO Délégué Description" sap:quickinfo="Short Description of a Set"/>
+            </EntityType>
+            <EntityType Name="ZI_STI_STATUS_VHType" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="value"/>
+                    <PropertyRef Name="language"/>
+                </Key>
+                <Property Name="value" Type="Edm.String" Nullable="false" MaxLength="14"/>
+                <Property Name="language" Type="Edm.String" Nullable="false" MaxLength="2"/>
+                <Property Name="text" Type="Edm.String" MaxLength="14"/>
             </EntityType>
             <ComplexType Name="ZGeneratedIdType">
                 <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="50" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -565,10 +567,10 @@
                 <EntitySet Name="ZC_STI_BUDG" EntityType="ZSTI_SRV.ZC_STI_BUDGType" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_CEPC_BUKRS" EntityType="ZSTI_SRV.ZC_STI_CEPC_BUKRSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_MISSION" EntityType="ZSTI_SRV.ZC_STI_MISSIONType" sap:content-version="1"/>
-                <EntitySet Name="ZC_STI_STATUS_VH" EntityType="ZSTI_SRV.ZC_STI_STATUS_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZI_FGA_PROFITCENTER_VH" EntityType="ZSTI_SRV.ZI_FGA_PROFITCENTER_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZI_FGA_PROJM_VH" EntityType="ZSTI_SRV.ZI_FGA_PROJM_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZI_FGA_UFO_VH" EntityType="ZSTI_SRV.ZI_FGA_UFO_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="ZI_STI_STATUS_VH" EntityType="ZSTI_SRV.ZI_STI_STATUS_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <AssociationSet Name="assoc_333E6DC35A0196A751DFF12F791D6481" Association="ZSTI_SRV.assoc_333E6DC35A0196A751DFF12F791D6481" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="ZC_STI_BUDG" Role="FromRole_assoc_333E6DC35A0196A751DFF12F791D6481"/>
                     <End EntitySet="ZC_STI" Role="ToRole_assoc_333E6DC35A0196A751DFF12F791D6481"/>
@@ -582,12 +584,12 @@
                     <End EntitySet="ZC_STI_BUDG" Role="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 </AssociationSet>
                 <FunctionImport Name="ZGENERATE_IDS" ReturnType="ZSTI_SRV.ZGeneratedIdType" m:HttpMethod="POST">
-                    <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_UFO" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
                 <FunctionImport Name="ZGET_ID" ReturnType="ZSTI_SRV.ZGEN_ID" m:HttpMethod="POST">
-                    <Parameter Name="iv_IdFormulaire" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="iv_IdFormulaire" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
@@ -1067,9 +1069,9 @@
             <Annotations Target="ZSTI_SRV.ZC_STIType/status" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
-                        <PropertyValue Property="Label" String="ZC_STI_STATUS_VH"/>
-                        <PropertyValue Property="CollectionPath" String="ZC_STI_STATUS_VH"/>
-                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Label" String="Aide à la recherche Status STI"/>
+                        <PropertyValue Property="CollectionPath" String="ZI_STI_STATUS_VH"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
                         <PropertyValue Property="Parameters">
                             <Collection>
                                 <Record Type="Common.ValueListParameterInOut">
@@ -1083,6 +1085,7 @@
                         </PropertyValue>
                     </Record>
                 </Annotation>
+                <Annotation Term="Common.ValueListWithFixedValues"/>
             </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_cmp" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
