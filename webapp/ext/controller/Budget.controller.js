@@ -140,7 +140,10 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
             },
 
             isLineEditable: function (bIsNew) {
-                return bIsNew === true;
+                //return bIsNew === true;
+                var oUIModel = this.getView().getModel("ui");
+                return oUIModel ? oUIModel.getProperty("/editable") : false;
+
             },
 
             enableAddLine: function (bEditable, aMissions) {
@@ -166,9 +169,6 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                 });
             },
 
-            enableAddLine: function (bEditable, aMissions) {
-                return bEditable && Array.isArray(aMissions) && aMissions.length > 0;
-            },
 
             onDeleteBudgetLine: function (oEvent) {
                 var oButton = oEvent.getSource();

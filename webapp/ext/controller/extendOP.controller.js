@@ -116,7 +116,7 @@ sap.ui.define(
                     console.error(error);
                     return Promise.reject(error);
                 } finally {
-                    
+
                     oView.setBusy(false);
                 }
 
@@ -178,6 +178,22 @@ sap.ui.define(
                 }
 
                 const sStatus = oModel.getProperty(sPath + "/status");
+
+                // Set editable based on status - only editable when status is 'DRAFT'
+                const bCanEdit = (sStatus === "DRAFT");
+
+                let oUIModel = oView.getModel("ui");
+                if (!oUIModel) {
+                    oUIModel = new sap.ui.model.json.JSONModel({
+                        editable: false,
+                        enabled: bCanEdit
+                    });
+                    oView.setModel(oUIModel, "ui");
+                } else {
+                    oUIModel.setProperty("/editable", false);
+                    oUIModel.setProperty("/enabled", bCanEdit);
+                }
+
                 if (sStatus === 'DRAFT') {
                     oModel.setProperty(sPath + "/status", 'En cours');
                 }
@@ -813,6 +829,7 @@ sap.ui.define(
                         oMissionsModel.setData({ results: missions });
                         oMissionsModel.refresh(true);
 
+                        this._recalculateMissionBudgets();
                         this.prepareMissionsTreeData();
 
                     } else {
@@ -1011,7 +1028,7 @@ sap.ui.define(
                         }
                     });
                     oView.getModel("missions").refresh(true);
-                    return;
+                    //return;
                 }
 
                 // Collect missions that exceed their available budget

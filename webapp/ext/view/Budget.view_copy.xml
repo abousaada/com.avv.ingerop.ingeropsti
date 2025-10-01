@@ -91,14 +91,20 @@
                         <Text text="{budget>Mission_p}" />
                         <Input
                             value="{budget>Libelle}"
-                            editable="{ui>/editable}"
+                            editable="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                         />
                         <Text text="{budget>MissionCode}" />
                         <Text text="{budget>Regroupement}" />
                         <DatePicker
                             value="{path: 'budget>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
                             displayFormat="short"
-                            editable="{ui>/editable}"
+                            editable="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                             width="100%"
                             required="true"
                         />
@@ -106,14 +112,20 @@
                         <DatePicker
                             value="{path: 'budget>EndDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
                             displayFormat="short"
-                            editable="{ui>/editable}"
+                            editable="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                             width="100%"
                             required="true"
                         />
 
                         <Input
                             value="{budget>BudgetAlloue}"
-                            editable="{ui>/editable}"
+                            editable="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                             type="Number"
                             placeholder="0.00"
                         />
@@ -122,7 +134,10 @@
                             icon="sap-icon://delete"
                             type="Reject"
                             press="onDeleteBudgetLine"
-                            visible="{ui>/editable}"
+                            visible="{
+                                path: 'budget>isNew',
+                                formatter: '.isLineEditable'
+                            }"
                         />
                     </cells>
                 </ColumnListItem>
