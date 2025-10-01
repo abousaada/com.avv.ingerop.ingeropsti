@@ -190,7 +190,7 @@ sap.ui.define(
                     });
                     oView.setModel(oUIModel, "ui");
                 } else {
-                    oUIModel.setProperty("/editable", false);
+                    //oUIModel.setProperty("/editable", false);
                     oUIModel.setProperty("/enabled", bCanEdit);
                 }
 
