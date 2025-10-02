@@ -24,13 +24,14 @@ sap.ui.define(
 
             beforeSaveExtension: async function (status) {
 
+                const that = this;
+                //const oView = this.base.getView();
+                const oView = this.getView();
+                const oContext = oView.getBindingContext();
+                const oModel = oContext.getModel();
+                const sPath = oContext.getPath();
+
                 try {
-                    const that = this;
-                    //const oView = this.base.getView();
-                    const oView = this.getView();
-                    const oContext = oView.getBindingContext();
-                    const oModel = oContext.getModel();
-                    const sPath = oContext.getPath();
 
                     oView.setBusy(true);
 
@@ -180,7 +181,8 @@ sap.ui.define(
                 const sStatus = oModel.getProperty(sPath + "/status");
 
                 // Editable if status is 'DRAFT' or empty/null
-                const bCanEdit = !sStatus || sStatus === "DRAFT" || sStatus === "En cours";
+                const bCanEdit = !sStatus || sStatus === "DRAFT" || sStatus === "En cours"
+                                        || sStatus === "REJECTED";
 
                 let oUIModel = oView.getModel("ui");
                 if (!oUIModel) {
