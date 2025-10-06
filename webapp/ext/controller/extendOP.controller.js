@@ -182,7 +182,7 @@ sap.ui.define(
 
                 // Editable if status is 'DRAFT' or empty/null
                 const bCanEdit = !sStatus || sStatus === "DRAFT" || sStatus === "En cours"
-                                        || sStatus === "REJECTED" || sStatus === "Rejeté" ;
+                    || sStatus === "REJECTED" || sStatus === "Rejeté";
 
                 let oUIModel = oView.getModel("ui");
                 if (!oUIModel) {
@@ -232,7 +232,7 @@ sap.ui.define(
 
                 var missions = await this.getMissions();
                 var budget = await this.getBudget();
-
+                var wf = await this.getWF();
                 // --- Initial calculation to display the values immediately ---
                 missions.forEach(mission => {
                     const missionId = mission.MissionId;
@@ -266,7 +266,8 @@ sap.ui.define(
 
                 var oBudgetModel = new sap.ui.model.json.JSONModel({ results: budget });
                 this.getView().setModel(oBudgetModel, "budget");
-
+                var oWfModel = new sap.ui.model.json.JSONModel({ results: wf });
+                this.getView().setModel(oWfModel, "wf");
                 var oCurrencyModel = new sap.ui.model.json.JSONModel({
                     Currencies: [
                         { key: "EUR", text: "Euro" },
@@ -363,7 +364,10 @@ sap.ui.define(
 
                 var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
                 this.getView().setModel(oMissionsModel, "missions");
+                //WF status
 
+                // var oMissionsModel = new sap.ui.model.json.JSONModel({ results: missions });
+                // this.getView().setModel(oMissionsModel, "missions");
 
                 //attach event to business_no_e => get missions
                 if (oContext) {
@@ -728,8 +732,33 @@ sap.ui.define(
                     return [];
                 }
             },
+            //WF status
+            async getWF() {
+                function escapeODataKey(val) {
+                    return String(val).replace(/'/g, "''");
+                }
 
+                try {
+                    const oContext = this._getController().getView().getBindingContext();
+                    const oModel = this.getView().getModel();
 
+                    const id_formulaire = escapeODataKey(oModel.getProperty(oContext.getPath() + "/id_formulaire"));
+                    const business_no_e = escapeODataKey(oModel.getProperty(oContext.getPath() + "/business_no_e"));
+
+                    const sPath = `/ZC_STI(id_formulaire='${id_formulaire}',business_no_e='${business_no_e}')/to_WF`;
+
+                    return new Promise((resolve, reject) => {
+                        oModel.read(sPath, {
+                            success: (oData) => resolve(oData?.results || []),
+                            error: (oError) => reject(oError)
+                        });
+                    });
+
+                } catch (error) {
+                    console.error(error);
+                    return [];
+                }
+            },
             _showODataErrorPopup: function (oError) {
                 try {
                     const oResponse = JSON.parse(oError.responseText);
@@ -1176,11 +1205,16 @@ sap.ui.define(
                     // Refresh budget and missions data
                     Promise.all([
                         this.getBudget(),
-                        this.getMissions()
-                    ]).then(([budget, missions]) => {
+                        this.getMissions(),
+                        this.getWF()
+                    ]).then(([budget, missions, wf]) => {
                         // Update budget model
                         if (oView.getModel("budget")) {
                             oView.getModel("budget").setData({ results: budget });
+                        }
+                        // Update wf model
+                        if (oView.getModel("wf")) {
+                            oView.getModel("wf").setData({ results: wf });
                         }
 
                         // Update missions model - preserve OriginalBudgetInSTI
@@ -1254,11 +1288,16 @@ sap.ui.define(
                     // Refresh budget and missions data
                     Promise.all([
                         this.getBudget(),
-                        this.getMissions()
-                    ]).then(([budget, missions]) => {
+                        this.getMissions(),
+                        this.getWF()
+                    ]).then(([budget, missions, wf]) => {
                         // Update the budget model
                         if (oView.getModel("budget")) {
                             oView.getModel("budget").setData({ results: budget });
+                        }
+                        // Update the wf model
+                        if (oView.getModel("wf")) {
+                            oView.getModel("wf").setData({ results: wf });
                         }
 
                         // Update the missions model
