@@ -181,8 +181,8 @@ sap.ui.define(
                 const sStatus = oModel.getProperty(sPath + "/status");
 
                 // Editable if status is 'DRAFT' or empty/null
-                const bCanEdit = !sStatus || sStatus === "DRAFT" || sStatus === "En cours"
-                    || sStatus === "REJECTED" || sStatus === "Rejeté";
+                const bCanEdit = !sStatus || sStatus === "DRAFT" || sStatus === "En cours";
+                    //|| sStatus === "REJECTED" || sStatus === "Rejeté";
 
                 let oUIModel = oView.getModel("ui");
                 if (!oUIModel) {
