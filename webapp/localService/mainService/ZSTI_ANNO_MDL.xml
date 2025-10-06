@@ -216,6 +216,9 @@
                     </Collection>
                 </Annotation>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/status">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_SDate">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
@@ -374,9 +377,6 @@
                 <Annotation Term="UI.Identification">
                     <Collection>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="Criticality"/>
-                        </Record>
-                        <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="business_no_e"/>
                         </Record>
                     </Collection>
@@ -387,10 +387,10 @@
                             <PropertyValue Property="Value" Path="id_formulaire"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="proprio_sti"/>
+                            <PropertyValue Property="Value" Path="status_text"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="status"/>
+                            <PropertyValue Property="Value" Path="proprio_sti"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="stidescr"/>
@@ -446,16 +446,13 @@
                 <Annotation Term="UI.LineItem">
                     <Collection>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="Criticality"/>
-                        </Record>
-                        <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="id_formulaire"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="proprio_sti"/>
+                            <PropertyValue Property="Value" Path="status_text"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="status"/>
+                            <PropertyValue Property="Value" Path="proprio_sti"/>
                         </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="stidescr"/>
@@ -522,9 +519,9 @@
                 </Annotation>
                 <Annotation Term="UI.SelectionFields">
                     <Collection>
+                        <PropertyPath>status_text</PropertyPath>
                         <PropertyPath>id_formulaire</PropertyPath>
                         <PropertyPath>business_no_e</PropertyPath>
-                        <PropertyPath>status</PropertyPath>
                         <PropertyPath>business_e_t</PropertyPath>
                         <PropertyPath>business_e_cmp</PropertyPath>
                         <PropertyPath>business_e_cdp</PropertyPath>

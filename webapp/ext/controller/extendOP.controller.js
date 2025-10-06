@@ -177,7 +177,7 @@ sap.ui.define(
                 if (!oContext) {
                     return;
                 }
-
+                
                 const sStatus = oModel.getProperty(sPath + "/status");
 
                 // Editable if status is 'DRAFT' or empty/null
