@@ -539,7 +539,7 @@ sap.ui.define(
 
                     var sBusinessNoP = oModel.getProperty(sPath + "/business_no_p");
 
-                    if (!sBusinessNoP) {
+                    //if (!sBusinessNoP) {
 
                         var sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
 
@@ -577,7 +577,7 @@ sap.ui.define(
                             resolve(nextId);
 
                         }
-                    }
+                    //}
                 });
             },
 
