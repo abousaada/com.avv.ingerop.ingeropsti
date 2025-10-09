@@ -51,6 +51,100 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                             title: "N°Affaire Partenaire Manquant"
                         }
                     );
+                    return;
+                }
+
+                var business_sdate_e = sModel.getProperty(sPath + "/business_e_SDate");
+                var business_edate_e = sModel.getProperty(sPath + "/business_e_EDate");
+                var business_e_currency = sModel.getProperty(sPath + "/business_e_currency");
+
+                var aMissions = this.getView().getModel("missions").getProperty("/results");
+
+                // Vérifier la limite de 99 lignes - CORRECTION ICI
+                var oModel = this.getView().getModel("budget");
+                var aData = oModel.getProperty("/results") || [];
+
+                // Compter les lignes existantes pour ce business_no_p - CORRECTION ICI
+                var existingLinesCount = aData.filter(function (item) {
+                    return item.business_no_p === business_no_p;
+                }).length;
+
+                // Bloquer si on atteint ou dépasse 99 lignes
+                if (existingLinesCount >= 99) {
+                    sap.m.MessageBox.error(
+                        "La limite maximale de 99 lignes de budget a été atteinte. Impossible d'ajouter une nouvelle ligne.",
+                        {
+                            title: "Limite de Lignes Atteinte"
+                        }
+                    );
+                    return;
+                }
+
+                // Get default mission if available
+                var sMission_e = "";
+                var sRegroupement = "";
+                var sMissionCode = "";
+                var sStatutmission = "";
+
+                if (aMissions.length > 0) {
+                    sMission_e = aMissions[0].MissionId;
+                    sRegroupement = aMissions[0].Regroupement;
+                    sMissionCode = aMissions[0].MissionCode;
+                    sStatutmission = aMissions[0].statutmission;
+                }
+
+                var maxSuffix = 0;
+                aData.forEach(function (item) {
+                    if (item.Mission_p && item.Mission_p.startsWith(business_no_p)) {
+                        var suffix = item.Mission_p.substring(business_no_p.length);
+                        var numericSuffix = parseInt(suffix, 10);
+                        if (!isNaN(numericSuffix) && numericSuffix > maxSuffix) {
+                            maxSuffix = numericSuffix;
+                        }
+                    }
+                });
+
+                var newSuffix = maxSuffix + 1;
+                var formattedSuffix = newSuffix.toString().padStart(2, '0');
+                var newMissionP = business_no_p + formattedSuffix;
+
+                var nextIdM = formattedSuffix; //await this._callZGET_IDAction('m',IdFormulaire);
+
+                var oNewLine = {
+                    Mission_e: sMission_e,
+                    Mission_p: newMissionP,
+                    Regroupement: sRegroupement,
+                    astatutmission: sStatutmission,
+                    MissionCode: sMissionCode,
+                    StartDate: business_sdate_e,
+                    EndDate: business_edate_e,
+                    business_no_p: business_no_p,
+                    BudgetAlloue: '0',
+                    Currency: business_e_currency,
+                    Mission_p_sec: nextIdM,
+                    isNew: true
+                };
+
+                aData.push(oNewLine);
+                oModel.setProperty("/results", aData);
+            },
+
+            onAddBudgetLine1: async function (oEvent) {
+                const oView = this.getView();
+                const oContext = oView.getBindingContext();
+                const sModel = oContext.getModel();
+                const sPath = oContext.getPath();
+
+                var business_no_p = sModel.getProperty(sPath + "/business_no_p");
+                var IdFormulaire = sModel.getProperty(sPath + "/id_formulaire");
+
+                if (!business_no_p) {
+                    sap.m.MessageBox.error(
+                        "Veuillez d'abord générer le N°Affaire Partenaire (Fille ou petite) avant d'ajouter une ligne de budget.",
+                        {
+                            title: "N°Affaire Partenaire Manquant"
+                        }
+                    );
                     return; // Arrêter l'exécution de la fonction
                 }
 
@@ -60,6 +154,29 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
 
                 var oBudgetModel = this.getView().getModel("budget");
                 var aMissions = this.getView().getModel("missions").getProperty("/results");
+
+                // Vérifier la limite de 99 lignes
+                var oModel = this.getView().getModel("budget");
+                var aData = oModel.getProperty("/results") || [];
+
+                // Compter les lignes existantes pour ce business_no_p
+                var existingLinesCount = 0;
+                aData.forEach(function (item) {
+                    if (item.business_no_p === business_no_p) {
+                        existingLinesCount++;
+                    }
+                });
+
+                // Bloquer si on atteint ou dépasse 99 lignes
+                if (existingLinesCount >= 99) {
+                    sap.m.MessageBox.error(
+                        "La limite maximale de 99 lignes de budget a été atteinte. Impossible d'ajouter une nouvelle ligne.",
+                        {
+                            title: "Limite de Lignes Atteinte"
+                        }
+                    );
+                    return;
+                }
 
                 // Get default mission if available
                 var sMission_e = "";

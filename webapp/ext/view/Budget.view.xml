@@ -32,6 +32,7 @@
             inset="false"
             growing="true"
             growingScrollToLoad="true"
+            growingThreshold="99"
             mode="None"
             items="{budget>/results}"
         >
