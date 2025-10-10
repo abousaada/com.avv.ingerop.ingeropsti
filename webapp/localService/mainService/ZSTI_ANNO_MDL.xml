@@ -216,6 +216,9 @@
                     </Collection>
                 </Annotation>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/Criticality">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType/status">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
@@ -231,7 +234,19 @@
             <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_curr">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/BudgetAlloue">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/Cumul">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType/glaccountPxSTI">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/TypeBudg">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/p_period">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType">
@@ -519,9 +534,9 @@
                 </Annotation>
                 <Annotation Term="UI.SelectionFields">
                     <Collection>
-                        <PropertyPath>status_text</PropertyPath>
                         <PropertyPath>id_formulaire</PropertyPath>
                         <PropertyPath>business_no_e</PropertyPath>
+                        <PropertyPath>status_text</PropertyPath>
                         <PropertyPath>business_e_t</PropertyPath>
                         <PropertyPath>business_e_cmp</PropertyPath>
                         <PropertyPath>business_e_cdp</PropertyPath>
