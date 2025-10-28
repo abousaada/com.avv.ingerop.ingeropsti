@@ -467,9 +467,6 @@
                             <PropertyValue Property="Value" Path="status_text"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="proprio_sti"/>
-                        </Record>
-                        <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="stidescr"/>
                         </Record>
                         <Record Type="UI.DataField">
