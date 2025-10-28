@@ -13,11 +13,12 @@
             <TextArea
                 rows="3"
                 width="50%"
+                id = "txtComment1"
                 placeholder="Écrire ici..."
                 editable="{ui>/editable}"
                 liveChange=".onLiveChangeNotes"
                 growing="true"
-                value="{utilities>/Notes}"
+                value="{comments>/COMM1}"
             />
         </VBox>
 
@@ -27,11 +28,12 @@
             <TextArea
                 rows="3"
                 width="50%"
+                id="txtComment2"
                 placeholder="Écrire ici..."
                 editable="{ui>/editable}"
                 liveChange=".onLiveChangeNotes"
                 growing="true"
-                value="{utilities>/Notes}"
+                value="{comments>/COMM2}"
             />
         </VBox>
 
@@ -41,11 +43,12 @@
             <TextArea
                 rows="3"
                 width="50%"
+                id="txtComment3"
                 placeholder="Écrire ici..."
                 editable="{ui>/editable}"
                 liveChange=".onLiveChangeNotes"
                 growing="true"
-                value="{utilities>/Notes}"
+                value="{comments>/COMM3}"
             />
         </VBox>
 
@@ -55,11 +58,12 @@
             <TextArea
                 rows="3"
                 width="50%"
+                id="txtComment4"
                 placeholder="Écrire ici..."
                 editable="{ui>/editable}"
                 liveChange=".onLiveChangeNotes"
                 growing="true"
-                value="{utilities>/Notes}"
+                value="{comments>/COMM4}"
             />
         </VBox>
 
@@ -69,11 +73,12 @@
             <TextArea
                 rows="3"
                 width="50%"
+                id="txtComment5"
                 placeholder="Écrire ici..."
                 editable="{ui>/editable}"
                 liveChange=".onLiveChangeNotes"
                 growing="true"
-                value="{utilities>/Notes}"
+                value="{comments>/COMM5}"
             />
         </VBox>
     </l:VerticalLayout>

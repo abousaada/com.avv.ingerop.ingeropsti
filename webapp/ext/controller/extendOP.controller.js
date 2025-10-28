@@ -177,12 +177,12 @@ sap.ui.define(
                 if (!oContext) {
                     return;
                 }
-                
+
                 const sStatus = oModel.getProperty(sPath + "/status");
 
                 // Editable if status is 'DRAFT' or empty/null
                 const bCanEdit = !sStatus || sStatus === "DRAFT" || sStatus === "En cours";
-                    //|| sStatus === "REJECTED" || sStatus === "Rejeté";
+                //|| sStatus === "REJECTED" || sStatus === "Rejeté";
 
                 let oUIModel = oView.getModel("ui");
                 if (!oUIModel) {
@@ -233,6 +233,8 @@ sap.ui.define(
                 var missions = await this.getMissions();
                 var budget = await this.getBudget();
                 var wf = await this.getWF();
+                var comments = await this.getComments();
+                var oGrouped = this._groupCommentLines(comments);
                 // --- Initial calculation to display the values immediately ---
                 missions.forEach(mission => {
                     const missionId = mission.MissionId;
@@ -268,6 +270,9 @@ sap.ui.define(
                 this.getView().setModel(oBudgetModel, "budget");
                 var oWfModel = new sap.ui.model.json.JSONModel({ results: wf });
                 this.getView().setModel(oWfModel, "wf");
+                var oCommentsModel = new sap.ui.model.json.JSONModel({ results: comments });
+                this.getView().setModel(oCommentsModel, "comments");
+                oCommentsModel.setData(oGrouped);
                 var oCurrencyModel = new sap.ui.model.json.JSONModel({
                     Currencies: [
                         { key: "EUR", text: "Euro" },
@@ -501,9 +506,48 @@ sap.ui.define(
                 }
                 return ids;
             },
+            _splitTextToLines: function (sText, sType) {
+                const MAX_LENGTH = 255;
+                const aLines = [];
 
+                if (!sText) return aLines;
+
+                for (let i = 0; i < sText.length; i += MAX_LENGTH) {
+                    const line = sText.substring(i, i + MAX_LENGTH);
+                    aLines.push({
+                        CommentType: sType,                       // ex: "COMM1"
+                        line: String(aLines.length + 1).padStart(3, "0"), // 001, 002, ...
+                        text_line: line
+                    });
+                }
+
+                return aLines;
+            },
 
             async deepUpsertSTI(data) {
+                //Comments
+                const sComm1 = this.getView().byId("txtComment1").getValue();
+                const sComm2 = this.getView().byId("txtComment2").getValue();
+                const sComm3 = this.getView().byId("txtComment3").getValue();
+                const sComm4 = this.getView().byId("txtComment4").getValue();
+                const sComm5 = this.getView().byId("txtComment5").getValue();
+
+                // Découper chaque texte
+                const aComm1 = this._splitTextToLines(sComm1, "COMM1");
+                const aComm2 = this._splitTextToLines(sComm2, "COMM2");
+                const aComm3 = this._splitTextToLines(sComm3, "COMM3");
+                const aComm4 = this._splitTextToLines(sComm4, "COMM4");
+                const aComm5 = this._splitTextToLines(sComm5, "COMM5");
+                // Affecter les propriétés à chaque ligne de chaque tableau
+                [aComm1, aComm2, aComm3, aComm4, aComm5].forEach(aComments => {
+                    aComments.forEach(line => {
+                        line.id_formulaire = data.id_formulaire;
+                        line.BusinessNo = data.business_no_e;
+                    });
+                });
+                //  Ajout du bloc de commentaires
+                const aAllComments = [].concat(aComm1, aComm2, aComm3, aComm4, aComm5);
+                data.to_Comments = aAllComments;
                 try {
                     const oModel = this.getView().getModel();
                     return new Promise((resolve, reject) => {
@@ -541,42 +585,42 @@ sap.ui.define(
 
                     //if (!sBusinessNoP) {
 
-                        var sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
+                    var sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
 
-                        var sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
+                    var sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
 
-                        if (!sBusinessUfo) {
-                            sap.m.MessageBox.error("Le champ Business UFO est vide");
-                            return;
+                    if (!sBusinessUfo) {
+                        sap.m.MessageBox.error("Le champ Business UFO est vide");
+                        return;
+                    }
+
+                    if (sBusinessNoE) {
+                        const prefix = sBusinessNoE.substring(0, 4);    // first 4 chars
+                        const segment = sBusinessNoE.substring(4, 8);  // chars 5-8
+                        const rest = sBusinessNoE.substring(8);        // chars 9-end
+                        let newMiddle;
+
+                        if (/^X{4}$/.test(segment)) {
+                            // All X → replace positions 5-8 with UFO, keep rest
+                            newMiddle = sBusinessUfo + rest;
+                        } else {
+                            // Not all X → replace positions 5-8 with UFO, but keep the next 4 chars intact
+                            const next4 = sBusinessNoE.substring(4, 8); // chars 5-9
+                            const remaining = sBusinessNoE.substring(12); // rest
+                            newMiddle = sBusinessUfo + next4 + remaining;
                         }
 
-                        if (sBusinessNoE) {
-                            const prefix = sBusinessNoE.substring(0, 4);    // first 4 chars
-                            const segment = sBusinessNoE.substring(4, 8);  // chars 5-8
-                            const rest = sBusinessNoE.substring(8);        // chars 9-end
-                            let newMiddle;
+                        /*const newId = prefix + newMiddle;
+                        oModel.setProperty(sPath + "/business_no_p", newId);
+                        resolve(newId);*/
 
-                            if (/^X{4}$/.test(segment)) {
-                                // All X → replace positions 5-8 with UFO, keep rest
-                                newMiddle = sBusinessUfo + rest;
-                            } else {
-                                // Not all X → replace positions 5-8 with UFO, but keep the next 4 chars intact
-                                const next4 = sBusinessNoE.substring(4, 8); // chars 5-9
-                                const remaining = sBusinessNoE.substring(12); // rest
-                                newMiddle = sBusinessUfo + next4 + remaining;
-                            }
+                        const baseId = prefix + newMiddle;
+                        // Calculate the next sequential ID
+                        const nextId = this._calculateBusinessNoPId(baseId);
+                        oModel.setProperty(sPath + "/business_no_p", nextId);
+                        resolve(nextId);
 
-                            /*const newId = prefix + newMiddle;
-                            oModel.setProperty(sPath + "/business_no_p", newId);
-                            resolve(newId);*/
-
-                            const baseId = prefix + newMiddle;
-                            // Calculate the next sequential ID
-                            const nextId = this._calculateBusinessNoPId(baseId);
-                            oModel.setProperty(sPath + "/business_no_p", nextId);
-                            resolve(nextId);
-
-                        }
+                    }
                     //}
                 });
             },
@@ -705,7 +749,70 @@ sap.ui.define(
                     return [];
                 }
             },
+            _groupCommentLines: function (aLines) {
+                const oGrouped = { COMM1: "", COMM2: "", COMM3: "", COMM4: "", COMM5: "" };
 
+                if (!Array.isArray(aLines)) { return oGrouped; }
+
+                // ordre correct : par type puis par numéro de ligne
+                aLines.sort((a, b) => {
+                    if (a.CommentType === b.CommentType) {
+                        return parseInt(a.LineNo, 10) - parseInt(b.LineNo, 10);
+                    }
+                    return (a.CommentType || "").localeCompare(b.CommentType || "");
+                });
+
+                aLines.forEach(line => {
+                    const sType = line.CommentType;
+                    if (oGrouped.hasOwnProperty(sType)) {
+                        oGrouped[sType] += (line.text_line || "");
+                    }
+                });
+
+                // optionnel: trim
+                Object.keys(oGrouped).forEach(k => oGrouped[k] = oGrouped[k].trim());
+
+                return oGrouped;
+            },
+            async getComments() {
+                function escapeODataKey(val) {
+                    return String(val).replace(/'/g, "''"); // OData rule: double quotes inside keys
+                }
+
+                try {
+                    const oContext = this._getController().getView().getBindingContext();
+                    const oModel = this.getView().getModel();
+
+                    if (!oContext) {
+                        console.warn("Pas de bindingContext trouvé sur la vue.");
+                        return [];
+                    }
+
+                    const sPathContext = oContext.getPath();
+                    if (!sPathContext) {
+                        console.warn("Pas de path disponible sur le bindingContext.");
+                        return [];
+                    }
+
+                    const id_formulaire = escapeODataKey(oModel.getProperty(oContext.getPath() + "/id_formulaire"));
+                    const business_no_e = escapeODataKey(oModel.getProperty(oContext.getPath() + "/business_no_e"));
+
+                    const sPath = `/ZC_STI(id_formulaire='${id_formulaire}',business_no_e='${business_no_e}')/to_Comments`;
+
+                    // const sPath = "/ZI_STI_COMMENTS";
+
+                    return new Promise((resolve, reject) => {
+                        oModel.read(sPath, {
+                            success: (oData) => resolve(oData?.results || []),
+                            error: (oError) => reject(oError)
+                        });
+                    });
+
+                } catch (error) {
+                    console.error(error);
+                    return [];
+                }
+            },
             async getBudget() {
                 function escapeODataKey(val) {
                     return String(val).replace(/'/g, "''");
@@ -1206,8 +1313,9 @@ sap.ui.define(
                     Promise.all([
                         this.getBudget(),
                         this.getMissions(),
-                        this.getWF()
-                    ]).then(([budget, missions, wf]) => {
+                        this.getWF(),
+                        this.getComments()
+                    ]).then(([budget, missions, wf, comments]) => {
                         // Update budget model
                         if (oView.getModel("budget")) {
                             oView.getModel("budget").setData({ results: budget });
@@ -1215,6 +1323,12 @@ sap.ui.define(
                         // Update wf model
                         if (oView.getModel("wf")) {
                             oView.getModel("wf").setData({ results: wf });
+                        }
+                        // Update comments model
+                        if (oView.getModel("comments")) {
+                           var oGrouped = this._groupCommentLines(comments);
+                           oView.getModel("comments").setData(oGrouped);
+                          //  oView.getModel("comments").setData({ results: comments });
                         }
 
                         // Update missions model - preserve OriginalBudgetInSTI
@@ -1289,8 +1403,9 @@ sap.ui.define(
                     Promise.all([
                         this.getBudget(),
                         this.getMissions(),
-                        this.getWF()
-                    ]).then(([budget, missions, wf]) => {
+                        this.getWF(),
+                        this.getComments()
+                    ]).then(([budget, missions, wf, comments]) => {
                         // Update the budget model
                         if (oView.getModel("budget")) {
                             oView.getModel("budget").setData({ results: budget });
@@ -1298,6 +1413,11 @@ sap.ui.define(
                         // Update the wf model
                         if (oView.getModel("wf")) {
                             oView.getModel("wf").setData({ results: wf });
+                        }
+
+                        // Update the comments model
+                        if (oView.getModel("comments")) {
+                            oView.getModel("comments").setData({ results: comments });
                         }
 
                         // Update the missions model
