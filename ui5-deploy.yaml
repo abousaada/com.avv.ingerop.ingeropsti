@@ -21,6 +21,6 @@ builder:
           name: ZSTI
           description: Application STI
           package: ZSTI
-          transport: DS4K900391
+          transport: DS4K900656
         exclude:
           - /test/

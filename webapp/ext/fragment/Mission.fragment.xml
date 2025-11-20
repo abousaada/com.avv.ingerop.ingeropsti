@@ -88,7 +88,7 @@
 
                 <!-- Status Column -->
                 <table:Column width="5rem">
-                    <Label text="Status" />
+                    <Label text="Statut" />
                     <table:template>
                         <Text
                             text="{missions>statutmission}"
