@@ -339,7 +339,7 @@
                 <Property Name="BusinessStatus" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="Soufam" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="Rgfact" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
-                <Property Name="AncienNumero" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:label=""/>
+                <Property Name="AncienNumero" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="Modalr" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="Modalf" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="Avance" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label=""/>
@@ -377,7 +377,7 @@
                 <Property Name="StartReview" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Character Field with Length 10" sap:heading=""/>
                 <Property Name="ProjectReview" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Character Field with Length 10" sap:heading=""/>
                 <Property Name="EndProjectReview" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Character Field with Length 10" sap:heading=""/>
-                <Property Name="UrlCup" Type="Edm.String" MaxLength="255" sap:display-format="UpperCase" sap:label="Char255" sap:heading=""/>
+                <Property Name="UrlCup" Type="Edm.String" MaxLength="1250" sap:display-format="UpperCase" sap:label="Character field, length 1250" sap:heading=""/>
                 <Property Name="CompanyCode" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Company code" sap:heading="" sap:quickinfo="Company code for WBS element" sap:value-list="standard"/>
                 <Property Name="ProfitCenter" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Profit Center" sap:heading=""/>
                 <Property Name="Type" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Proj.type" sap:heading="" sap:quickinfo="Project Type"/>
@@ -419,7 +419,7 @@
                 <Property Name="id_formulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_no_e" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:heading="" sap:quickinfo="Character field length 24" sap:value-list="standard"/>
                 <Property Name="Criticality" Type="Edm.Byte"/>
-                <Property Name="status_text" Type="Edm.String" MaxLength="14" sap:label="" sap:creatable="false" sap:updatable="false" sap:value-list="fixed-values"/>
+                <Property Name="stext" Type="Edm.String" MaxLength="14" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="status" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="business_e_t" Type="Edm.String" MaxLength="40" sap:label="Description" sap:heading="" sap:quickinfo="PS: Short description (1st text line)" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_e_cmp" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Company code" sap:heading="" sap:quickinfo="Company code for WBS element" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
@@ -520,7 +520,7 @@
                 <Key>
                     <PropertyRef Name="ProfitCenter"/>
                 </Key>
-                <Property Name="ProfitCenter" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Centre de profit" sap:quickinfo="From Value"/>
+                <Property Name="ProfitCenter" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:text="description" sap:label="Centre de profit" sap:quickinfo="From Value"/>
                 <Property Name="UFO" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="UFO Délégué" sap:quickinfo="Set Name"/>
                 <Property Name="description" Type="Edm.String" MaxLength="40" sap:label="Centre de profit Description" sap:quickinfo="Short Description of a Set"/>
             </EntityType>
@@ -542,15 +542,18 @@
                 <Key>
                     <PropertyRef Name="BusinessNo"/>
                     <PropertyRef Name="id_formulaire"/>
+                    <PropertyRef Name="langu"/>
+                    <PropertyRef Name="CommentType"/>
+                    <PropertyRef Name="line"/>
                 </Key>
                 <Property Name="BusinessNo" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
                 <Property Name="id_formulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label=""/>
-                <Property Name="langu" Type="Edm.String" MaxLength="2" sap:label="Language Key"/>
-                <Property Name="CommentType" Type="Edm.String" MaxLength="6" sap:display-format="UpperCase" sap:label="Reserve" sap:quickinfo="Character field of length 6"/>
-                <Property Name="line" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Number" sap:quickinfo="Four-digit number"/>
+                <Property Name="langu" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
+                <Property Name="CommentType" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="UpperCase" sap:label="Reserve" sap:quickinfo="Character field of length 6"/>
+                <Property Name="line" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="NonNegative" sap:label="Number" sap:quickinfo="Four-digit number"/>
                 <Property Name="text_line" Type="Edm.String" MaxLength="255" sap:display-format="UpperCase" sap:label="Char255"/>
             </EntityType>
-            <EntityType Name="ZI_STI_STATUS_VHType" sap:value-list="true" sap:content-version="1">
+            <EntityType Name="ZI_STI_STATUS_VHType" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="value"/>
                     <PropertyRef Name="language"/>
@@ -1119,27 +1122,6 @@
                         </PropertyValue>
                     </Record>
                 </Annotation>
-            </Annotations>
-            <Annotations Target="ZSTI_SRV.ZC_STIType/status_text" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-                <Annotation Term="Common.ValueList">
-                    <Record>
-                        <PropertyValue Property="Label" String="Aide à la recherche Status STI"/>
-                        <PropertyValue Property="CollectionPath" String="ZI_STI_STATUS_VH"/>
-                        <PropertyValue Property="SearchSupported" Bool="true"/>
-                        <PropertyValue Property="Parameters">
-                            <Collection>
-                                <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="status_text"/>
-                                    <PropertyValue Property="ValueListProperty" String="value"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="text"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-                <Annotation Term="Common.ValueListWithFixedValues"/>
             </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_cmp" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
