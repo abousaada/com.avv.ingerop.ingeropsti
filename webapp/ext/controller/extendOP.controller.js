@@ -95,6 +95,11 @@ sap.ui.define(
                                     that._recalculateMissionBudgets();
 
                                     oView.getModel().refresh(true);
+                                    const oUIModel = oView.getModel("ui");
+                                    if (oUIModel) {
+                                        oUIModel.setProperty("/editable", false);
+                                    }
+
                                     const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
                                     oRouter.navTo("ListReport");
 
@@ -1326,9 +1331,9 @@ sap.ui.define(
                         }
                         // Update comments model
                         if (oView.getModel("comments")) {
-                           var oGrouped = this._groupCommentLines(comments);
-                           oView.getModel("comments").setData(oGrouped);
-                          //  oView.getModel("comments").setData({ results: comments });
+                            var oGrouped = this._groupCommentLines(comments);
+                            oView.getModel("comments").setData(oGrouped);
+                            //  oView.getModel("comments").setData({ results: comments });
                         }
 
                         // Update missions model - preserve OriginalBudgetInSTI
