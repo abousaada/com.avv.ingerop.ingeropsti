@@ -428,7 +428,7 @@
                 <Property Name="business_e_currency" Type="Edm.String" MaxLength="3" sap:label=""/>
                 <Property Name="business_e_ufo" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Set Name" sap:heading="" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
                 <Property Name="business_e_cdp" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Profit Center" sap:heading="" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
-                <Property Name="business_e_bm" Type="Edm.String" MaxLength="25" sap:text="business_e_bm_t" sap:label="" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="business_e_bm" Type="Edm.String" MaxLength="25" sap:text="business_e_bm_t" sap:label="" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
                 <Property Name="business_e_bm_t" Type="Edm.String" MaxLength="25" sap:label="Name of Person Resp." sap:heading="" sap:quickinfo="Name of responsible person (Project manager)"/>
                 <Property Name="business_e_clt" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_e_curr" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="Currency" sap:heading="" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
@@ -889,9 +889,6 @@
                                     <PropertyValue Property="ValueListProperty" String="STILinkedCount"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="RateDevis"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
                                     <PropertyValue Property="ValueListProperty" String="VAT"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
@@ -931,20 +928,31 @@
                                     <PropertyValue Property="ValueListProperty" String="Activity"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_EDate"/>
-                                    <PropertyValue Property="ValueListProperty" String="EndDate"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_cdp"/>
+                                    <PropertyValue Property="ValueListProperty" String="CDG"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_SDate"/>
-                                    <PropertyValue Property="ValueListProperty" String="StartDate"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_bm_t"/>
+                                    <PropertyValue Property="ValueListProperty" String="description"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterInOut">
                                     <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_clt"/>
                                     <PropertyValue Property="ValueListProperty" String="CustomerName"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_SDate"/>
+                                    <PropertyValue Property="ValueListProperty" String="StartDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_EDate"/>
+                                    <PropertyValue Property="ValueListProperty" String="EndDate"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterInOut">
                                     <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_currency"/>
                                     <PropertyValue Property="ValueListProperty" String="Currency"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="RateDevis"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
                                     <PropertyValue Property="ValueListProperty" String="Reflet"/>
@@ -1001,65 +1009,58 @@
                                     <PropertyValue Property="ValueListProperty" String="Datcha"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="NbOfMonth"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_cdp"/>
-                                    <PropertyValue Property="ValueListProperty" String="CDG"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="EngagementCommittee"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="StartReview"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="ContractReview"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="ProjectReview"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="EndProjectReview"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="QuoteReview"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="UrlCup"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="RemainingMonth"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="Type"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="BusinessManager"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="BusinessFactRule"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="RBACumulNm1"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="RBACumulN"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="RBAMonthM"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="ReviActu"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="RBAForecast"/>
+                                    <PropertyValue Property="ValueListProperty" String="Site"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
                                     <PropertyValue Property="ValueListProperty" String="Criticality"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="Site"/>
+                                    <PropertyValue Property="ValueListProperty" String="RBAForecast"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ReviActu"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="RBAMonthM"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="RBACumulN"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="RBACumulNm1"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessFactRule"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BusinessManager"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Type"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="UrlCup"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="EndProjectReview"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ProjectReview"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="StartReview"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="EngagementCommittee"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="ContractReview"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="QuoteReview"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="RemainingMonth"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
                                     <PropertyValue Property="ValueListProperty" String="International"/>
@@ -1117,6 +1118,9 @@
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
                                     <PropertyValue Property="ValueListProperty" String="DataSource"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="NbOfMonth"/>
                                 </Record>
                             </Collection>
                         </PropertyValue>
@@ -1211,6 +1215,26 @@
                                 <Record Type="Common.ValueListParameterIn">
                                     <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_ufo"/>
                                     <PropertyValue Property="ValueListProperty" String="UFO"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="description"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/business_e_bm" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Value Help for Project Manager"/>
+                        <PropertyValue Property="CollectionPath" String="ZI_FGA_PROJM_VH"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="business_e_bm"/>
+                                    <PropertyValue Property="ValueListProperty" String="UsrId"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
                                     <PropertyValue Property="ValueListProperty" String="description"/>
