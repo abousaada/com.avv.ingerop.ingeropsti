@@ -94,6 +94,9 @@ sap.ui.define(
                                 onClose: function () {
                                     that._recalculateMissionBudgets();
 
+                                    const newIdFormulaire = updatedSTI.id_formulaire;
+                                    oModel.setProperty(sPath + "/id_formulaire", newIdFormulaire);
+
                                     oView.getModel().refresh(true);
                                     const oUIModel = oView.getModel("ui");
                                     if (oUIModel) {
@@ -208,7 +211,7 @@ sap.ui.define(
                 const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
 
                 if (bIsCreate) {
-                    const sNewFormulaireId = await this._calculateFormulaireId();
+                    var sNewFormulaireId; // = await this._calculateFormulaireId();
 
                     oModel.setProperty(sPath + "/id_formulaire", sNewFormulaireId);
 
