@@ -1159,99 +1159,92 @@ sap.ui.define(
                 }
             },
 
+
             _recalculateMissionBudgets: function () {
                 var oView = this.getView();
                 var budgetData = oView.getModel("budget").getProperty("/results");
                 var missionsData = oView.getModel("missions").getProperty("/results");
 
-                // Check if budget table is empty
+                // Flag pour éviter les alertes multiples
+                if (!this._lastBudgetAlertTime) {
+                    this._lastBudgetAlertTime = 0;
+                }
+                var now = new Date().getTime();
+                var showAlert = (now - this._lastBudgetAlertTime) > 5000; // 5 secondes entre les alertes
+
                 if (!budgetData || budgetData.length === 0) {
-                    console.log("Budget table is empty - preserving existing mission values");
-                    // Even when budget is empty, ensure OriginalBudgetInSTI is set
                     missionsData.forEach(mission => {
                         if (mission.OriginalBudgetInSTI === undefined) {
                             mission.OriginalBudgetInSTI = parseFloat(mission.BudgetInSTI || 0);
                         }
                     });
                     oView.getModel("missions").refresh(true);
-                    //return;
+                    return;
                 }
 
-                // Collect missions that exceed their available budget
                 var overBudgetMissions = [];
                 var updatedMissions = [];
 
                 missionsData.forEach(mission => {
                     const missionId = mission.MissionId;
 
-                    // Get the ORIGINAL database value (not the calculated one)
-                    //const originalDatabaseBudget = parseFloat(mission.OriginalBudgetInSTI || mission.BudgetInSTI || 0);
-                    const originalDatabaseBudget = parseFloat(mission.OriginalBudgetInSTI || 0);
-
-                    // If we haven't stored the original value yet, store it now
-                    /*if (!mission.OriginalBudgetInSTI) {
-                        mission.OriginalBudgetInSTI = originalDatabaseBudget;
-                    }*/
-
-                    // Filter budget lines: only include NEW ones (not yet saved)
-                    const newBudgetLines = budgetData.filter(b => {
-                        return b.Mission_e === missionId && b.isNew;
-                    });
-
-                    // Sum of ONLY NEW manually added BudgetAlloue for this mission
-                    const newManualBudget = newBudgetLines
+                    // Sum ALL current budget values for this mission
+                    const totalBudgetForMission = budgetData
+                        .filter(b => b.Mission_e === missionId)
                         .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0);
 
-                    // Total BudgetInSTI = original database value + ONLY NEW manual values
-                    const totalBudgetInSTI = originalDatabaseBudget + newManualBudget;
+                    const available = parseFloat(mission.GlobalBudget) - totalBudgetForMission;
 
-                    const available = parseFloat(mission.GlobalBudget) - totalBudgetInSTI;
+                    const updatedMission = {
+                        ...mission,
+                        OriginalBudgetInSTI: totalBudgetForMission,
+                        BudgetInSTI: totalBudgetForMission.toFixed(2),
+                        AvailableBudget: available.toFixed(2),
+                        SubcontractedBudgetPercentage: mission.GlobalBudget === "0.00" ?
+                            "0%" : ((totalBudgetForMission / mission.GlobalBudget) * 100).toFixed(2) + "%"
+                    };
+
+                    updatedMissions.push(updatedMission);
 
                     if (available < 0) {
                         overBudgetMissions.push({
                             MissionId: mission.MissionId,
                             description: mission.description,
                             available: available.toFixed(2),
-                            totalBudgetInSTI: totalBudgetInSTI.toFixed(2),
-                            originalDatabaseBudget: originalDatabaseBudget.toFixed(2),
-                            newManualBudget: newManualBudget.toFixed(2),
-                            newBudgetLinesCount: newBudgetLines.length,
-                            totalBudgetLinesCount: budgetData.filter(b => b.Mission_e === missionId).length
-                        });
-                    } else {
-                        updatedMissions.push({
-                            ...mission,
-                            // Preserve the original database value
-                            OriginalBudgetInSTI: originalDatabaseBudget,
-                            // Store the calculated total separately
-                            BudgetInSTI: totalBudgetInSTI.toFixed(2),
-                            AvailableBudget: available.toFixed(2),
-                            SubcontractedBudgetPercentage: mission.GlobalBudget === "0.00" ?
-                                "0%" : ((totalBudgetInSTI / mission.GlobalBudget) * 100).toFixed(2) + "%"
+                            totalBudgetInSTI: totalBudgetForMission.toFixed(2)
                         });
                     }
                 });
 
-                if (overBudgetMissions.length > 0) {
-                    var message = overBudgetMissions.map(m =>
-                        `Mission '${m.description}' (${m.MissionId}) dépasse le budget disponible.\n` +
-                        `Budget base: ${m.originalDatabaseBudget}, Nouveau budget manuel: ${m.newManualBudget}\n` +
-                        `Budget total: ${m.totalBudgetInSTI}, Disponible: ${m.available}\n` +
-                        `(Nouvelles lignes: ${m.newBudgetLinesCount}/${m.totalBudgetLinesCount})`
-                    ).join("\n\n");
-
-                    sap.m.MessageBox.warning(message, {
-                        title: "Attention",
-                        actions: [sap.m.MessageBox.Action.OK]
-                    });
-                    return;
-                }
-
                 oView.getModel("missions").setProperty("/results", updatedMissions);
                 oView.getModel("missions").refresh(true);
+
+                if (overBudgetMissions.length > 0 && showAlert) {
+                    // Mettre à jour le timestamp
+                    this._lastBudgetAlertTime = now;
+
+                    var message = "ATTENTION : " + overBudgetMissions.length + " mission(s) dépasse(nt) le budget disponible :\n\n";
+
+                    overBudgetMissions.forEach((m, index) => {
+                        message += `${index + 1}. Mission '${m.description}' (${m.MissionId})\n`;
+                        message += `   Budget sous-traité: ${m.totalBudgetInSTI}, Disponible: ${m.available}\n`;
+                        if (index < overBudgetMissions.length - 1) {
+                            message += "\n";
+                        }
+                    });
+
+                    sap.m.MessageBox.warning(message, {
+                        title: "Attention - Budget dépassé",
+                        actions: [sap.m.MessageBox.Action.OK],
+                        onClose: function () {
+                            // Réinitialiser le timer après fermeture de l'alerte
+                            this._lastBudgetAlertTime = 0;
+                        }.bind(this)
+                    });
+                }
+
                 this.prepareMissionsTreeData();
             },
-
 
             onValidateSTI: function (oEvent) {
                 this.beforeSaveExtension('INAPPROVAL');
