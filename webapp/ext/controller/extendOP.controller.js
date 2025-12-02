@@ -1161,6 +1161,90 @@ sap.ui.define(
 
 
             _recalculateMissionBudgets: function () {
+    var oView = this.getView();
+    var budgetData = oView.getModel("budget").getProperty("/results");
+    var missionsData = oView.getModel("missions").getProperty("/results");
+
+    // Flag pour éviter les alertes multiples
+    if (!this._lastBudgetAlertTime) {
+        this._lastBudgetAlertTime = 0;
+    }
+    var now = new Date().getTime();
+    var showAlert = (now - this._lastBudgetAlertTime) > 5000; // 5 secondes entre les alertes
+
+    var overBudgetMissions = [];
+    var updatedMissions = [];
+
+    missionsData.forEach(mission => {
+        const missionId = mission.MissionId;
+
+        // CRITICAL FIX: Get the ORIGINAL database BudgetInSTI value
+        const originalDatabaseBudgetInSTI = parseFloat(mission.BudgetInSTI || 0);
+
+        // Sum ALL current budget values from the UI table for this mission
+        const currentTableBudget = budgetData && budgetData.length > 0 ?
+            budgetData
+                .filter(b => b.Mission_e === missionId)
+                .reduce((acc, b) => acc + parseFloat(b.BudgetAlloue || 0), 0) :
+            0;
+
+        // TOTAL BudgetInSTI = Database value + Current table values
+        const totalBudgetForMission = originalDatabaseBudgetInSTI + currentTableBudget;
+
+        const available = parseFloat(mission.GlobalBudget || 0) - totalBudgetForMission;
+
+        const updatedMission = {
+            ...mission,
+            OriginalBudgetInSTI: totalBudgetForMission,
+            BudgetInSTI: totalBudgetForMission.toFixed(2),
+            AvailableBudget: available.toFixed(2),
+            SubcontractedBudgetPercentage: parseFloat(mission.GlobalBudget || 0) === 0 ?
+                "0%" : ((totalBudgetForMission / parseFloat(mission.GlobalBudget || 0)) * 100).toFixed(2) + "%"
+        };
+
+        updatedMissions.push(updatedMission);
+
+        if (available < 0) {
+            overBudgetMissions.push({
+                MissionId: mission.MissionId,
+                description: mission.description,
+                available: available.toFixed(2),
+                totalBudgetInSTI: totalBudgetForMission.toFixed(2)
+            });
+        }
+    });
+
+    oView.getModel("missions").setProperty("/results", updatedMissions);
+    oView.getModel("missions").refresh(true);
+
+    if (overBudgetMissions.length > 0 && showAlert) {
+        // Mettre à jour le timestamp
+        this._lastBudgetAlertTime = now;
+
+        var message = "ATTENTION : " + overBudgetMissions.length + " mission(s) dépasse(nt) le budget disponible :\n\n";
+
+        overBudgetMissions.forEach((m, index) => {
+            message += `${index + 1}. Mission '${m.description}' (${m.MissionId})\n`;
+            message += `   Budget sous-traité: ${m.totalBudgetInSTI}, Disponible: ${m.available}\n`;
+            if (index < overBudgetMissions.length - 1) {
+                message += "\n";
+            }
+        });
+
+        sap.m.MessageBox.warning(message, {
+            title: "Attention - Budget dépassé",
+            actions: [sap.m.MessageBox.Action.OK],
+            onClose: function () {
+                // Réinitialiser le timer après fermeture de l'alerte
+                this._lastBudgetAlertTime = 0;
+            }.bind(this)
+        });
+    }
+
+    this.prepareMissionsTreeData();
+},
+
+            _recalculateMissionBudgets1: function () {
                 var oView = this.getView();
                 var budgetData = oView.getModel("budget").getProperty("/results");
                 var missionsData = oView.getModel("missions").getProperty("/results");
@@ -1376,81 +1460,7 @@ sap.ui.define(
                     oView.setBusy(false);
                 }
             },
-            _refreshScreenData1: function (oView, status) {
-                try {
-                    // Show busy indicator
-                    oView.setBusy(true);
-
-                    // Get the main model and context
-                    const oModel = oView.getModel();
-                    const oContext = oView.getBindingContext();
-
-                    if (!oContext) {
-                        console.warn("No binding context available for refresh");
-                        oView.setBusy(false);
-                        return;
-                    }
-
-                    // Refresh the main entity by re-reading it
-                    const sPath = oContext.getPath();
-
-                    // Use model's refresh method correctly
-                    oModel.refresh(true); // This refreshes the entire model
-
-                    // If you need to refresh a specific binding, use:
-                    // oView.getBindingContext().getModel().refresh(true);
-
-                    // Refresh budget and missions data
-                    Promise.all([
-                        this.getBudget(),
-                        this.getMissions(),
-                        this.getWF(),
-                        this.getComments()
-                    ]).then(([budget, missions, wf, comments]) => {
-                        // Update the budget model
-                        if (oView.getModel("budget")) {
-                            oView.getModel("budget").setData({ results: budget });
-                        }
-                        // Update the wf model
-                        if (oView.getModel("wf")) {
-                            oView.getModel("wf").setData({ results: wf });
-                        }
-
-                        // Update the comments model
-                        if (oView.getModel("comments")) {
-                            oView.getModel("comments").setData({ results: comments });
-                        }
-
-                        // Update the missions model
-                        if (oView.getModel("missions")) {
-                            oView.getModel("missions").setData({ results: missions });
-                        }
-
-
-
-                        sap.m.MessageToast.show("Data refreshed successfully");
-
-                        if (status !== 'DRAFT') {
-                            const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
-                            oRouter.navTo("ListReport");
-                        }
-
-                        // Recalculate budgets and refresh tree
-                        this.prepareMissionsTreeData();
-                        //this._recalculateMissionBudgets();
-
-                    }).catch(error => {
-                        console.error("Erreur lors du rafraîchissement des données secondaires :", error);
-                        sap.m.MessageToast.show("Erreur lors du rafraîchissement de certaines données");
-                    }).finally(() => {
-                        oView.setBusy(false);
-                    });
-
-                } catch (error) {
-                    console.error("Erreur dans _refreshScreenData :", error);
-                    oView.setBusy(false);
-                }
-            },
+            
         }
     }
 );
