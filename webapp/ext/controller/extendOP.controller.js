@@ -1166,6 +1166,22 @@ sap.ui.define(
                 var budgetData = oView.getModel("budget").getProperty("/results");
                 var missionsData = oView.getModel("missions").getProperty("/results");
 
+                
+                // First, get the missions model from the view
+                var missionsModel = oView.getModel("missions");
+
+                // Initialize original missions model if it doesn't exist
+                if (!this._originalMissionsModel) {
+                    var missionsData = missionsModel.getProperty("/results") || [];
+                    this._originalMissionsModel = {
+                        data: JSON.parse(JSON.stringify(missionsData)),
+                        lastUpdated: new Date().getTime()
+                    };
+                }
+
+                // Now use the stored original data
+                var missionsData = this._originalMissionsModel.data;
+
                 // Flag pour éviter les alertes multiples
                 if (!this._lastBudgetAlertTime) {
                     this._lastBudgetAlertTime = 0;
@@ -1178,8 +1194,6 @@ sap.ui.define(
 
                 missionsData.forEach(mission => {
                     const missionId = mission.MissionId;
-
-                    // CRITICAL FIX: Get the ORIGINAL database BudgetInSTI value
                     const originalDatabaseBudgetInSTI = parseFloat(mission.BudgetInSTI || 0);
 
                     // Sum ALL current budget values from the UI table for this mission
