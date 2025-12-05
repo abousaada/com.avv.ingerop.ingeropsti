@@ -249,6 +249,12 @@
             <Annotations Target="ZSTI_SRV.ZC_STIType/p_period">
                 <Annotation Term="UI.Hidden"/>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/business_no_p_t">
+                <Annotation Term="UI.MultiLineText"/>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/business_p_projm_t">
+                <Annotation Term="UI.MultiLineText"/>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType">
                 <Annotation Term="UI.Facets">
                     <Collection>
