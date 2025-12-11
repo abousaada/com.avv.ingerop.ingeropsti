@@ -449,6 +449,7 @@
                 <Property Name="glaccountPxSTI" Type="Edm.String" MaxLength="255"/>
                 <Property Name="TypeBudg" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:label="char8" sap:quickinfo="Character field, 8 characters long"/>
                 <Property Name="p_period" Type="Edm.String" MaxLength="6"/>
+                <Property Name="date_creation" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
                 <NavigationProperty Name="to_BUDG" Relationship="ZSTI_SRV.assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" FromRole="FromRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" ToRole="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 <NavigationProperty Name="to_Comments" Relationship="ZSTI_SRV.assoc_9204A440B06323DF29C36860ABC8797B" FromRole="FromRole_assoc_9204A440B06323DF29C36860ABC8797B" ToRole="ToRole_assoc_9204A440B06323DF29C36860ABC8797B"/>
                 <NavigationProperty Name="to_Missions" Relationship="ZSTI_SRV.assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" FromRole="FromRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" ToRole="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
