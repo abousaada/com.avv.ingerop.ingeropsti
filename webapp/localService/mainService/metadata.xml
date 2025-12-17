@@ -569,6 +569,9 @@
             <ComplexType Name="ZGEN_ID">
                 <Property Name="ZGenId" Type="Edm.Int16" Nullable="false" sap:label="Signed INT2 / int16" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </ComplexType>
+            <ComplexType Name="ZCHECK_STI_FLOW">
+                <Property Name="ZExist" Type="Edm.Boolean" Nullable="false" sap:label="Indicator" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </ComplexType>
             <Association Name="assoc_FD79958503C5B69AE394CE77394A4B0F" sap:content-version="1">
                 <End Type="ZSTI_SRV.ZC_STI_WFType" Multiplicity="1" Role="FromRole_assoc_FD79958503C5B69AE394CE77394A4B0F"/>
                 <End Type="ZSTI_SRV.ZC_STIType" Multiplicity="1" Role="ToRole_assoc_FD79958503C5B69AE394CE77394A4B0F"/>
@@ -648,6 +651,14 @@
                 <FunctionImport Name="ZGET_ID" ReturnType="ZSTI_SRV.ZGEN_ID" m:HttpMethod="POST">
                     <Parameter Name="IV_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="iv_IdFormulaire" Type="Edm.String" Mode="In" MaxLength="50"/>
+                </FunctionImport>
+                <FunctionImport Name="ZCHECK_INTERCO" ReturnType="ZSTI_SRV.ZCHECK_STI_FLOW" m:HttpMethod="POST">
+                    <Parameter Name="IV_UFO_P" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_BUSINESS_NO_E" Type="Edm.String" Mode="In" MaxLength="50"/>
+                </FunctionImport>
+                <FunctionImport Name="ZCHECK_UFO_CDP" ReturnType="ZSTI_SRV.ZCHECK_STI_FLOW" m:HttpMethod="POST">
+                    <Parameter Name="IV_CDP_P" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_BUSINESS_NO_E" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>

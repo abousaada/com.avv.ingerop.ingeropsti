@@ -16,7 +16,7 @@ sap.ui.define(
 
             onInit: async function () {
                 this._getExtensionAPI().attachPageDataLoaded(this._onObjectExtMatched.bind(this));
-                this._setupEnterKeyHandlers();
+                await this._setupEnterKeyHandlers();
 
                 sap.ui.getCore().getEventBus().subscribe("budget", "budgetLineDeleted", this._recalculateMissionBudgets, this);
 
@@ -134,7 +134,7 @@ sap.ui.define(
 
             //},
 
-            _setupEnterKeyHandlers: function () {
+            _setupEnterKeyHandlers: async function () {
                 var oView = this.getView();
 
                 oView.attachAfterRendering(function () {
@@ -159,8 +159,8 @@ sap.ui.define(
                 }.bind(this));
             },
 
-            _onEnterKeyPressed: function (oEvent) {
-                this.onGenerateId();
+            _onEnterKeyPressed: async function (oEvent) {
+                await this.onGenerateId();
             },
 
             _getExtensionAPI: function () {
@@ -581,9 +581,60 @@ sap.ui.define(
                 }
             },
 
+            onGenerateId: async function () {
 
-            onGenerateId: function () {
+                const oContext = this._getController().getView().getBindingContext();
+                const sPath = oContext.getPath();
+                const oModel = this.getView().getModel();
+
+                const sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
+                const sBusinessCdp = oModel.getProperty(sPath + "/business_p_cdp");
+                const sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
+
+                if (!sBusinessUfo) {
+                    sap.m.MessageBox.error("Le champ Business UFO est vide");
+                    return;
+                }
+
+                const isInterCo = await this._callZCHECK_INTERCOAction(sBusinessNoE, sBusinessUfo);
+                if (isInterCo) {
+                    sap.m.MessageBox.error("Une STI Groupe vers cette UFO déléguée existe déjà pour cette affaire. Un second flux n’est pas autorisé.");
+                    return;
+                }
+
+                const isInterCdp = await this._callZCHECK_UFO_CDPAction(sBusinessNoE, sBusinessCdp);
+                if (isInterCdp) {
+                    sap.m.MessageBox.error("Une STI avec la même affaire émettrice et le même centre de profit récepteur existe déjà. La création d’un doublon n’est pas autorisée.");
+                    return;
+                }
+
+                // ---- Generate ID logic ----
+                const prefix = sBusinessNoE.substring(0, 4);
+                const segment = sBusinessNoE.substring(4, 8);
+                const rest = sBusinessNoE.substring(8);
+
+                let newMiddle;
+                if (/^X{4}$/.test(segment)) {
+                    newMiddle = sBusinessUfo + rest;
+                } else {
+                    const next4 = sBusinessNoE.substring(4, 8);
+                    const remaining = sBusinessNoE.substring(12);
+                    newMiddle = sBusinessUfo + next4 + remaining;
+                }
+
+                const baseId = prefix + newMiddle;
+                const nextId = this._calculateBusinessNoPId(baseId);
+
+                oModel.setProperty(sPath + "/business_no_p", nextId);
+
+                return nextId;
+            },
+
+
+            onGenerateId1: function () {
                 return new Promise((resolve, reject) => {
+
+
 
                     const oContext = this._getController().getView().getBindingContext();
                     const sPath = oContext.getPath();
@@ -594,11 +645,24 @@ sap.ui.define(
                     //if (!sBusinessNoP) {
 
                     var sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
-
+                    var sBusinessCdp = oModel.getProperty(sPath + "/business_p_cdp");
                     var sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
 
                     if (!sBusinessUfo) {
                         sap.m.MessageBox.error("Le champ Business UFO est vide");
+                        return;
+                    }
+
+
+                    var isInterCo = this._callZCHECK_INTERCOAction(sBusinessNoE, sBusinessUfo);
+                    if (isInterCo) {
+                        sap.m.MessageBox.error("is InterCO");
+                        return;
+                    }
+
+                    var isInterCdp = this._callZCHECK_UFO_CDPAction(sBusinessNoE, sBusinessCdp);
+                    if (isInterCdp) {
+                        sap.m.MessageBox.error("is InterCDP");
                         return;
                     }
 
@@ -1166,7 +1230,7 @@ sap.ui.define(
                 var budgetData = oView.getModel("budget").getProperty("/results");
                 var missionsData = oView.getModel("missions").getProperty("/results");
 
-                
+
                 // First, get the missions model from the view
                 var missionsModel = oView.getModel("missions");
 
@@ -1549,6 +1613,68 @@ sap.ui.define(
                 }
             },
 
+
+            _callZCHECK_INTERCOAction: function (IV_BUSINESS_NO_E, IV_UFO_P) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const oModel = this.getView().getModel();
+
+                        // Prepare the parameter object
+                        const oParams = {
+                            IV_BUSINESS_NO_E: IV_BUSINESS_NO_E,
+                            IV_UFO_P: IV_UFO_P
+                        };
+
+                        // Call the action with parameters
+                        oModel.callFunction("/ZCHECK_INTERCO", {
+                            method: "POST", // Usually POST for actions with parameters
+                            urlParameters: oParams,
+                            success: (oData) => {
+                                console.log("ZCHECK_INTERCO action successful:", oData);
+                                resolve(oData.ZCHECK_INTERCO.ZExist);
+                            },
+                            error: (oError) => {
+                                console.error("Error calling ZCHECK_INTERCO action:", oError);
+                                reject(oError);
+                            }
+                        });
+                    } catch (error) {
+                        console.error("Unexpected error in _callZGET_IDAction:", error);
+                        reject(error);
+                    }
+                });
+            },
+
+            _callZCHECK_UFO_CDPAction: function (IV_BUSINESS_NO_E, IV_CDP_P) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const oModel = this.getView().getModel();
+
+                        // Prepare the parameter object
+                        const oParams = {
+                            IV_BUSINESS_NO_E: IV_BUSINESS_NO_E,
+                            IV_CDP_P: IV_CDP_P
+                        };
+
+                        // Call the action with parameters
+                        oModel.callFunction("/ZCHECK_UFO_CDP", {
+                            method: "POST", // Usually POST for actions with parameters
+                            urlParameters: oParams,
+                            success: (oData) => {
+                                console.log("ZCHECK_UFO_CDP action successful:", oData);
+                                resolve(oData.ZCHECK_UFO_CDP.ZExist);
+                            },
+                            error: (oError) => {
+                                console.error("Error calling ZCHECK_UFO_CDP action:", oError);
+                                reject(oError);
+                            }
+                        });
+                    } catch (error) {
+                        console.error("Unexpected error in _callZCHECK_UFO_CDPAction:", error);
+                        reject(error);
+                    }
+                });
+            },
         }
     }
 );
