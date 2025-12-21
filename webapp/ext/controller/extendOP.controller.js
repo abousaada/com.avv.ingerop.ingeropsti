@@ -44,6 +44,27 @@ sap.ui.define(
 
                     //const nextId = await this._callZGET_IDAction();
 
+                    // VALIDATION CHECKS: before generating ID or saving :InterCo/CDP check
+                    const sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
+                    const sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
+                    const sBusinessCdp = oModel.getProperty(sPath + "/business_p_cdp");
+
+                    // Validate InterCo check
+                    const isInterCo = await this._callZCHECK_INTERCOAction(sBusinessNoE, sBusinessUfo);
+                    if (isInterCo) {
+                        sap.m.MessageBox.error("Une STI Groupe vers cette UFO déléguée existe déjà pour cette affaire. Un second flux n’est pas autorisé.");
+                        oView.setBusy(false);
+                        return Promise.reject("InterCo validation failed");
+                    }
+
+                    // Validate CDP check
+                    const isInterCdp = await this._callZCHECK_UFO_CDPAction(sBusinessNoE, sBusinessCdp);
+                    if (isInterCdp) {
+                        sap.m.MessageBox.error("Une STI avec la même affaire émettrice et le même centre de profit récepteur existe déjà. La création d’un doublon n’est pas autorisée.");
+                        oView.setBusy(false);
+                        return Promise.reject("InterCdp validation failed");
+                    }
+
                     var business_no_p = oModel.getProperty(sPath + "/business_no_p");
                     if (!business_no_p) {
                         await this.onGenerateId();
