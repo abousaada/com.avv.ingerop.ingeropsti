@@ -19,7 +19,8 @@
                     enabled="{
                         parts: [
                             { path: 'ui>/editable' },
-                            { path: 'missions>/results' }
+                            { path: 'missions>/results' },
+                            { path: 'ui>/isAvnant' }
                         ],
                         formatter: '.enableAddLine'
                     }"
@@ -78,8 +79,12 @@
                                 templateShareable: false
                             }"
                             editable="{
-                                path: 'budget>isNew',
-                                formatter: '.isLineEditable'
+                                parts: [
+                                    { path: 'budget>isNew' },
+                                    { path: 'budget>Mission_p' },
+                                    { path: 'ui>/isAvnant' }
+                                ],
+                                formatter: '.formatCellEditable'
                             }"
                             selectedKey="{budget>Mission_e}"
                             change="onMissionChange"
@@ -89,17 +94,35 @@
                                 text="{missions>MissionId}"
                             />
                         </Select>
+                        
                         <Text text="{budget>Mission_p}" />
+                        
                         <Input
                             value="{budget>Libelle}"
-                            editable="{ui>/editable}"
+                            editable="{
+                                parts: [
+                                    { path: 'budget>isNew' },
+                                    { path: 'budget>Mission_p' },
+                                    { path: 'ui>/isAvnant' }
+                                ],
+                                formatter: '.formatCellEditable'
+                            }"
                         />
+                        
                         <Text text="{budget>MissionCode}" />
                         <Text text="{budget>Regroupement}" />
+                        
                         <DatePicker
                             value="{path: 'budget>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
                             displayFormat="short"
-                            editable="{ui>/editable}"
+                            editable="{
+                                parts: [
+                                    { path: 'budget>isNew' },
+                                    { path: 'budget>Mission_p' },
+                                    { path: 'ui>/isAvnant' }
+                                ],
+                                formatter: '.formatCellEditable'
+                            }"
                             width="100%"
                             required="true"
                         />
@@ -107,23 +130,46 @@
                         <DatePicker
                             value="{path: 'budget>EndDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
                             displayFormat="short"
-                            editable="{ui>/editable}"
+                            editable="{
+                                parts: [
+                                    { path: 'budget>isNew' },
+                                    { path: 'budget>Mission_p' },
+                                    { path: 'ui>/isAvnant' }
+                                ],
+                                formatter: '.formatCellEditable'
+                            }"
                             width="100%"
                             required="true"
                         />
 
                         <Input
                             value="{budget>BudgetAlloue}"
-                            editable="{ui>/editable}"
+                            editable="{
+                                parts: [
+                                    { path: 'budget>isNew' },
+                                    { path: 'budget>Mission_p' },
+                                    { path: 'ui>/isAvnant' }
+                                ],
+                                formatter: '.formatCellEditable'
+                            }"
                             type="Number"
                             placeholder="0.00"
                         />
+                        
                         <Text text="{budget>Currency}" />
+                        
                         <Button
                             icon="sap-icon://delete"
                             type="Reject"
                             press="onDeleteBudgetLine"
-                            visible="{ui>/editable}"
+                            enabled="{
+                                parts: [
+                                    { path: 'budget>isNew' },
+                                    { path: 'budget>Mission_p' },
+                                    { path: 'ui>/isAvnant' }
+                                ],
+                                formatter: '.formatCellEditable'
+                            }"
                         />
                     </cells>
                 </ColumnListItem>

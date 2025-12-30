@@ -450,6 +450,7 @@
                 <Property Name="TypeBudg" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:label="char8" sap:quickinfo="Character field, 8 characters long"/>
                 <Property Name="p_period" Type="Edm.String" MaxLength="6"/>
                 <Property Name="date_creation" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
+                <Property Name="is_avenant" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Single-Character Flag" sap:heading=""/>
                 <NavigationProperty Name="to_BUDG" Relationship="ZSTI_SRV.assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" FromRole="FromRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" ToRole="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 <NavigationProperty Name="to_Comments" Relationship="ZSTI_SRV.assoc_9204A440B06323DF29C36860ABC8797B" FromRole="FromRole_assoc_9204A440B06323DF29C36860ABC8797B" ToRole="ToRole_assoc_9204A440B06323DF29C36860ABC8797B"/>
                 <NavigationProperty Name="to_Missions" Relationship="ZSTI_SRV.assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" FromRole="FromRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" ToRole="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
@@ -645,20 +646,20 @@
                     <End EntitySet="ZC_STI_BUDG" Role="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 </AssociationSet>
                 <FunctionImport Name="ZGENERATE_IDS" ReturnType="ZSTI_SRV.ZGeneratedIdType" m:HttpMethod="POST">
-                    <Parameter Name="IV_UFO" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_UFO" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
                 <FunctionImport Name="ZGET_ID" ReturnType="ZSTI_SRV.ZGEN_ID" m:HttpMethod="POST">
-                    <Parameter Name="IV_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="iv_IdFormulaire" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
                 <FunctionImport Name="ZCHECK_INTERCO" ReturnType="ZSTI_SRV.ZCHECK_STI_FLOW" m:HttpMethod="POST">
-                    <Parameter Name="IV_UFO_P" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_BUSINESS_NO_E" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_UFO_P" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
                 <FunctionImport Name="ZCHECK_UFO_CDP" ReturnType="ZSTI_SRV.ZCHECK_STI_FLOW" m:HttpMethod="POST">
-                    <Parameter Name="IV_CDP_P" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_BUSINESS_NO_E" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_CDP_P" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>

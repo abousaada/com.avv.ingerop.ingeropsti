@@ -51,7 +51,7 @@ sap.ui.define(
                     const sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
                     const sBusinessCdp = oModel.getProperty(sPath + "/business_p_cdp");
 
-                    if ( business_no_p === undefined && status !== 'INAPPROVAL' && status !== 'APPROVE') {
+                    if (business_no_p === undefined && status !== 'INAPPROVAL' && status !== 'APPROVE') {
 
                         // Validate InterCo check
                         const isInterCo = await this._callZCHECK_INTERCOAction(sBusinessNoE, sBusinessUfo);
@@ -75,6 +75,10 @@ sap.ui.define(
                         await this.onGenerateId();
                         business_no_p = oModel.getProperty(sPath + "/business_no_p");
                         oPayload.business_no_p = business_no_p;
+                    }
+
+                    if (status === 'APPROVED') {
+                        oPayload.is_avenant = 'X';
                     }
 
                     const aBudgetLines = this.getView().getModel("budget").getProperty("/results");
@@ -215,8 +219,8 @@ sap.ui.define(
                 const sStatus = oModel.getProperty(sPath + "/status");
 
                 // Editable if status is 'DRAFT' or empty/null
-                const bCanEdit = !sStatus || sStatus === "DRAFT" || sStatus === "En cours";
-                //|| sStatus === "REJECTED" || sStatus === "Rejeté";
+                const bCanEdit = !sStatus || sStatus === "DRAFT"
+                    || sStatus === "En cours" || sStatus === "APPROVED";
 
                 let oUIModel = oView.getModel("ui");
                 if (!oUIModel) {
@@ -235,6 +239,8 @@ sap.ui.define(
                 }
 
                 const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
+
+                this._controlButtonVisibility(bIsCreate);
 
                 if (bIsCreate) {
                     var sNewFormulaireId; // = await this._calculateFormulaireId();
@@ -459,11 +465,97 @@ sap.ui.define(
                 this._setFieldEditableState("business_p_mail", bIsCreate);
                 this._setFieldEditableState("business_p_projm", bIsCreate);
 
+                const bIsAvnant = this.isAvnant(oModel, sPath);
+                this._setAvenantFieldEditableState("stidescr", bIsAvnant);
+
                 this.prepareMissionsTreeData();
 
 
             },
 
+            isAvnant: function (oModel, sPath) {
+                if (!oModel || !sPath) {
+                    return false;
+                }
+
+                const sStatus = oModel.getProperty(sPath + "/status");
+                const sIsAvenant = oModel.getProperty(sPath + "/is_avenant");
+
+                const bIsAvnant = sStatus === "APPROVED" ||
+                    (sStatus === "DRAFT" && sIsAvenant === "X");
+
+                // Store in UI model for other controllers to access
+                const oView = this.getView();
+                let oUIModel = oView.getModel("ui");
+                if (!oUIModel) {
+                    oUIModel = new sap.ui.model.json.JSONModel({
+                        isAvnant: bIsAvnant,
+                        editable: false,
+                        enabled: true
+                    });
+                    oView.setModel(oUIModel, "ui");
+                } else {
+                    oUIModel.setProperty("/isAvnant", bIsAvnant);
+                }
+
+                return bIsAvnant;
+            },
+
+            _controlButtonVisibility: function (bIsCreate) {
+                try {
+                    // Get the Fiori elements controller
+                    const oController = this._getController();
+                    if (!oController) return;
+
+                    // Get the Object Page layout
+                    const oObjectPage = oController.byId("objectPage");
+                    if (!oObjectPage) return;
+
+                    // Control both buttons
+                    const aButtons = [
+                        { id: "btnValidateButton", text: "Approuver" },   // btnApprove from manifest
+                        { id: "btnApproveButton", text: "Valider" }       // btnValidate from manifest
+                    ];
+
+                    aButtons.forEach(oButtonDef => {
+                        let oButton = null;
+
+                        oButton = oController.byId(oButtonDef.id);
+
+                        if (!oButton) {
+                            const oHeader = oObjectPage.getHeaderTitle();
+                            if (oHeader && oHeader.getActions) {
+                                const aActions = oHeader.getActions();
+                                oButton = aActions.find(action =>
+                                    action.getId().includes(oButtonDef.id) ||
+                                    action.getText() === oButtonDef.text
+                                );
+                            }
+                        }
+                        if (!oButton) {
+                            const aFoundButtons = this.getView().findAggregatedObjects(true,
+                                (oCtrl) => oCtrl.isA("sap.m.Button") &&
+                                    (oCtrl.getId().includes(oButtonDef.id) ||
+                                        oCtrl.getText() === oButtonDef.text)
+                            );
+                            if (aFoundButtons.length > 0) {
+                                oButton = aFoundButtons[0];
+                            }
+                        }
+
+                        // Set visibility for found button
+                        if (oButton) {
+                            oButton.setVisible(!bIsCreate);
+                            if (bIsCreate) {
+                                oButton.setEnabled(false);
+                            }
+                        }
+                    });
+
+                } catch (error) {
+                    console.error("Error controlling button visibility:", error);
+                }
+            },
 
             _setFieldEditableState: function (sFieldId, bIsCreate) {
                 const oView = this.getView();
@@ -490,6 +582,24 @@ sap.ui.define(
                 const bEditable = bIsCreate && oUIModel.getProperty("/editable");
                 aSmartFields.forEach((oSmartField) => oSmartField.setEditable(bEditable));
             },
+
+
+            _setAvenantFieldEditableState: function (sFieldId, bIsAvnant) {
+                const oView = this.getView();
+
+                const aSmartFields = oView.findAggregatedObjects(true, (oCtrl) => {
+                    return oCtrl.isA("sap.ui.comp.smartfield.SmartField") &&
+                        oCtrl.getId().includes(sFieldId);
+                });
+
+                // stidescr should be editable when NOT an avenant
+                const bShouldBeEditable = !bIsAvnant;
+
+                aSmartFields.forEach((oSmartField) => {
+                    oSmartField.setEditable(bShouldBeEditable);
+                });
+            },
+
 
             _calculateFormulaireId: async function () {
 
@@ -616,6 +726,7 @@ sap.ui.define(
                 const sBusinessUfo = (oModel.getProperty(sPath + "/business_p_ufo") || "").substring(0, 4);
                 const sBusinessCdp = oModel.getProperty(sPath + "/business_p_cdp");
                 const sBusinessNoE = oModel.getProperty(sPath + "/business_no_e");
+                const sBusinessNoP = oModel.getProperty(sPath + "/business_no_p");
 
                 if (!sBusinessUfo) {
                     sap.m.MessageBox.error("Le champ Business UFO est vide");
