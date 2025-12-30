@@ -37,123 +37,6 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
 
 
             onAddBudgetLine: async function (oEvent) {
-            const oView = this.getView();
-            const oContext = oView.getBindingContext();
-            const sModel = oContext.getModel();
-            const sPath = oContext.getPath();
-
-            var business_no_p = sModel.getProperty(sPath + "/business_no_p");
-            var IdFormulaire = sModel.getProperty(sPath + "/id_formulaire");
-
-            if (!business_no_p) {
-                MessageBox.error(
-                    "Veuillez d'abord générer le N°Affaire Partenaire (Fille ou petite) avant d'ajouter une ligne de budget.",
-                    { title: "N°Affaire Partenaire Manquant" }
-                );
-                return;
-            }
-
-            // Check if we're in avenant mode
-            const oUIModel = oView.getModel("ui");
-            const bIsAvnant = oUIModel ? oUIModel.getProperty("/isAvnant") : false;
-
-            var business_sdate_e = sModel.getProperty(sPath + "/business_e_SDate");
-            var business_edate_e = sModel.getProperty(sPath + "/business_e_EDate");
-            var business_e_currency = sModel.getProperty(sPath + "/business_e_currency");
-
-            var aMissions = this.getView().getModel("missions").getProperty("/results");
-
-            // Check 99 lines limit
-            var oModel = this.getView().getModel("budget");
-            var aData = oModel.getProperty("/results") || [];
-
-            // Count existing lines for this business_no_p
-            var existingLinesCount = 0;
-            aData.forEach(function (item) {
-                if (item.business_no_p === business_no_p) {
-                    existingLinesCount++;
-                }
-            });
-
-            // Block if reaching 99 lines
-            if (existingLinesCount >= 99) {
-                MessageBox.error(
-                    "La limite maximale de 99 lignes de budget a été atteinte. Impossible d'ajouter une nouvelle ligne.",
-                    { title: "Limite de Lignes Atteinte" }
-                );
-                return;
-            }
-
-            // Get default mission if available
-            var sMission_e = "";
-            var sRegroupement = "";
-            var sMissionCode = "";
-            var sStatutmission = "";
-
-            if (aMissions.length > 0) {
-                sMission_e = aMissions[0].MissionId;
-                sRegroupement = aMissions[0].Regroupement;
-                sMissionCode = aMissions[0].MissionCode;
-                sStatutmission = aMissions[0].statutmission;
-            }
-
-            // NEW LOGIC: Different Mission_p generation based on avenant mode
-            var newMissionP;
-            var nextIdM;
-            
-            if (bIsAvnant) {
-                // In avenant mode: use ## instead of incrementing
-                newMissionP = business_no_p + "##";
-                nextIdM = "##";
-                
-            } else {
-                // Regular mode: increment as before
-                var maxSuffix = 0;
-                aData.forEach(function (item) {
-                    if (item.Mission_p && item.Mission_p.startsWith(business_no_p)) {
-                        // Extract numeric suffix (ignore ## lines)
-                        if (item.Mission_p.includes('##')) return;
-                        
-                        var suffix = item.Mission_p.substring(business_no_p.length);
-                        var numericSuffix = parseInt(suffix, 10);
-                        if (!isNaN(numericSuffix) && numericSuffix > maxSuffix) {
-                            maxSuffix = numericSuffix;
-                        }
-                    }
-                });
-
-                var newSuffix = maxSuffix + 1;
-                var formattedSuffix = newSuffix.toString().padStart(2, '0');
-                newMissionP = business_no_p + formattedSuffix;
-                nextIdM = formattedSuffix;
-            }
-
-            var oNewLine = {
-                Mission_e: sMission_e,
-                Mission_p: newMissionP,
-                Regroupement: sRegroupement,
-                astatutmission: sStatutmission,
-                MissionCode: sMissionCode,
-                StartDate: business_sdate_e,
-                EndDate: business_edate_e,
-                business_no_p: business_no_p,
-                BudgetAlloue: '0',
-                Currency: business_e_currency,
-                Mission_p_sec: nextIdM,
-                isNew: true,
-                // Add flag to identify avenant new lines
-                isAvenantNewLine: bIsAvnant
-            };
-
-            aData.push(oNewLine);
-            oModel.setProperty("/results", aData);
-            
-            // Log for debugging
-            console.log("Added new line in " + (bIsAvnant ? "Avenant" : "Regular") + " mode: ", oNewLine);
-        },
-
-
-            onAddBudgetLine1: async function (oEvent) {
                 const oView = this.getView();
                 const oContext = oView.getBindingContext();
                 const sModel = oContext.getModel();
@@ -163,14 +46,16 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                 var IdFormulaire = sModel.getProperty(sPath + "/id_formulaire");
 
                 if (!business_no_p) {
-                    sap.m.MessageBox.error(
+                    MessageBox.error(
                         "Veuillez d'abord générer le N°Affaire Partenaire (Fille ou petite) avant d'ajouter une ligne de budget.",
-                        {
-                            title: "N°Affaire Partenaire Manquant"
-                        }
+                        { title: "N°Affaire Partenaire Manquant" }
                     );
                     return;
                 }
+
+                // Check if we're in avenant mode
+                const oUIModel = oView.getModel("ui");
+                const bIsAvnant = oUIModel ? oUIModel.getProperty("/isAvnant") : false;
 
                 var business_sdate_e = sModel.getProperty(sPath + "/business_e_SDate");
                 var business_edate_e = sModel.getProperty(sPath + "/business_e_EDate");
@@ -178,22 +63,23 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
 
                 var aMissions = this.getView().getModel("missions").getProperty("/results");
 
-                // Vérifier la limite de 99 lignes - CORRECTION ICI
+                // Check 99 lines limit
                 var oModel = this.getView().getModel("budget");
                 var aData = oModel.getProperty("/results") || [];
 
-                // Compter les lignes existantes pour ce business_no_p - CORRECTION ICI
-                var existingLinesCount = aData.filter(function (item) {
-                    return item.business_no_p === business_no_p;
-                }).length;
+                // Count existing lines for this business_no_p
+                var existingLinesCount = 0;
+                aData.forEach(function (item) {
+                    if (item.business_no_p === business_no_p) {
+                        existingLinesCount++;
+                    }
+                });
 
-                // Bloquer si on atteint ou dépasse 99 lignes
+                // Block if reaching 99 lines
                 if (existingLinesCount >= 99) {
-                    sap.m.MessageBox.error(
+                    MessageBox.error(
                         "La limite maximale de 99 lignes de budget a été atteinte. Impossible d'ajouter une nouvelle ligne.",
-                        {
-                            title: "Limite de Lignes Atteinte"
-                        }
+                        { title: "Limite de Lignes Atteinte" }
                     );
                     return;
                 }
@@ -211,22 +97,42 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                     sStatutmission = aMissions[0].statutmission;
                 }
 
-                var maxSuffix = 0;
-                aData.forEach(function (item) {
-                    if (item.Mission_p && item.Mission_p.startsWith(business_no_p)) {
-                        var suffix = item.Mission_p.substring(business_no_p.length);
-                        var numericSuffix = parseInt(suffix, 10);
-                        if (!isNaN(numericSuffix) && numericSuffix > maxSuffix) {
-                            maxSuffix = numericSuffix;
+                // NEW LOGIC: Different Mission_p generation based on avenant mode
+                var newMissionP;
+                var nextIdM;
+
+                if (bIsAvnant) {
+                    // In avenant mode: use ## instead of incrementing
+                    newMissionP = business_no_p + "##";
+                    nextIdM = "##";
+                } else {
+                    // Regular mode: increment as before - FIXED LOGIC
+                    var maxSuffix = 0;
+                    aData.forEach(function (item) {
+                        if (item.Mission_p && item.business_no_p === business_no_p) {
+                            // Only process items with the same business_no_p
+                            /*if (item.Mission_p.includes('##')) {
+                                // Skip ## lines in avenant mode for max suffix calculation
+                                return;
+                            }*/
+
+                            // Extract suffix (last 2 characters of Mission_p)
+                            var missionPWithoutBusiness = item.Mission_p.substring(business_no_p.length);
+
+                            // Try to parse as number
+                            var numericSuffix = parseInt(missionPWithoutBusiness, 10);
+
+                            if (!isNaN(numericSuffix) && numericSuffix > maxSuffix) {
+                                maxSuffix = numericSuffix;
+                            }
                         }
-                    }
-                });
+                    });
 
-                var newSuffix = maxSuffix + 1;
-                var formattedSuffix = newSuffix.toString().padStart(2, '0');
-                var newMissionP = business_no_p + formattedSuffix;
-
-                var nextIdM = formattedSuffix; //await this._callZGET_IDAction('m',IdFormulaire);
+                    var newSuffix = maxSuffix + 1;
+                    var formattedSuffix = newSuffix.toString().padStart(2, '0');
+                    newMissionP = business_no_p + formattedSuffix;
+                    nextIdM = formattedSuffix;
+                }
 
                 var oNewLine = {
                     Mission_e: sMission_e,
@@ -240,14 +146,25 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                     BudgetAlloue: '0',
                     Currency: business_e_currency,
                     Mission_p_sec: nextIdM,
-                    isNew: true
+                    isNew: true,
+                    // Add flag to identify avenant new lines
+                    isAvenantNewLine: bIsAvnant
                 };
 
                 aData.push(oNewLine);
                 oModel.setProperty("/results", aData);
+
+                // Log for debugging
+                console.log("Added new line in " + (bIsAvnant ? "Avenant" : "Regular") + " mode: ", oNewLine);
+                console.log("Current data count: " + aData.length);
+
+                // Log all Mission_p values for debugging
+                aData.forEach(function (item, index) {
+                    console.log("Item " + index + ": " + item.Mission_p + " (business_no_p: " + item.business_no_p + ")");
+                });
             },
 
-
+            
             onMissionChange: function (oEvent) {
                 var oSelect = oEvent.getSource();
                 var oRow = oSelect.getParent();
