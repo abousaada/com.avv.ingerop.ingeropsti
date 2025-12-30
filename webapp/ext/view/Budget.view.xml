@@ -34,7 +34,7 @@
             growing="true"
             growingScrollToLoad="true"
             growingThreshold="99"
-            mode="None"
+            mode="SingleSelectLeft"
             items="{budget>/results}"
         >
             <columns>
@@ -94,9 +94,9 @@
                                 text="{missions>MissionId}"
                             />
                         </Select>
-                        
+
                         <Text text="{budget>Mission_p}" />
-                        
+
                         <Input
                             value="{budget>Libelle}"
                             editable="{
@@ -108,10 +108,10 @@
                                 formatter: '.formatCellEditable'
                             }"
                         />
-                        
+
                         <Text text="{budget>MissionCode}" />
                         <Text text="{budget>Regroupement}" />
-                        
+
                         <DatePicker
                             value="{path: 'budget>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
                             displayFormat="short"
@@ -155,9 +155,9 @@
                             type="Number"
                             placeholder="0.00"
                         />
-                        
+
                         <Text text="{budget>Currency}" />
-                        
+
                         <Button
                             icon="sap-icon://delete"
                             type="Reject"
@@ -176,4 +176,18 @@
             </items>
         </Table>
     </layout:VerticalLayout>
+
+    <!-- New modifications in a separate panel -->
+    <Panel
+        expandable="true"
+        expanded="true"
+        headerText="Modification du budget"
+    >
+        <content>
+            <core:Fragment
+                fragmentName="com.avv.ingerop.ingeropsti.ext.fragment.BudgetModification"
+                type="XML"
+            />
+        </content>
+    </Panel>
 </mvc:View>

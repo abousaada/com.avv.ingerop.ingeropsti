@@ -8,9 +8,12 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
              * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
              * @memberOf com.avv.ingerop.ingeropsti.ext.Budget
              */
-            //	onInit: function () {
-            //
-            //	},
+            onInit: function () {
+                this.initBudgetModificationsModel();
+
+                // Initialize event handlers
+                this.initEventHandlers();
+            },
             /**
              * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
              * (NOT before the first rendering! onInit() is used for that one!).
@@ -164,7 +167,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                 });
             },
 
-            
+
             onMissionChange: function (oEvent) {
                 var oSelect = oEvent.getSource();
                 var oRow = oSelect.getParent();
@@ -293,6 +296,379 @@ sap.ui.define(['sap/ui/core/mvc/Controller'],
                 });
             },
 
+        initEventHandlers: function () {
+            // Listen for budget table row selection
+            var oTable = this.byId("budgetTable");
+            if (oTable) {
+                oTable.attachSelectionChange(this.onBudgetTableSelectionChange.bind(this));
+            }
+        },
+
+onBudgetTableSelectionChange: function (oEvent) {
+            var aSelectedItems = oEvent.getSource().getSelectedItems();
+            
+            if (aSelectedItems.length > 0) {
+                var oSelectedItem = aSelectedItems[0];
+                var oBindingContext = oSelectedItem.getBindingContext("budget");
+                
+                if (oBindingContext) {
+                    // Store the selected budget line in UI model
+                    var oSelectedBudgetLine = {
+                        Mission_p: oBindingContext.getProperty("Mission_p"),
+                        Mission_e: oBindingContext.getProperty("Mission_e"),
+                        Currency: oBindingContext.getProperty("Currency"),
+                        Libelle: oBindingContext.getProperty("Libelle"),
+                        Regroupement: oBindingContext.getProperty("Regroupement")
+                    };
+                    
+                    var oUIModel = this.getView().getModel("ui");
+                    if (oUIModel) {
+                        oUIModel.setProperty("/selectedBudgetLine", oSelectedBudgetLine);
+                        console.log("Budget line selected:", oSelectedBudgetLine);
+                    }
+                }
+            }
+        },
+
+            onBudgetRowSelected: function (oEvent) {
+                var oSelectedItem = oEvent.getParameter("row");
+                if (oSelectedItem) {
+                    var oBindingContext = oSelectedItem.getBindingContext("budget");
+                    if (oBindingContext) {
+                        var sMissionP = oBindingContext.getProperty("Mission_p");
+                        var sMissionE = oBindingContext.getProperty("Mission_e");
+                        var sCurrency = oBindingContext.getProperty("Currency");
+
+                        // Store the selected budget line for quick addition to modifications
+                        this.getView().getModel("ui").setProperty("/selectedBudgetLine", {
+                            Mission_p: sMissionP,
+                            Mission_e: sMissionE,
+                            Currency: sCurrency
+                        });
+                    }
+                }
+            },
+
+            onAddBudgetModificationLine: function () {
+            const oView = this.getView();
+            const oUIModel = oView.getModel("ui");
+            const bEditable = oUIModel ? oUIModel.getProperty("/editable") : false;
+
+            if (!bEditable) {
+                MessageBox.warning("Vous n'êtes pas en mode édition.");
+                return;
+            }
+
+            // Check if there are any budget lines to modify
+            var oBudgetModel = this.getView().getModel("budget");
+            var aBudgetLines = oBudgetModel.getProperty("/results") || [];
+
+            if (aBudgetLines.length === 0) {
+                MessageBox.warning(
+                    "Aucune ligne de budget n'est disponible pour modification. Veuillez d'abord créer des lignes de budget.",
+                    { title: "Aucune Ligne de Budget" }
+                );
+                return;
+            }
+
+            // Get selected budget line from UI model
+            var oSelectedBudgetLine = null;
+            if (oUIModel) {
+                oSelectedBudgetLine = oUIModel.getProperty("/selectedBudgetLine");
+            }
+
+            var oModel = this.getView().getModel("budgetModifications");
+            var aData = oModel.getProperty("/results") || [];
+
+            // Create new modification line
+            var oNewModification = {
+                CreationDate: this.getCurrentDate(),
+                MissionReceptrice: "", // Will be selected from dropdown
+                MissionEmettrice: "",  // Will be selected from dropdown
+                AjustementBudget: "",
+                Devise: "",
+                isNew: true
+            };
+
+            // If a budget line is selected in the table, pre-fill Mission réceptrice
+            if (oSelectedBudgetLine && oSelectedBudgetLine.Mission_p) {
+                oNewModification.MissionReceptrice = oSelectedBudgetLine.Mission_p;
+                oNewModification.MissionEmettrice = oSelectedBudgetLine.Mission_e || "";
+                oNewModification.Devise = oSelectedBudgetLine.Currency || "";
+                
+                console.log("Pre-filling modification with selected budget line:", oSelectedBudgetLine);
+            }
+
+            aData.push(oNewModification);
+            oModel.setProperty("/results", aData);
+        },
+
+         
+            formatBudgetLineText: function (sMissionP, sMissionE) {
+                if (!sMissionP || !sMissionE) return "";
+                return sMissionP + " (émettrice: " + sMissionE + ")";
+            },
+
+
+            onBudgetLineSelected: function (oEvent) {
+                var oSelect = oEvent.getSource();
+                var sSelectedKey = oSelect.getSelectedKey();
+                var oBindingContext = oSelect.getBindingContext("budgetModifications");
+
+                if (oBindingContext && sSelectedKey) {
+                    // Find the selected budget line from the budget table
+                    var oBudgetModel = this.getView().getModel("budget");
+                    var aBudgetLines = oBudgetModel.getProperty("/results") || [];
+                    var oSelectedBudgetLine = aBudgetLines.find(function (line) {
+                        return line.Mission_p === sSelectedKey;
+                    });
+
+                    if (oSelectedBudgetLine) {
+                        // Auto-fill the modification fields
+                        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/SelectedBudgetLine", sSelectedKey);
+                        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/MissionReceptrice", oSelectedBudgetLine.Mission_p);
+                        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/MissionEmettrice", oSelectedBudgetLine.Mission_e);
+                        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Devise", oSelectedBudgetLine.Currency);
+
+                        // Store additional info for reference
+                        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/BudgetLineData", oSelectedBudgetLine);
+                    }
+                }
+            },
+
+
+
+            getValidatedMissions: function () {
+                // This should be implemented to fetch validated missions
+                // For now, using mock data
+                return [
+                    {
+                        MissionId: "MISSION-001",
+                        MissionName: "Mission Alpha",
+                        Currency: "EUR",
+                        IsValidated: true
+                    },
+                    {
+                        MissionId: "MISSION-002",
+                        MissionName: "Mission Beta",
+                        Currency: "USD",
+                        IsValidated: true
+                    },
+                    {
+                        MissionId: "MISSION-003",
+                        MissionName: "Mission Gamma",
+                        Currency: "EUR",
+                        IsValidated: true
+                    }
+                ];
+            },
+
+            updateMissionPairs: function () {
+                const aMissions = this.getValidatedMissions();
+                const aPairs = [];
+
+                // Create all possible pairs
+                for (let i = 0; i < aMissions.length; i++) {
+                    for (let j = 0; j < aMissions.length; j++) {
+                        if (i !== j) { // Exclude self-pairs
+                            aPairs.push({
+                                emitter: aMissions[i].MissionId,
+                                receiver: aMissions[j].MissionId,
+                                emitterName: aMissions[i].MissionName,
+                                receiverName: aMissions[j].MissionName
+                            });
+                        }
+                    }
+                }
+
+                const oMissionPairsModel = this.getView().getModel("missionPairs");
+                oMissionPairsModel.setProperty("/pairs", aPairs);
+            },
+
+
+            onMissionPairChange: function (oEvent) {
+                const oSelect = oEvent.getSource();
+                const sSelectedKey = oSelect.getSelectedKey();
+                const oBindingContext = oSelect.getBindingContext("budgetModifications");
+
+                if (oBindingContext && sSelectedKey) {
+                    const aMissions = sSelectedKey.split("|");
+                    if (aMissions.length === 2) {
+                        const [sEmitter, sReceiver] = aMissions;
+
+                        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/MissionPairId", sSelectedKey);
+                        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/MissionEmettrice", sEmitter);
+                        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/MissionReceptrice", sReceiver);
+
+                        // Set currency from receiving mission
+                        const sCurrency = this.getMissionCurrency(sReceiver);
+                        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/Devise", sCurrency);
+                    }
+                }
+            },
+
+            getMissionCurrency: function (sMissionId) {
+                const aMissions = this.getValidatedMissions();
+                const oMission = aMissions.find(m => m.MissionId === sMissionId);
+                return oMission ? oMission.Currency : "";
+            },
+
+            isModificationLineEditable: function (bIsNew, sMissionPairId) {
+                const oUIModel = this.getView().getModel("ui");
+                const bEditable = oUIModel ? oUIModel.getProperty("/editable") : false;
+
+                // Only editable if in edit mode and it's a new line
+                return bEditable && (bIsNew === true || !sMissionPairId);
+            },
+
+
+            initBudgetModificationsModel: function () {
+                // Create model for budget modifications
+                var oModel = new sap.ui.model.json.JSONModel({
+                    results: []
+                });
+                this.getView().setModel(oModel, "budgetModifications");
+            },
+
+            
+            // When Mission réceptrice is selected
+            // When Mission réceptrice is selected in modification table
+        onMissionReceptriceChange: function (oEvent) {
+            var oSelect = oEvent.getSource();
+            var sSelectedKey = oSelect.getSelectedKey();
+            var oBindingContext = oSelect.getBindingContext("budgetModifications");
+
+            if (oBindingContext && sSelectedKey) {
+                // Find the selected budget line to get its currency
+                var oBudgetModel = this.getView().getModel("budget");
+                var aBudgetLines = oBudgetModel.getProperty("/results") || [];
+                var oSelectedBudgetLine = aBudgetLines.find(function (line) {
+                    return line.Mission_p === sSelectedKey;
+                });
+
+                if (oSelectedBudgetLine) {
+                    // Auto-fill the currency from the budget line
+                    oBindingContext.getModel().setProperty(
+                        oBindingContext.getPath() + "/Devise",
+                        oSelectedBudgetLine.Currency
+                    );
+
+                    // Auto-fill Mission émettrice if not already set
+                    if (oSelectedBudgetLine.Mission_e && !oBindingContext.getProperty("MissionEmettrice")) {
+                        oBindingContext.getModel().setProperty(
+                            oBindingContext.getPath() + "/MissionEmettrice",
+                            oSelectedBudgetLine.Mission_e
+                        );
+                    }
+                }
+            }
+        },
+
+
+            // When Mission émettrice is selected
+            onMissionEmettriceChange: function (oEvent) {
+                // Nothing special needed here, just store the selection
+                // You could add validation if needed
+            },
+
+            // Formatter for Mission réceptrice dropdown
+            formatMissionReceptriceText: function (sMissionP, sLibelle) {
+                if (!sMissionP) return "";
+                var sText = sMissionP;
+                if (sLibelle) {
+                    sText += " - " + sLibelle;
+                }
+                return sText;
+            },
+
+            getCurrentDate: function () {
+                const oDate = new Date();
+                //return oDate.toISOString().split('T')[0]; 
+                return oDate;
+            },
+
+            // Delete a modification line
+            onDeleteBudgetModificationLine: function (oEvent) {
+                const oButton = oEvent.getSource();
+                const oContext = oButton.getBindingContext("budgetModifications");
+
+                if (!oContext) return;
+
+                MessageBox.confirm(
+                    "Êtes-vous sûr de vouloir supprimer cette ligne de modification budgétaire ?",
+                    {
+                        title: "Confirmation de suppression",
+                        onClose: (sAction) => {
+                            if (sAction === MessageBox.Action.OK) {
+                                const sPath = oContext.getPath();
+                                const oModel = this.getView().getModel("budgetModifications");
+                                const aData = oModel.getProperty("/results");
+                                const iIndex = parseInt(sPath.split("/").pop());
+
+                                aData.splice(iIndex, 1);
+                                oModel.setProperty("/results", aData);
+                            }
+                        }
+                    }
+                );
+            },
+
+            // Validate budget adjustment
+            onBudgetAdjustmentChange: function (oEvent) {
+                const sValue = oEvent.getSource().getValue();
+
+                // Validate numeric input
+                if (sValue && isNaN(parseFloat(sValue))) {
+                    MessageBox.warning("Veuillez saisir un montant numérique valide.");
+                    oEvent.getSource().setValue("");
+                }
+            },
+
+            // Validate before save
+            validateModifications: function () {
+                const oModel = this.getView().getModel("budgetModifications");
+                const aModifications = oModel.getProperty("/results") || [];
+                let bIsValid = true;
+                let sErrorMessage = "";
+
+                aModifications.forEach(function (modification, index) {
+                    if (!modification.MissionReceptrice) {
+                        bIsValid = false;
+                        sErrorMessage = "La mission réceptrice est obligatoire pour la ligne " + (index + 1);
+                        return;
+                    }
+
+                    if (!modification.MissionEmettrice) {
+                        bIsValid = false;
+                        sErrorMessage = "La mission émettrice est obligatoire pour la ligne " + (index + 1);
+                        return;
+                    }
+
+                    if (!modification.AjustementBudget || isNaN(parseFloat(modification.AjustementBudget))) {
+                        bIsValid = false;
+                        sErrorMessage = "L'ajustement budgétaire est invalide pour la ligne " + (index + 1);
+                        return;
+                    }
+                });
+
+                if (!bIsValid) {
+                    MessageBox.error(sErrorMessage);
+                }
+
+                return bIsValid;
+            },
+
+            // Get all modifications for save/update
+            getBudgetModifications: function () {
+                const oModel = this.getView().getModel("budgetModifications");
+                return oModel.getProperty("/results") || [];
+            },
+
+            // Clear modifications (when form is reset)
+            clearBudgetModifications: function () {
+                const oModel = this.getView().getModel("budgetModifications");
+                oModel.setProperty("/results", []);
+            },
 
 
         });
