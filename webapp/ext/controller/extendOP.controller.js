@@ -108,7 +108,7 @@ sap.ui.define(
                             const oModification = {
                                 BUSINESS_NO_E: oPayload.business_no_e || '',
                                 IdFormulaire: oPayload.id_formulaire || '',
-                                DateCreation: modif.DateCreation || new Date().toISOString().split('T')[0],
+                                DateCreation: modif.DateCreation || new Date(),
                                 Mission_e: modif.Mission_e || '',
                                 Mission_p: modif.Mission_p || '',
                                 DeltaBudget: modif.DeltaBudget || '0',

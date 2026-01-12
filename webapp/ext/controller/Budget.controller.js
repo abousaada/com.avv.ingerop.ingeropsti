@@ -477,60 +477,6 @@ sap.ui.define([
                 MessageToast.show("Nouvelle ligne de modification ajoutée pour " + oSelectedBudgetLine.Mission_p);
             },
 
-            onAddBudgetModificationLine1: function () {
-                const oView = this.getView();
-                const oUIModel = oView.getModel("ui");
-                const bEditable = oUIModel ? oUIModel.getProperty("/editable") : false;
-
-                if (!bEditable) {
-                    MessageBox.warning("Vous n'êtes pas en mode édition.");
-                    return;
-                }
-
-                // Check if there are any budget lines to modify
-                var oBudgetModel = this.getView().getModel("budget");
-                var aBudgetLines = oBudgetModel.getProperty("/results") || [];
-
-                if (aBudgetLines.length === 0) {
-                    MessageBox.warning(
-                        "Aucune ligne de budget n'est disponible pour modification. Veuillez d'abord créer des lignes de budget.",
-                        { title: "Aucune Ligne de Budget" }
-                    );
-                    return;
-                }
-
-                // Get selected budget line from UI model
-                var oSelectedBudgetLine = null;
-                if (oUIModel) {
-                    oSelectedBudgetLine = oUIModel.getProperty("/selectedBudgetLine");
-                }
-
-                var oModel = this.getView().getModel("modifBudget");
-                var aData = oModel.getProperty("/results") || [];
-
-                // Create new modification line
-                var oNewModification = {
-                    DateCreation: this.getCurrentDate(),
-                    Mission_e: "", // Will be selected from dropdown
-                    Mission_p: "",  // Will be selected from dropdown
-                    DeltaBudget: "",
-                    Devise: "",
-                    isNew: true
-                };
-
-                // If a budget line is selected in the table, pre-fill Mission réceptrice
-                if (oSelectedBudgetLine && oSelectedBudgetLine.Mission_p) {
-                    oNewModification.Mission_p = oSelectedBudgetLine.Mission_p;
-                    oNewModification.Mission_e = oSelectedBudgetLine.Mission_e || "";
-                    oNewModification.Devise = oSelectedBudgetLine.Currency || "";
-
-                    console.log("Pre-filling modification with selected budget line:", oSelectedBudgetLine);
-                }
-
-                aData.push(oNewModification);
-                oModel.setProperty("/results", aData);
-            },
-
 
             formatBudgetLineText: function (sMissionP, sMissionE) {
                 if (!sMissionP || !sMissionE) return "";
