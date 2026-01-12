@@ -38,6 +38,9 @@
             items="{budget>/results}"
         >
             <columns>
+                <Column width="100px">
+                    <Text text="Date de création" />
+                </Column>
                 <Column width="280px">
                     <Text text="Mission sous-traitée" />
                 </Column>
@@ -73,6 +76,12 @@
             <items>
                 <ColumnListItem>
                     <cells>
+                        <Text 
+                            text="{
+                                path: 'budget>CreationDate',
+                                type: 'sap.ui.model.type.Date',
+                                formatOptions: { pattern: 'yyyy-MM-dd' }
+                            }" />
                         <Select
                             items="{
                                 path: 'missions>/results',
@@ -182,7 +191,10 @@
         expandable="true"
         expanded="true"
         headerText="Modification du budget"
-        visible="{ui>/isAvnant}"
+        visible="{
+            path: 'ui>/isAvnant',
+            formatter: '.formatModifBudgetVisible'
+        }"
     >
         <content>
             <core:Fragment

@@ -454,17 +454,17 @@
                 <NavigationProperty Name="to_BUDG" Relationship="ZSTI_SRV.assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" FromRole="FromRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" ToRole="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 <NavigationProperty Name="to_Comments" Relationship="ZSTI_SRV.assoc_9204A440B06323DF29C36860ABC8797B" FromRole="FromRole_assoc_9204A440B06323DF29C36860ABC8797B" ToRole="ToRole_assoc_9204A440B06323DF29C36860ABC8797B"/>
                 <NavigationProperty Name="to_Missions" Relationship="ZSTI_SRV.assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" FromRole="FromRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" ToRole="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
+                <NavigationProperty Name="to_MODIF_BUDG" Relationship="ZSTI_SRV.assoc_244BBA6810B763020B2F2F3A54C52045" FromRole="FromRole_assoc_244BBA6810B763020B2F2F3A54C52045" ToRole="ToRole_assoc_244BBA6810B763020B2F2F3A54C52045"/>
                 <NavigationProperty Name="to_WF" Relationship="ZSTI_SRV.assoc_FBE2DE3BAC3BAF891F86ED95BDAEDE51" FromRole="FromRole_assoc_FBE2DE3BAC3BAF891F86ED95BDAEDE51" ToRole="ToRole_assoc_FBE2DE3BAC3BAF891F86ED95BDAEDE51"/>
             </EntityType>
             <EntityType Name="ZC_STI_BUDGType" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="BUSINESS_NO_E"/>
                     <PropertyRef Name="IdFormulaire"/>
-                    <PropertyRef Name="Mission_e"/>
                 </Key>
                 <Property Name="BUSINESS_NO_E" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
                 <Property Name="IdFormulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label=""/>
-                <Property Name="Mission_e" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
+                <Property Name="Mission_e" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="Mission_p" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="Mission_p_sec" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Field length 10" sap:quickinfo="Numeric Character Field, Length 10"/>
                 <Property Name="business_no_p" Type="Edm.String" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
@@ -476,6 +476,7 @@
                 <Property Name="Regroupement" Type="Edm.String" MaxLength="40" sap:label="Regroupement mission"/>
                 <Property Name="MissionCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="3-Byte field" sap:heading=""/>
                 <Property Name="AFFAIRE_TYPE" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label=""/>
+                <Property Name="CreationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
                 <NavigationProperty Name="to_STI" Relationship="ZSTI_SRV.assoc_333E6DC35A0196A751DFF12F791D6481" FromRole="FromRole_assoc_333E6DC35A0196A751DFF12F791D6481" ToRole="ToRole_assoc_333E6DC35A0196A751DFF12F791D6481"/>
             </EntityType>
             <EntityType Name="ZC_STI_CEPC_BUKRSType" sap:content-version="1">
@@ -504,6 +505,26 @@
                 <Property Name="Regroupement" Type="Edm.String" MaxLength="40" sap:label="Regroupement mission"/>
                 <Property Name="statutmission" Type="Edm.String" MaxLength="1" sap:label="Statut mission"/>
                 <Property Name="description" Type="Edm.String" MaxLength="100" sap:display-format="UpperCase" sap:label=""/>
+            </EntityType>
+            <EntityType Name="ZC_STI_MODIF_BUDGType" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="BUSINESS_NO_E"/>
+                    <PropertyRef Name="IdFormulaire"/>
+                </Key>
+                <Property Name="BUSINESS_NO_E" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
+                <Property Name="IdFormulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Field length 10" sap:quickinfo="Numeric Character Field, Length 10"/>
+                <Property Name="DateCreation" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
+                <Property Name="Mission_e" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
+                <Property Name="Mission_p" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
+                <Property Name="DeltaBudget" Type="Edm.Int64" sap:label=""/>
+                <Property Name="Devise" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
+                <Property Name="DateModification" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)"/>
+                <Property Name="Utilisateur" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
+                <Property Name="ValidFrom" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
+                <Property Name="ValidTo" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
+                <Property Name="Status" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Single-Character Flag" sap:heading=""/>
+                <Property Name="Commentaire" Type="Edm.String" MaxLength="255"/>
+                <NavigationProperty Name="to_STI" Relationship="ZSTI_SRV.assoc_23F919D7256CD0F71376A3AF75439F44" FromRole="FromRole_assoc_23F919D7256CD0F71376A3AF75439F44" ToRole="ToRole_assoc_23F919D7256CD0F71376A3AF75439F44"/>
             </EntityType>
             <EntityType Name="ZC_STI_WFType" sap:label="Workflow de STI" sap:content-version="1">
                 <Key>
@@ -589,6 +610,10 @@
                 <End Type="ZSTI_SRV.ZC_STIType" Multiplicity="1" Role="FromRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
                 <End Type="ZSTI_SRV.ZC_STI_MISSIONType" Multiplicity="*" Role="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
             </Association>
+            <Association Name="assoc_244BBA6810B763020B2F2F3A54C52045" sap:content-version="1">
+                <End Type="ZSTI_SRV.ZC_STIType" Multiplicity="1" Role="FromRole_assoc_244BBA6810B763020B2F2F3A54C52045"/>
+                <End Type="ZSTI_SRV.ZC_STI_MODIF_BUDGType" Multiplicity="*" Role="ToRole_assoc_244BBA6810B763020B2F2F3A54C52045"/>
+            </Association>
             <Association Name="assoc_FBE2DE3BAC3BAF891F86ED95BDAEDE51" sap:content-version="1">
                 <End Type="ZSTI_SRV.ZC_STIType" Multiplicity="1" Role="FromRole_assoc_FBE2DE3BAC3BAF891F86ED95BDAEDE51"/>
                 <End Type="ZSTI_SRV.ZC_STI_WFType" Multiplicity="*" Role="ToRole_assoc_FBE2DE3BAC3BAF891F86ED95BDAEDE51"/>
@@ -596,6 +621,10 @@
             <Association Name="assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" sap:content-version="1">
                 <End Type="ZSTI_SRV.ZC_STIType" Multiplicity="1" Role="FromRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 <End Type="ZSTI_SRV.ZC_STI_BUDGType" Multiplicity="*" Role="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
+            </Association>
+            <Association Name="assoc_23F919D7256CD0F71376A3AF75439F44" sap:content-version="1">
+                <End Type="ZSTI_SRV.ZC_STI_MODIF_BUDGType" Multiplicity="1" Role="FromRole_assoc_23F919D7256CD0F71376A3AF75439F44"/>
+                <End Type="ZSTI_SRV.ZC_STIType" Multiplicity="1" Role="ToRole_assoc_23F919D7256CD0F71376A3AF75439F44"/>
             </Association>
             <EntityContainer Name="ZSTI_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
                 <EntitySet Name="I_BusinessPartner" EntityType="ZSTI_SRV.I_BusinessPartnerType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
@@ -615,12 +644,17 @@
                 <EntitySet Name="ZC_STI_BUDG" EntityType="ZSTI_SRV.ZC_STI_BUDGType" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_CEPC_BUKRS" EntityType="ZSTI_SRV.ZC_STI_CEPC_BUKRSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_MISSION" EntityType="ZSTI_SRV.ZC_STI_MISSIONType" sap:content-version="1"/>
+                <EntitySet Name="ZC_STI_MODIF_BUDG" EntityType="ZSTI_SRV.ZC_STI_MODIF_BUDGType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZC_STI_WF" EntityType="ZSTI_SRV.ZC_STI_WFType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZI_FGA_PROFITCENTER_VH" EntityType="ZSTI_SRV.ZI_FGA_PROFITCENTER_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZI_FGA_PROJM_VH" EntityType="ZSTI_SRV.ZI_FGA_PROJM_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
                 <EntitySet Name="ZI_FGA_UFO_VH" EntityType="ZSTI_SRV.ZI_FGA_UFO_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZI_STI_COMMENTS" EntityType="ZSTI_SRV.ZI_STI_COMMENTSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZI_STI_STATUS_VH" EntityType="ZSTI_SRV.ZI_STI_STATUS_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <AssociationSet Name="assoc_244BBA6810B763020B2F2F3A54C52045" Association="ZSTI_SRV.assoc_244BBA6810B763020B2F2F3A54C52045" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ZC_STI" Role="FromRole_assoc_244BBA6810B763020B2F2F3A54C52045"/>
+                    <End EntitySet="ZC_STI_MODIF_BUDG" Role="ToRole_assoc_244BBA6810B763020B2F2F3A54C52045"/>
+                </AssociationSet>
                 <AssociationSet Name="assoc_FD79958503C5B69AE394CE77394A4B0F" Association="ZSTI_SRV.assoc_FD79958503C5B69AE394CE77394A4B0F" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="ZC_STI_WF" Role="FromRole_assoc_FD79958503C5B69AE394CE77394A4B0F"/>
                     <End EntitySet="ZC_STI" Role="ToRole_assoc_FD79958503C5B69AE394CE77394A4B0F"/>
@@ -628,6 +662,10 @@
                 <AssociationSet Name="assoc_9204A440B06323DF29C36860ABC8797B" Association="ZSTI_SRV.assoc_9204A440B06323DF29C36860ABC8797B" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="ZC_STI" Role="FromRole_assoc_9204A440B06323DF29C36860ABC8797B"/>
                     <End EntitySet="ZI_STI_COMMENTS" Role="ToRole_assoc_9204A440B06323DF29C36860ABC8797B"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_23F919D7256CD0F71376A3AF75439F44" Association="ZSTI_SRV.assoc_23F919D7256CD0F71376A3AF75439F44" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ZC_STI_MODIF_BUDG" Role="FromRole_assoc_23F919D7256CD0F71376A3AF75439F44"/>
+                    <End EntitySet="ZC_STI" Role="ToRole_assoc_23F919D7256CD0F71376A3AF75439F44"/>
                 </AssociationSet>
                 <AssociationSet Name="assoc_FBE2DE3BAC3BAF891F86ED95BDAEDE51" Association="ZSTI_SRV.assoc_FBE2DE3BAC3BAF891F86ED95BDAEDE51" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
                     <End EntitySet="ZC_STI" Role="FromRole_assoc_FBE2DE3BAC3BAF891F86ED95BDAEDE51"/>
@@ -1327,6 +1365,9 @@
             <Annotations Target="ZSTI_SRV.ZC_STIType/to_BUDG" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.Composition"/>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STIType/to_MODIF_BUDG" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Composition"/>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STIType/to_WF" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.Composition"/>
             </Annotations>
@@ -1345,6 +1386,14 @@
                                 </Record>
                                 <Record>
                                     <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Comments"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_MODIF_BUDG"/>
                                     <PropertyValue Property="InsertRestrictions">
                                         <Record>
                                             <PropertyValue Property="Insertable" Bool="false"/>
@@ -1373,6 +1422,24 @@
                 </Annotation>
             </Annotations>
             <Annotations Target="ZSTI_SRV.ZSTI_SRV_Entities/ZC_STI_BUDG" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_STI"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="true"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZSTI_SRV.ZSTI_SRV_Entities/ZC_STI_MODIF_BUDG" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Capabilities.NavigationRestrictions">
                     <Record>
                         <PropertyValue Property="RestrictedProperties">

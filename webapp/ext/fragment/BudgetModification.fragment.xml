@@ -33,14 +33,14 @@
         growing="true"
         growingScrollToLoad="true"
         mode="None"
-        items="{budgetModifications>/results}">
+        items="{modifBudget>/results}">
 
             <headerToolbar>
                 <OverflowToolbar>
                     <Title text="Ajustements budgétaires" level="H3"/>
                     <ToolbarSpacer/>
                     <Label text="Nombre de lignes:"/>
-                    <Text text="{= ${budgetModifications>/results}.length }"/>
+                    <Text text="{= ${modifBudget>/results}.length }"/>
                 </OverflowToolbar>
             </headerToolbar>
             
@@ -49,10 +49,10 @@
                     <Text text="Date de création" />
                 </Column>
                 <Column width="180px">
-                    <Text text="Mission réceptrice" />
+                    <Text text="Mission émettrice" />
                 </Column>
                 <Column width="180px">
-                    <Text text="Mission émettrice" />
+                    <Text text="Mission réceptrice" />
                 </Column>
                 <Column width="150px">
                     <Text text="Ajustement du budget" />
@@ -71,26 +71,26 @@
                         <!-- Date de création (auto-filled) -->
                         <Text 
                             text="{
-                                path: 'budgetModifications>CreationDate',
+                                path: 'modifBudget>DateCreation',
                                 type: 'sap.ui.model.type.Date',
                                 formatOptions: { pattern: 'yyyy-MM-dd' }
                             }" />
                         
                         
                         <!-- Mission réceptrice (read-only) -->
-                        <Text text="{budgetModifications>MissionReceptrice}" />
+                        <Text text="{modifBudget>Mission_e}" />
                         
                         <!-- Mission émettrice (read-only) -->
-                        <Text text="{budgetModifications>MissionEmettrice}" />
+                        <Text text="{modifBudget>Mission_p}" />
                         
                         <!-- Budget adjustment input -->
                         <Input
-                            value="{budgetModifications>AjustementBudget}"
+                            value="{modifBudget>DeltaBudget}"
                             change="onBudgetAdjustmentChange"
                             enabled="{
                                 parts: [
-                                    { path: 'budgetModifications>isNew' },
-                                    { path: 'budgetModifications>MissionPairId' }
+                                    { path: 'modifBudget>isNew' },
+                                    { path: 'modifBudget>MissionPairId' }
                                 ],
                                 formatter: '.isModificationLineEditable'
                             }"
@@ -100,7 +100,7 @@
                         </Input>
                         
                         <!-- Currency (auto-filled, read-only) -->
-                        <Text text="{budgetModifications>Devise}" />
+                        <Text text="{modifBudget>Devise}" />
                         
                         <!-- Delete button -->
                         <Button
@@ -109,10 +109,10 @@
                             press="onDeleteBudgetModificationLine"
                             enabled="{
                                 parts: [
-                                    { path: 'budgetModifications>isNew' },
-                                    { path: 'budgetModifications>MissionPairId' }
+                                    {path: 'ui>/editable'},
+                                    {path: 'ui>/hasSelectedBudgetLine'}
                                 ],
-                                formatter: '.isModificationLineEditable'
+                                formatter: '.enableAddModificationLine'
                             }"
                             tooltip="Supprimer cette ligne"
                         />

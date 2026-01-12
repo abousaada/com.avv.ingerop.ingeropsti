@@ -77,7 +77,7 @@ sap.ui.define(
                         oPayload.business_no_p = business_no_p;
                     }
 
-                    if (status === 'APPROVED') {
+                    if (status === 'APPROVED' || oPayload.is_avenant === 'X') {
                         oPayload.is_avenant = 'X';
                     }
 
@@ -98,6 +98,31 @@ sap.ui.define(
                         Mission_p_sec: line.Mission_p_sec,
                         //statutmission: line.statutmission || 'A' 
                     }));
+
+
+                    const aBudgetModifications = oView.getModel("modifBudget").getProperty("/results") || [];
+                    const aModificationsPayload = [];
+                    if (aBudgetModifications.length > 0) {
+                        aBudgetModifications.forEach((modif, index) => {
+                            const oModification = {
+                                BUSINESS_NO_E: oPayload.business_no_e || '',
+                                IdFormulaire: oPayload.id_formulaire || '',
+                                DateCreation: modif.DateCreation || new Date().toISOString().split('T')[0],
+                                Mission_e: modif.Mission_e || '',
+                                Mission_p: modif.Mission_p || '',
+                                DeltaBudget: modif.DeltaBudget || '0',
+                                Devise: modif.Devise 
+                            };
+
+                            aModificationsPayload.push(oModification);
+                        });
+
+                        console.log("Payload des modifications préparé:", aModificationsPayload);
+                    };
+
+                    if (aModificationsPayload.length > 0) {
+                        oPayload.to_MODIF_BUDG = aModificationsPayload;
+                    };
 
                     if (!status) {
                         status = 'DRAFT';
@@ -238,6 +263,10 @@ sap.ui.define(
                     oModel.setProperty(sPath + "/status", 'En cours');
                 }
 
+                if (sStatus === "APPROVED") {
+                    this._showApprovedRowPopup();
+                }
+
                 const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
 
                 this._controlButtonVisibility(bIsCreate);
@@ -272,6 +301,7 @@ sap.ui.define(
 
                 var missions = await this.getMissions();
                 var budget = await this.getBudget();
+                var modifBudget = await this.getModifBudget();
                 var wf = await this.getWF();
                 var comments = await this.getComments();
                 var oGrouped = this._groupCommentLines(comments);
@@ -308,8 +338,13 @@ sap.ui.define(
 
                 var oBudgetModel = new sap.ui.model.json.JSONModel({ results: budget });
                 this.getView().setModel(oBudgetModel, "budget");
+
+                var oModifBudgetModel = new sap.ui.model.json.JSONModel({ results: modifBudget });
+                this.getView().setModel(oModifBudgetModel, "modifBudget");
+
                 var oWfModel = new sap.ui.model.json.JSONModel({ results: wf });
                 this.getView().setModel(oWfModel, "wf");
+
                 var oCommentsModel = new sap.ui.model.json.JSONModel({ results: comments });
                 this.getView().setModel(oCommentsModel, "comments");
                 oCommentsModel.setData(oGrouped);
@@ -471,6 +506,85 @@ sap.ui.define(
                 this.prepareMissionsTreeData();
 
 
+            },
+
+            _showApprovedRowPopup: function () {
+                const that = this;
+
+                // Créer la popup de choix
+                const oDialog = new sap.m.Dialog({
+                    title: "Action sur document approuvé",
+                    type: sap.m.DialogType.Message,
+                    content: new sap.m.VBox({
+                        items: [
+                            new sap.m.Text({
+                                text: "Ce document a le statut 'Approuvé'. Que souhaitez-vous faire ?"
+                            })
+                        ]
+                    }),
+                    initialFocus: "cancelButton", // Focus sur Annuler par défaut
+                    buttons: [
+                        new sap.m.Button({
+                            text: "Créer un avenant",
+                            press: function () {
+                                oDialog.close();
+                                that._createAmendment();
+                            }
+                        }),
+                        new sap.m.Button({
+                            text: "Modifier le budget",
+                            press: function () {
+                                oDialog.close();
+                                that._modifyBudget();
+                            }
+                        }),
+                        new sap.m.Button({
+                            id: "cancelButton", // ID pour le focus initial
+                            text: "Annuler",
+                            type: sap.m.ButtonType.Emphasized, // Bouton emphasized
+                            press: function () {
+                                oDialog.close();
+                                // Ne rien faire, juste fermer la popup
+                                sap.m.MessageToast.show("Action annulée");
+                            }
+                        })
+                    ],
+                    afterClose: function () {
+                        oDialog.destroy();
+                    }
+                });
+
+                oDialog.open();
+            },
+
+            _modifyBudget: function () {
+                const oView = this.getView();
+                const oUIModel = oView.getModel("ui");
+
+                // Définir le mode "modification budget seulement"
+                if (oUIModel) {
+                    oUIModel.setProperty("/showAddAmendment", false);
+                    oUIModel.setProperty("/showModifBudget", true); // Afficher le tableau modification budget
+                }
+
+                // Désactiver le bouton "Add Line" pour le tableau budget principal
+                sap.m.MessageToast.show("Mode modification budget activé - L'ajout de lignes est désactivé");
+            },
+
+            _createAmendment: function () {
+                const oView = this.getView();
+                const oContext = oView.getBindingContext();
+                const oModel = oContext.getModel();
+                const sPath = oContext.getPath();
+
+                const oUIModel = oView.getModel("ui");
+                if (oUIModel) {
+                    // Pour un avenant, activer l'ajout de lignes
+                    oUIModel.setProperty("/showAddAmendment", true);
+                    oUIModel.setProperty("/showModifBudget", false); // Cacher le tableau modification budget
+                }
+
+                sap.m.MessageToast.show("Vous pouvez ajouter de nouvelles lignes budgétaires.");
             },
 
             isAvnant: function (oModel, sPath) {
@@ -734,13 +848,13 @@ sap.ui.define(
                 }
 
                 const isInterCo = await this._callZCHECK_INTERCOAction(sBusinessNoE, sBusinessUfo);
-                if (isInterCo) {
+                if (isInterCo && !sBusinessNoP) {
                     sap.m.MessageBox.error("Une STI Groupe vers cette UFO déléguée existe déjà pour cette affaire. Un second flux n’est pas autorisé.");
                     return;
                 }
 
                 const isInterCdp = await this._callZCHECK_UFO_CDPAction(sBusinessNoE, sBusinessCdp);
-                if (isInterCdp) {
+                if (isInterCdp && !sBusinessNoP) {
                     sap.m.MessageBox.error("Une STI avec la même affaire émettrice et le même centre de profit récepteur existe déjà. La création d’un doublon n’est pas autorisée.");
                     return;
                 }
@@ -958,6 +1072,8 @@ sap.ui.define(
                     return [];
                 }
             },
+
+
             _groupCommentLines: function (aLines) {
                 const oGrouped = { COMM1: "", COMM2: "", COMM3: "", COMM4: "", COMM5: "" };
 
@@ -1022,6 +1138,7 @@ sap.ui.define(
                     return [];
                 }
             },
+
             async getBudget() {
                 function escapeODataKey(val) {
                     return String(val).replace(/'/g, "''");
@@ -1048,6 +1165,34 @@ sap.ui.define(
                     return [];
                 }
             },
+
+            async getModifBudget() {
+                function escapeODataKey(val) {
+                    return String(val).replace(/'/g, "''");
+                }
+
+                try {
+                    const oContext = this._getController().getView().getBindingContext();
+                    const oModel = this.getView().getModel();
+
+                    const id_formulaire = escapeODataKey(oModel.getProperty(oContext.getPath() + "/id_formulaire"));
+                    const business_no_e = escapeODataKey(oModel.getProperty(oContext.getPath() + "/business_no_e"));
+
+                    const sPath = `/ZC_STI(id_formulaire='${id_formulaire}',business_no_e='${business_no_e}')/to_MODIF_BUDG`;
+
+                    return new Promise((resolve, reject) => {
+                        oModel.read(sPath, {
+                            success: (oData) => resolve(oData?.results || []),
+                            error: (oError) => reject(oError)
+                        });
+                    });
+
+                } catch (error) {
+                    console.error(error);
+                    return [];
+                }
+            },
+
             //WF status
             async getWF() {
                 function escapeODataKey(val) {
@@ -1686,6 +1831,7 @@ sap.ui.define(
                     // Refresh budget and missions data
                     Promise.all([
                         this.getBudget(),
+                        this.getModifBudget(),
                         this.getMissions(),
                         this.getWF(),
                         this.getComments()
@@ -1693,6 +1839,10 @@ sap.ui.define(
                         // Update budget model
                         if (oView.getModel("budget")) {
                             oView.getModel("budget").setData({ results: budget });
+                        }
+                        // Update budget model
+                        if (oView.getModel("modifBudget")) {
+                            oView.getModel("modifBudget").setData({ results: modifBudget });
                         }
                         // Update wf model
                         if (oView.getModel("wf")) {
@@ -1812,6 +1962,15 @@ sap.ui.define(
                     }
                 });
             },
+
+            formatModifBudgetVisible: function (bIsAvnant) {
+                const oView = this.getView();
+                const oUIModel = oView.getModel("ui");
+                if (!oUIModel) return false;
+
+                const bShowModifBudget = oUIModel.getProperty("/showModifBudget");
+                return bIsAvnant && bShowModifBudget;
+            }
         }
     }
 );
