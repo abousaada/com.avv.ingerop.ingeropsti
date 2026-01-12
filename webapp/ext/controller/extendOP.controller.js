@@ -511,21 +511,6 @@ sap.ui.define(
 
                 const bIsModif = this.isModif(oModel, sPath);
 
-                if (!oUIModel) {
-                    oUIModel = new sap.ui.model.json.JSONModel({
-                        editable: false,
-                        enabled: bCanEdit,
-                        showModifBudget: false,
-                        showAddAmendment: false
-                    });
-                    oView.setModel(oUIModel, "ui");
-                } else {
-
-                    if (oUIModel.getProperty("/showModifBudget") === undefined) {
-                        oUIModel.setProperty("/showModifBudget", false);
-                    }
-                    oUIModel.setProperty("/enabled", bCanEdit);
-                }
                 this.prepareMissionsTreeData();
 
 
@@ -569,6 +554,17 @@ sap.ui.define(
                                 oDialog.close();
                                 // Ne rien faire, juste fermer la popup
                                 sap.m.MessageToast.show("Action annulée");
+
+                                // Disable editing when cancel is clicked
+                                const oView = that.getView();
+                                const oUIModel = oView.getModel("ui");
+                                if (oUIModel) {
+                                    oUIModel.setProperty("/editable", false);
+                                    oUIModel.setProperty("/enabled", false);
+                                    oUIModel.setProperty("/showAddAmendment", false);
+                                    oUIModel.setProperty("/showModifBudget", false);
+                                    oUIModel.refresh(true);
+                                }
                             }
                         })
                     ],
@@ -592,6 +588,7 @@ sap.ui.define(
                     // Set is_avenant to 'X' in the main model
                     if (oModel && sPath) {
                         oModel.setProperty(sPath + "/is_modif", "X");
+                        oModel.setProperty(sPath + "/is_avenant", "");
                         console.log("is_avenant set to X in modify budget mode");
                     }
                 }
@@ -601,7 +598,7 @@ sap.ui.define(
                 if (oUIModel) {
                     oUIModel.setProperty("/showAddAmendment", false);
                     oUIModel.setProperty("/showModifBudget", true); // Afficher le tableau modification budget
-                oUIModel.refresh(true);
+                    oUIModel.refresh(true);
                 }
 
 
@@ -622,6 +619,7 @@ sap.ui.define(
                     // Set is_avenant to 'X' in the main model
                     if (oModel && sPath) {
                         oModel.setProperty(sPath + "/is_avenant", "X");
+                        oModel.setProperty(sPath + "/is_modif", "");
                         console.log("is_avenant set to X in modify budget mode");
                     }
                 }
@@ -636,38 +634,37 @@ sap.ui.define(
             },
 
             isModif: function (oModel, sPath) {
-    if (!oModel || !sPath) {
-        return false;
-    }
+                if (!oModel || !sPath) {
+                    return false;
+                }
 
-    const sStatus = oModel.getProperty(sPath + "/status");
-    const sIsModif = oModel.getProperty(sPath + "/is_modif");
+                const sStatus = oModel.getProperty(sPath + "/status");
+                const sIsModif = oModel.getProperty(sPath + "/is_modif");
 
-    // Define your logic for when is_modif should be considered true
-    const bIsModif = sStatus === "APPROVED" ||
-        (sStatus === "DRAFT" && sIsModif === "X") ||
-        (sStatus === "En cours" && sIsModif === "X") ||
-        sIsModif === "X"; // Or any other conditions you need
+                // Define your logic for when is_modif should be considered true
+                const bIsModif = sStatus === "APPROVED" ||
+                    (sStatus === "DRAFT" && sIsModif === "X") ||
+                    (sStatus === "En cours" && sIsModif === "X") ||
+                    sIsModif === "X"; // Or any other conditions you need
 
-    // Store in UI model for other controllers to access
-    const oView = this.getView();
-    let oUIModel = oView.getModel("ui");
-    if (!oUIModel) {
-        oUIModel = new sap.ui.model.json.JSONModel({
-            isModif: bIsModif,
-            isAvnant: false, // Keep both properties
-            editable: false,
-            enabled: true,
-            showAddAmendment: false,
-            showModifBudget: true
-        });
-        oView.setModel(oUIModel, "ui");
-    } else {
-        oUIModel.setProperty("/isModif", bIsModif);
-    }
+                // Store in UI model for other controllers to access
+                const oView = this.getView();
+                let oUIModel = oView.getModel("ui");
+                if (!oUIModel) {
+                    oUIModel = new sap.ui.model.json.JSONModel({
+                        isModif: sIsModif,
+                        editable: false,
+                        enabled: true,
+                        showAddAmendment: false,
+                        showModifBudget: true
+                    });
+                    oView.setModel(oUIModel, "ui");
+                } else {
+                    oUIModel.setProperty("/isModif", bIsModif);
+                }
 
-    return bIsModif;
-},
+                return bIsModif;
+            },
 
             isAvnant: function (oModel, sPath) {
                 if (!oModel || !sPath) {
@@ -686,7 +683,7 @@ sap.ui.define(
                 let oUIModel = oView.getModel("ui");
                 if (!oUIModel) {
                     oUIModel = new sap.ui.model.json.JSONModel({
-                        isAvnant: bIsAvnant,
+                        isAvnant: sIsAvenant,
                         editable: false,
                         enabled: true
                     });

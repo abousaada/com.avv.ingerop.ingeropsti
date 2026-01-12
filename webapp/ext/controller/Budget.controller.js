@@ -291,7 +291,7 @@ sap.ui.define([
             },
 
             onAfterRendering: function () {
-                var oTable = this.byId("budgetTable");
+                /*var oTable = this.byId("budgetTable");
                 var aItems = oTable.getItems();
 
                 aItems.forEach(function (oItem, index) {
@@ -306,7 +306,7 @@ sap.ui.define([
                         console.warn("MISMATCH in row " + index);
                         oSelect.setSelectedKey(sModelValue);
                     }
-                });
+                });*/
             },
 
 
