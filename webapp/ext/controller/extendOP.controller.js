@@ -1512,13 +1512,13 @@ sap.ui.define(
                 var missionsModel = oView.getModel("missions");
 
                 // Initialize original missions model if it doesn't exist
-                if (!this._originalMissionsModel) {
+                //if (!this._originalMissionsModel) {
                     var missionsData = missionsModel.getProperty("/results") || [];
                     this._originalMissionsModel = {
                         data: JSON.parse(JSON.stringify(missionsData)),
                         lastUpdated: new Date().getTime()
                     };
-                }
+                //}
 
                 // Now use the stored original data
                 var missionsData = this._originalMissionsModel.data;
