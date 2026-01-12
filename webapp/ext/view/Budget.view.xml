@@ -13,7 +13,7 @@
                 <Button
                     id="addLineBtn"
                     icon="sap-icon://add"
-                    text="Add Line"
+                    text="Ajouter une ligne"
                     press="onAddBudgetLine"
                     type="Emphasized"
                     enabled="{

@@ -96,6 +96,7 @@ sap.ui.define(
                         MissionCode: line.MissionCode,
                         Regroupement: line.Regroupement,
                         Mission_p_sec: line.Mission_p_sec,
+                        CreationDate: line.CreationDate,
                         //statutmission: line.statutmission || 'A' 
                     }));
 
@@ -111,7 +112,7 @@ sap.ui.define(
                                 Mission_e: modif.Mission_e || '',
                                 Mission_p: modif.Mission_p || '',
                                 DeltaBudget: modif.DeltaBudget || '0',
-                                Devise: modif.Devise 
+                                Devise: modif.Devise
                             };
 
                             aModificationsPayload.push(oModification);
@@ -503,6 +504,21 @@ sap.ui.define(
                 const bIsAvnant = this.isAvnant(oModel, sPath);
                 this._setAvenantFieldEditableState("stidescr", bIsAvnant);
 
+                if (!oUIModel) {
+                    oUIModel = new sap.ui.model.json.JSONModel({
+                        editable: false,
+                        enabled: bCanEdit,
+                        showModifBudget: false,
+                        showAddAmendment: false
+                    });
+                    oView.setModel(oUIModel, "ui");
+                } else {
+
+                    if (oUIModel.getProperty("/showModifBudget") === undefined) {
+                        oUIModel.setProperty("/showModifBudget", false);
+                    }
+                    oUIModel.setProperty("/enabled", bCanEdit);
+                }
                 this.prepareMissionsTreeData();
 
 
@@ -567,12 +583,12 @@ sap.ui.define(
                     oUIModel.setProperty("/showModifBudget", true); // Afficher le tableau modification budget
                 }
 
-                
+
                 // Désactiver le bouton "Add Line" pour le tableau budget principal
                 sap.m.MessageToast.show("Mode modification budget activé - L'ajout de lignes est désactivé");
             },
 
-            
+
             _createAmendment: function () {
                 const oView = this.getView();
                 const oContext = oView.getBindingContext();
