@@ -660,9 +660,11 @@ sap.ui.define(
                     });
                     oView.setModel(oUIModel, "ui");
                 } else {
+                    oUIModel.setProperty("/showModifBudget", bIsModif);
                     oUIModel.setProperty("/isModif", bIsModif);
                 }
 
+                
                 return bIsModif;
             },
 

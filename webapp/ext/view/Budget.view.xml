@@ -91,6 +91,7 @@
                             }"
                             editable="{
                                 parts: [
+                                    { path: 'ui>/editable' },
                                     { path: 'budget>isNew' },
                                     { path: 'budget>Mission_p' },
                                     { path: 'ui>/isAvnant' }
@@ -112,6 +113,7 @@
                             value="{budget>Libelle}"
                             editable="{
                                 parts: [
+                                    { path: 'ui>/editable' },
                                     { path: 'budget>isNew' },
                                     { path: 'budget>Mission_p' },
                                     { path: 'ui>/isAvnant' }
@@ -128,6 +130,7 @@
                             displayFormat="short"
                             editable="{
                                 parts: [
+                                    { path: 'ui>/editable' },
                                     { path: 'budget>isNew' },
                                     { path: 'budget>Mission_p' },
                                     { path: 'ui>/isAvnant' }
@@ -143,6 +146,7 @@
                             displayFormat="short"
                             editable="{
                                 parts: [
+                                    { path: 'ui>/editable' },
                                     { path: 'budget>isNew' },
                                     { path: 'budget>Mission_p' },
                                     { path: 'ui>/isAvnant' }
@@ -157,6 +161,7 @@
                             value="{budget>BudgetAlloue}"
                             editable="{
                                 parts: [
+                                    { path: 'ui>/editable' },
                                     { path: 'budget>isNew' },
                                     { path: 'budget>Mission_p' },
                                     { path: 'ui>/isAvnant' }
@@ -175,6 +180,7 @@
                             press="onDeleteBudgetLine"
                             enabled="{
                                 parts: [
+                                    { path: 'ui>/editable' },
                                     { path: 'budget>isNew' },
                                     { path: 'budget>Mission_p' },
                                     { path: 'ui>/isAvnant' }

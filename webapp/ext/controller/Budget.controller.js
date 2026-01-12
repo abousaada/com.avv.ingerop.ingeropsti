@@ -18,7 +18,7 @@ sap.ui.define([
 
                 // Initialize event handlers
                 this.initEventHandlers();
-                
+
             },
 
             initUIModel: function () {
@@ -188,7 +188,7 @@ sap.ui.define([
                     Currency: business_e_currency,
                     Mission_p_sec: nextIdM,
                     isNew: true,
-                    CreationDate: this.getCurrentDate(),  
+                    CreationDate: this.getCurrentDate(),
                     isAvenantNewLine: bIsAvnant
                 };
 
@@ -232,8 +232,11 @@ sap.ui.define([
 
             },
 
-            formatCellEditable: function (bIsNew, sMissionP, bIsAvnant) {
+            formatCellEditable: function (bEditable, bIsNew, sMissionP, bIsAvnant) {
 
+                if (!bEditable) {
+                    return false;
+                }
                 // Check if it's a new avenant line (contains ##)
                 const isNewAvenantLine = sMissionP && sMissionP.includes('##');
 
@@ -273,7 +276,7 @@ sap.ui.define([
                 }
                 const bShowModifBudget = true; // "oUIModel.getProperty("/showModifBudget") || false;
                 const result = !bShowModifBudget && Array.isArray(aMissions) && aMissions.length > 0;
-            
+
                 return !result;
             },
 
@@ -684,7 +687,7 @@ sap.ui.define([
                 const oUIModel = oView.getModel("ui");
                 if (!oUIModel) return false;
 
-                const bShowModifBudget = oUIModel.getProperty("/showModifBudget")|| false;
+                const bShowModifBudget = oUIModel.getProperty("/showModifBudget") || false;
                 return bIsAvnant && bShowModifBudget;
             },
 
