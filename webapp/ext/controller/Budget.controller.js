@@ -18,6 +18,7 @@ sap.ui.define([
 
                 // Initialize event handlers
                 this.initEventHandlers();
+                
             },
 
             initUIModel: function () {
@@ -173,24 +174,6 @@ sap.ui.define([
                     nextIdM = formattedSuffix;
                 }
 
-                // IMPORTANT: Try different date formats to see which one works
-                var today = new Date();
-
-                // Option 1: ISO string (YYYY-MM-DD)
-                var todayISO = today.toISOString().split('T')[0];
-
-                // Option 2: Create a Date object with just the date part (no time)
-                var todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-                // Option 3: String in format that SAP backend might expect
-                var todayFormatted = today.getFullYear() + "-" +
-                    (today.getMonth() + 1).toString().padStart(2, '0') + "-" +
-                    today.getDate().toString().padStart(2, '0');
-
-                console.log("Date format options:");
-                console.log("ISO: " + todayISO);
-                console.log("Date object: " + todayDate);
-                console.log("Formatted: " + todayFormatted);
 
                 var oNewLine = {
                     Mission_e: sMission_e,
@@ -205,29 +188,12 @@ sap.ui.define([
                     Currency: business_e_currency,
                     Mission_p_sec: nextIdM,
                     isNew: true,
-                    // Try with different date formats to see which one works
-                    CreationDate: todayISO,  // Try this first
-                    // CreationDate: todayFormatted,  // If ISO doesn't work, try this
-                    // CreationDate: todayDate,  // Or try a Date object
-                    // Add flag to identify avenant new lines
+                    CreationDate: this.getCurrentDate(),  
                     isAvenantNewLine: bIsAvnant
                 };
 
                 aData.push(oNewLine);
                 oModel.setProperty("/results", aData);
-
-                // Log for debugging
-                console.log("Added new line in " + (bIsAvnant ? "Avenant" : "Regular") + " mode: ", oNewLine);
-                console.log("CreationDate set to: " + oNewLine.CreationDate);
-                console.log("Type of CreationDate: " + typeof oNewLine.CreationDate);
-                console.log("Current data count: " + aData.length);
-
-                // Log all items with their CreationDate
-                aData.forEach(function (item, index) {
-                    console.log("Item " + index + ": " + item.Mission_p +
-                        " - CreationDate: " + item.CreationDate +
-                        " (type: " + typeof item.CreationDate + ")");
-                });
 
                 // Force UI refresh
                 oModel.refresh();
@@ -293,8 +259,8 @@ sap.ui.define([
                     sap.m.MessageBox.error("Modèle UI introuvable");
                     return;
                 }
-                const bBudgetOnlyEdit = oUIModel.getProperty("/budgetOnlyEdit") || false;
-                return !bBudgetOnlyEdit && bEditable && Array.isArray(aMissions) && aMissions.length > 0;
+                const bShowModifBudget = oUIModel.getProperty("/showModifBudget") || false;
+                return !bShowModifBudget && bEditable && Array.isArray(aMissions) && aMissions.length > 0;
             },
 
             enableAddLine1: function (bEditable, aMissions, bIsAvnant) {
@@ -758,9 +724,10 @@ sap.ui.define([
                 const oUIModel = oView.getModel("ui");
                 if (!oUIModel) return false;
 
-                const bShowModifBudget = oUIModel.getProperty("/showModifBudget");
+                const bShowModifBudget = oUIModel.getProperty("/showModifBudget")|| false;
                 return bIsAvnant && bShowModifBudget;
             },
+
 
             enableAddModificationLine: function (bEditable, bHasSelectedLine) {
                 return bEditable && bHasSelectedLine;

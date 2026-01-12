@@ -567,10 +567,12 @@ sap.ui.define(
                     oUIModel.setProperty("/showModifBudget", true); // Afficher le tableau modification budget
                 }
 
+                
                 // Désactiver le bouton "Add Line" pour le tableau budget principal
                 sap.m.MessageToast.show("Mode modification budget activé - L'ajout de lignes est désactivé");
             },
 
+            
             _createAmendment: function () {
                 const oView = this.getView();
                 const oContext = oView.getBindingContext();
