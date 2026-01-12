@@ -80,7 +80,7 @@
                             text="{
                                 path: 'budget>CreationDate',
                                 type: 'sap.ui.model.type.Date',
-                                formatOptions: { pattern: 'yyyy-MM-dd' }
+                                formatOptions: { pattern: 'dd.MM.yyyy' }
                             }" />
 
                         
@@ -124,7 +124,7 @@
                         <Text text="{budget>Regroupement}" />
 
                         <DatePicker
-                            value="{path: 'budget>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
+                            value="{path: 'budget>StartDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }}"
                             displayFormat="short"
                             editable="{
                                 parts: [
@@ -139,7 +139,7 @@
                         />
 
                         <DatePicker
-                            value="{path: 'budget>EndDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"
+                            value="{path: 'budget>EndDate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }}"
                             displayFormat="short"
                             editable="{
                                 parts: [
