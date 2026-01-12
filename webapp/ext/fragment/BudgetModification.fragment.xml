@@ -1,49 +1,59 @@
 <core:FragmentDefinition
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
-    xmlns:layout="sap.ui.layout">
-    
-    <layout:VerticalLayout width="100%" class="sapUiSmallMargin">
+    xmlns:layout="sap.ui.layout"
+>
+    <layout:VerticalLayout
+        width="100%"
+        class="sapUiSmallMargin"
+    >
         <!-- Title for the new block -->
-        <Text text="Ce bloc permet de saisir des ajustements budgétaires sur des missions existantes validées." 
-              class="sapUiSmallMarginBottom"/>
-        
+        <Text
+            text="Ce bloc permet de saisir des ajustements budgétaires sur des missions existantes validées."
+            class="sapUiSmallMarginBottom"
+        />
+
         <!-- Toolbar with Add button -->
-    <Toolbar>
-        <content>
-            <Title level="H3" 
-                   class="sapUiTinyMarginEnd"/>
-            <ToolbarSpacer />
-            <Button
-                id="addModificationBtn"
-                icon="sap-icon://add"
-                text="Ajouter une ligne"
-                press="onAddBudgetModificationLine"
-                type="Emphasized"
-                enabled="{ui>/editable}"
-                class="sapUiTinyMarginBegin"
-            />
-        </content>
-    </Toolbar>
+        <Toolbar>
+            <content>
+                <Title
+                    level="H3"
+                    class="sapUiTinyMarginEnd"
+                />
+                <ToolbarSpacer />
+                <Button
+                    id="addModificationBtn"
+                    icon="sap-icon://add"
+                    text="Ajouter une ligne"
+                    press="onAddBudgetModificationLine"
+                    type="Emphasized"
+                    enabled="{ui>/editable}"
+                    class="sapUiTinyMarginBegin"
+                />
+            </content>
+        </Toolbar>
 
         <!-- Budget Modification Table -->
-    <Table
-        id="budgetModificationTable"
-        inset="true"
-        growing="true"
-        growingScrollToLoad="true"
-        mode="None"
-        items="{modifBudget>/results}">
-
+        <Table
+            id="budgetModificationTable"
+            inset="true"
+            growing="true"
+            growingScrollToLoad="true"
+            mode="None"
+            items="{modifBudget>/results}"
+        >
             <headerToolbar>
                 <OverflowToolbar>
-                    <Title text="Ajustements budgétaires" level="H3"/>
-                    <ToolbarSpacer/>
-                    <Label text="Nombre de lignes:"/>
-                    <Text text="{= ${modifBudget>/results}.length }"/>
+                    <Title
+                        text="Ajustements budgétaires"
+                        level="H3"
+                    />
+                    <ToolbarSpacer />
+                    <Label text="Nombre de lignes:" />
+                    <Text text="{= ${modifBudget>/results}.length }" />
                 </OverflowToolbar>
             </headerToolbar>
-            
+
             <columns>
                 <Column width="120px">
                     <Text text="Date de création" />
@@ -69,20 +79,20 @@
                 <ColumnListItem>
                     <cells>
                         <!-- Date de création (auto-filled) -->
-                        <Text 
+                        <Text
                             text="{
                                 path: 'modifBudget>DateCreation',
                                 type: 'sap.ui.model.type.Date',
                                 formatOptions: { pattern: 'yyyy-MM-dd' }
-                            }" />
-                        
-                        
+                            }"
+                        />
+
                         <!-- Mission réceptrice (read-only) -->
                         <Text text="{modifBudget>Mission_e}" />
-                        
+
                         <!-- Mission émettrice (read-only) -->
                         <Text text="{modifBudget>Mission_p}" />
-                        
+
                         <!-- Budget adjustment input -->
                         <Input
                             value="{modifBudget>DeltaBudget}"
@@ -96,12 +106,12 @@
                             }"
                             placeholder="Montant +/-"
                             type="Number"
-                            width="100%">
-                        </Input>
-                        
+                            width="100%"
+                        />
+
                         <!-- Currency (auto-filled, read-only) -->
                         <Text text="{modifBudget>Devise}" />
-                        
+
                         <!-- Delete button -->
                         <Button
                             icon="sap-icon://delete"
@@ -109,10 +119,10 @@
                             press="onDeleteBudgetModificationLine"
                             enabled="{
                                 parts: [
-                                    {path: 'ui>/editable'},
-                                    {path: 'ui>/hasSelectedBudgetLine'}
+                                    { path: 'modifBudget>isNew' },
+                                    { path: 'modifBudget>MissionPairId' }
                                 ],
-                                formatter: '.enableAddModificationLine'
+                                formatter: '.isModificationLineEditable'
                             }"
                             tooltip="Supprimer cette ligne"
                         />
@@ -120,18 +130,29 @@
                 </ColumnListItem>
             </items>
         </Table>
-        
+
         <!-- Information text -->
         <VBox class="sapUiSmallMarginTop">
-            <Text text="Informations :" class="sapUiTinyMarginBottom"/>
-            <Text text="• Seules les missions validées (issues d'un formulaire approuvé) sont disponibles à la sélection" 
-                  class="sapUiTinyMarginBottom"/>
-            <Text text="• La date de création est automatiquement remplie avec la date du jour" 
-                  class="sapUiTinyMarginBottom"/>
-            <Text text="• La devise est reprise automatiquement depuis la mission réceptrice" 
-                  class="sapUiTinyMarginBottom"/>
-            <Text text="• L'ajustement peut être positif (augmentation) ou négatif (diminution)" 
-                  class="sapUiTinyMarginBottom"/>
+            <Text
+                text="Informations :"
+                class="sapUiTinyMarginBottom"
+            />
+            <Text
+                text="• Seules les missions validées (issues d'un formulaire approuvé) sont disponibles à la sélection"
+                class="sapUiTinyMarginBottom"
+            />
+            <Text
+                text="• La date de création est automatiquement remplie avec la date du jour"
+                class="sapUiTinyMarginBottom"
+            />
+            <Text
+                text="• La devise est reprise automatiquement depuis la mission réceptrice"
+                class="sapUiTinyMarginBottom"
+            />
+            <Text
+                text="• L'ajustement peut être positif (augmentation) ou négatif (diminution)"
+                class="sapUiTinyMarginBottom"
+            />
         </VBox>
     </layout:VerticalLayout>
 </core:FragmentDefinition>

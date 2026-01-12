@@ -34,7 +34,7 @@
             growing="true"
             growingScrollToLoad="true"
             growingThreshold="99"
-            mode="{= ${ui>/isAvnant} &amp;&amp; ${ui>/showModifBudget} ? 'SingleSelectLeft' : 'None' }"
+            mode="{= ${ui>/isModif} ? 'SingleSelectLeft' : 'None' }"
             items="{budget>/results}"
         >
             <columns>
@@ -194,7 +194,7 @@
         expandable="true"
         expanded="true"
         headerText="Modification du budget"
-        visible="{= ${ui>/isAvnant} &amp;&amp; ${ui>/showModifBudget}}"
+        visible="{ui>/isModif}"
     >
         <content>
             <core:Fragment

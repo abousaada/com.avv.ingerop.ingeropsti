@@ -451,6 +451,7 @@
                 <Property Name="p_period" Type="Edm.String" MaxLength="6"/>
                 <Property Name="date_creation" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
                 <Property Name="is_avenant" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Single-Character Flag" sap:heading=""/>
+                <Property Name="is_modif" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Single-Character Flag" sap:heading=""/>
                 <NavigationProperty Name="to_BUDG" Relationship="ZSTI_SRV.assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" FromRole="FromRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D" ToRole="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 <NavigationProperty Name="to_Comments" Relationship="ZSTI_SRV.assoc_9204A440B06323DF29C36860ABC8797B" FromRole="FromRole_assoc_9204A440B06323DF29C36860ABC8797B" ToRole="ToRole_assoc_9204A440B06323DF29C36860ABC8797B"/>
                 <NavigationProperty Name="to_Missions" Relationship="ZSTI_SRV.assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" FromRole="FromRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9" ToRole="ToRole_assoc_BDE3EF1CC903BE8B03DEE893F2059FD9"/>
@@ -509,25 +510,19 @@
             <EntityType Name="ZC_STI_MODIF_BUDGType" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="BUSINESS_NO_E"/>
-                    <PropertyRef Name="BUSINESS_NO_P"/>
                     <PropertyRef Name="IdFormulaire"/>
                     <PropertyRef Name="modif_sec"/>
+                    <PropertyRef Name="Mission_e"/>
+                    <PropertyRef Name="Mission_p"/>
                 </Key>
                 <Property Name="BUSINESS_NO_E" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
-                <Property Name="BUSINESS_NO_P" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
                 <Property Name="IdFormulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Field length 10" sap:quickinfo="Numeric Character Field, Length 10"/>
                 <Property Name="modif_sec" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Field length 10" sap:quickinfo="Numeric Character Field, Length 10"/>
+                <Property Name="Mission_e" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
+                <Property Name="Mission_p" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
                 <Property Name="DateCreation" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
-                <Property Name="Mission_e" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
-                <Property Name="Mission_p" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
                 <Property Name="DeltaBudget" Type="Edm.Int64" sap:label=""/>
                 <Property Name="Devise" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
-                <Property Name="DateModification" Type="Edm.DateTimeOffset" Precision="7" sap:label="Time Stamp" sap:quickinfo="UTC Time Stamp in Long Form (YYYYMMDDhhmmssmmmuuun)"/>
-                <Property Name="Utilisateur" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
-                <Property Name="ValidFrom" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
-                <Property Name="ValidTo" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
-                <Property Name="Status" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Single-Character Flag" sap:heading=""/>
-                <Property Name="Commentaire" Type="Edm.String" MaxLength="255"/>
                 <NavigationProperty Name="to_STI" Relationship="ZSTI_SRV.assoc_23F919D7256CD0F71376A3AF75439F44" FromRole="FromRole_assoc_23F919D7256CD0F71376A3AF75439F44" ToRole="ToRole_assoc_23F919D7256CD0F71376A3AF75439F44"/>
             </EntityType>
             <EntityType Name="ZC_STI_WFType" sap:label="Workflow de STI" sap:content-version="1">

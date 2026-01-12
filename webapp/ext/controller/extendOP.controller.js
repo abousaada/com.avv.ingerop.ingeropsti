@@ -101,10 +101,14 @@ sap.ui.define(
                     }));
 
 
-                    const aBudgetModifications = oView.getModel("modifBudget").getProperty("/results") || [];
+                    // ====== Filter only NEW modifBudget lines ======
+                    const aAllBudgetModifications = oView.getModel("modifBudget").getProperty("/results") || [];
+
+                    // Filter to get only new lines
+                    const aNewBudgetModifications = aAllBudgetModifications.filter(modif => modif.isNew === true);
                     const aModificationsPayload = [];
-                    if (aBudgetModifications.length > 0) {
-                        aBudgetModifications.forEach((modif, index) => {
+                    if (aNewBudgetModifications.length > 0) {
+                        aNewBudgetModifications.forEach((modif, index) => {
                             const oModification = {
                                 BUSINESS_NO_E: oPayload.business_no_e || '',
                                 IdFormulaire: oPayload.id_formulaire || '',
@@ -112,7 +116,8 @@ sap.ui.define(
                                 Mission_e: modif.Mission_e || '',
                                 Mission_p: modif.Mission_p || '',
                                 DeltaBudget: modif.DeltaBudget || '0',
-                                Devise: modif.Devise
+                                Devise: modif.Devise,
+                                modif_sec: modif.modif_sec
                             };
 
                             aModificationsPayload.push(oModification);
@@ -504,6 +509,8 @@ sap.ui.define(
                 const bIsAvnant = this.isAvnant(oModel, sPath);
                 this._setAvenantFieldEditableState("stidescr", bIsAvnant);
 
+                const bIsModif = this.isModif(oModel, sPath);
+
                 if (!oUIModel) {
                     oUIModel = new sap.ui.model.json.JSONModel({
                         editable: false,
@@ -576,11 +583,25 @@ sap.ui.define(
             _modifyBudget: function () {
                 const oView = this.getView();
                 const oUIModel = oView.getModel("ui");
+                const oContext = oView.getBindingContext();
+
+                if (oContext) {
+                    const oModel = oContext.getModel();
+                    const sPath = oContext.getPath();
+
+                    // Set is_avenant to 'X' in the main model
+                    if (oModel && sPath) {
+                        oModel.setProperty(sPath + "/is_modif", "X");
+                        console.log("is_avenant set to X in modify budget mode");
+                    }
+                }
+
 
                 // Définir le mode "modification budget seulement"
                 if (oUIModel) {
                     oUIModel.setProperty("/showAddAmendment", false);
                     oUIModel.setProperty("/showModifBudget", true); // Afficher le tableau modification budget
+                oUIModel.refresh(true);
                 }
 
 
@@ -591,11 +612,20 @@ sap.ui.define(
 
             _createAmendment: function () {
                 const oView = this.getView();
-                const oContext = oView.getBindingContext();
-                const oModel = oContext.getModel();
-                const sPath = oContext.getPath();
-
                 const oUIModel = oView.getModel("ui");
+                const oContext = oView.getBindingContext();
+
+                if (oContext) {
+                    const oModel = oContext.getModel();
+                    const sPath = oContext.getPath();
+
+                    // Set is_avenant to 'X' in the main model
+                    if (oModel && sPath) {
+                        oModel.setProperty(sPath + "/is_avenant", "X");
+                        console.log("is_avenant set to X in modify budget mode");
+                    }
+                }
+
                 if (oUIModel) {
                     // Pour un avenant, activer l'ajout de lignes
                     oUIModel.setProperty("/showAddAmendment", true);
@@ -604,6 +634,40 @@ sap.ui.define(
 
                 sap.m.MessageToast.show("Vous pouvez ajouter de nouvelles lignes budgétaires.");
             },
+
+            isModif: function (oModel, sPath) {
+    if (!oModel || !sPath) {
+        return false;
+    }
+
+    const sStatus = oModel.getProperty(sPath + "/status");
+    const sIsModif = oModel.getProperty(sPath + "/is_modif");
+
+    // Define your logic for when is_modif should be considered true
+    const bIsModif = sStatus === "APPROVED" ||
+        (sStatus === "DRAFT" && sIsModif === "X") ||
+        (sStatus === "En cours" && sIsModif === "X") ||
+        sIsModif === "X"; // Or any other conditions you need
+
+    // Store in UI model for other controllers to access
+    const oView = this.getView();
+    let oUIModel = oView.getModel("ui");
+    if (!oUIModel) {
+        oUIModel = new sap.ui.model.json.JSONModel({
+            isModif: bIsModif,
+            isAvnant: false, // Keep both properties
+            editable: false,
+            enabled: true,
+            showAddAmendment: false,
+            showModifBudget: true
+        });
+        oView.setModel(oUIModel, "ui");
+    } else {
+        oUIModel.setProperty("/isModif", bIsModif);
+    }
+
+    return bIsModif;
+},
 
             isAvnant: function (oModel, sPath) {
                 if (!oModel || !sPath) {

@@ -263,6 +263,20 @@ sap.ui.define([
                 return !bShowModifBudget && bEditable && Array.isArray(aMissions) && aMissions.length > 0;
             },
 
+            showModifBudget: function (bEditable, aMissions) {
+                const oView = this.getView();
+                const oUIModel = oView.getModel("ui");
+
+                if (!oUIModel) {
+                    sap.m.MessageBox.error("Modèle UI introuvable");
+                    return;
+                }
+                const bShowModifBudget = true; // "oUIModel.getProperty("/showModifBudget") || false;
+                const result = !bShowModifBudget && Array.isArray(aMissions) && aMissions.length > 0;
+            
+                return !result;
+            },
+
             enableAddLine1: function (bEditable, aMissions, bIsAvnant) {
                 const oUIModel = this.getView().getModel("ui");
                 const bBudgetOnlyEdit = oUIModel ? oUIModel.getProperty("/budgetOnlyEdit") : false;
