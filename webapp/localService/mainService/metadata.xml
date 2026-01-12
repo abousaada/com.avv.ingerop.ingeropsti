@@ -419,7 +419,7 @@
                 <Property Name="id_formulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_no_e" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:heading="" sap:quickinfo="Character field length 24" sap:value-list="standard"/>
                 <Property Name="Criticality" Type="Edm.Byte"/>
-                <Property Name="stext" Type="Edm.String" MaxLength="14" sap:label="" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="stext" Type="Edm.String" MaxLength="24" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="status" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label=""/>
                 <Property Name="business_e_t" Type="Edm.String" MaxLength="100" sap:display-format="UpperCase" sap:label="" sap:creatable="false" sap:updatable="false"/>
                 <Property Name="business_e_cmp" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Company code" sap:heading="" sap:quickinfo="Company code for WBS element" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
@@ -509,10 +509,14 @@
             <EntityType Name="ZC_STI_MODIF_BUDGType" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="BUSINESS_NO_E"/>
+                    <PropertyRef Name="BUSINESS_NO_P"/>
                     <PropertyRef Name="IdFormulaire"/>
+                    <PropertyRef Name="modif_sec"/>
                 </Key>
-                <Property Name="BUSINESS_NO_E" Type="Edm.String" Nullable="false" MaxLength="24" sap:display-format="UpperCase" sap:label="Text 24" sap:quickinfo="Character field length 24"/>
+                <Property Name="BUSINESS_NO_E" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
+                <Property Name="BUSINESS_NO_P" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
                 <Property Name="IdFormulaire" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Field length 10" sap:quickinfo="Numeric Character Field, Length 10"/>
+                <Property Name="modif_sec" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Field length 10" sap:quickinfo="Numeric Character Field, Length 10"/>
                 <Property Name="DateCreation" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
                 <Property Name="Mission_e" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
                 <Property Name="Mission_p" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Char" sap:quickinfo="Character field of length 40"/>
@@ -684,20 +688,20 @@
                     <End EntitySet="ZC_STI_BUDG" Role="ToRole_assoc_4C440054DA86EB6EA9AA53AAC97FFE9D"/>
                 </AssociationSet>
                 <FunctionImport Name="ZGENERATE_IDS" ReturnType="ZSTI_SRV.ZGeneratedIdType" m:HttpMethod="POST">
-                    <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_UFO" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_PROJECT_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
                 <FunctionImport Name="ZGET_ID" ReturnType="ZSTI_SRV.ZGEN_ID" m:HttpMethod="POST">
-                    <Parameter Name="iv_IdFormulaire" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_TYPE" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="iv_IdFormulaire" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
                 <FunctionImport Name="ZCHECK_INTERCO" ReturnType="ZSTI_SRV.ZCHECK_STI_FLOW" m:HttpMethod="POST">
-                    <Parameter Name="IV_BUSINESS_NO_E" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_UFO_P" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_BUSINESS_NO_E" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
                 <FunctionImport Name="ZCHECK_UFO_CDP" ReturnType="ZSTI_SRV.ZCHECK_STI_FLOW" m:HttpMethod="POST">
-                    <Parameter Name="IV_BUSINESS_NO_E" Type="Edm.String" Mode="In" MaxLength="50"/>
                     <Parameter Name="IV_CDP_P" Type="Edm.String" Mode="In" MaxLength="50"/>
+                    <Parameter Name="IV_BUSINESS_NO_E" Type="Edm.String" Mode="In" MaxLength="50"/>
                 </FunctionImport>
             </EntityContainer>
             <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>

@@ -614,7 +614,8 @@ sap.ui.define(
                 const sIsAvenant = oModel.getProperty(sPath + "/is_avenant");
 
                 const bIsAvnant = sStatus === "APPROVED" ||
-                    (sStatus === "DRAFT" && sIsAvenant === "X");
+                    (sStatus === "DRAFT" && sIsAvenant === "X") ||
+                    (sStatus === "En cours" && sIsAvenant === "X");
 
                 // Store in UI model for other controllers to access
                 const oView = this.getView();
