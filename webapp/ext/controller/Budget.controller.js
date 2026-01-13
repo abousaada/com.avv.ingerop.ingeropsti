@@ -375,14 +375,16 @@ sap.ui.define([
 
             },
 
+
             onBudgetTableSelectionChange: function (oEvent) {
                 var aSelectedItems = oEvent.getSource().getSelectedItems();
+                var oUIModel = this.getView().getModel("ui");
 
                 if (aSelectedItems.length > 0) {
                     var oSelectedItem = aSelectedItems[0];
                     var oBindingContext = oSelectedItem.getBindingContext("budget");
 
-                    if (oBindingContext) {
+                    if (oBindingContext && oUIModel) {
                         // Store the selected budget line in UI model
                         var oSelectedBudgetLine = {
                             Mission_p: oBindingContext.getProperty("Mission_p"),
@@ -392,14 +394,19 @@ sap.ui.define([
                             Regroupement: oBindingContext.getProperty("Regroupement")
                         };
 
-                        var oUIModel = this.getView().getModel("ui");
-                        if (oUIModel) {
-                            oUIModel.setProperty("/selectedBudgetLine", oSelectedBudgetLine);
-                            console.log("Budget line selected:", oSelectedBudgetLine);
-                        }
+                        oUIModel.setProperty("/selectedBudgetLine", oSelectedBudgetLine);
+                        oUIModel.setProperty("/hasSelectedBudgetLine", true); 
+                        console.log("Budget line selected:", oSelectedBudgetLine);
+                    }
+                } else {
+                    // No selection - clear the properties
+                    if (oUIModel) {
+                        oUIModel.setProperty("/selectedBudgetLine", null);
+                        oUIModel.setProperty("/hasSelectedBudgetLine", false);  
                     }
                 }
             },
+    
 
             onBudgetRowSelected: function (oEvent) {
                 var oSelectedItem = oEvent.getParameter("row");
@@ -453,8 +460,8 @@ sap.ui.define([
                 const bHasSelectedLine = oUIModel.getProperty("/hasSelectedBudgetLine") || false;
                 const oSelectedBudgetLine = oUIModel.getProperty("/selectedBudgetLine");
 
-                //if (!bHasSelectedLine || !oSelectedBudgetLine) {
-                if (!oSelectedBudgetLine) {
+                if (!bHasSelectedLine || !oSelectedBudgetLine) {
+                    //if (!oSelectedBudgetLine) {
                     MessageBox.warning(
                         "Veuillez d'abord sélectionner une ligne de budget avant d'ajouter une modification.",
                         { title: "Aucune ligne sélectionnée" }
