@@ -867,7 +867,8 @@ sap.ui.define(
                 } else {
                     const next4 = sBusinessNoE.substring(4, 8);
                     const remaining = sBusinessNoE.substring(12);
-                    newMiddle = sBusinessUfo + next4 + remaining;
+                    //newMiddle = sBusinessUfo + next4 + remaining;
+                    newMiddle = next4 + sBusinessUfo +  remaining;
                 }
 
                 const baseId = prefix + newMiddle;
@@ -1503,7 +1504,156 @@ sap.ui.define(
             },
 
 
-            _recalculateMissionBudgets: function () {
+            resetOriginalMissionsModel: function () {
+                var oView = this.getView();
+                var missionsModel = oView.getModel("missions");
+                var missionsData = missionsModel.getProperty("/results") || [];
+
+                this._originalMissionsModel = {
+                    data: JSON.parse(JSON.stringify(missionsData)),
+                    lastUpdated: new Date().getTime()
+                };
+            },
+
+  _recalculateMissionBudgets: function () {
+    var oView = this.getView();
+    var budgetData = oView.getModel("budget").getProperty("/results");
+    var modifBudgetData = oView.getModel("modifBudget").getProperty("/results") || [];
+
+    // Get the missions model from the view
+    var missionsModel = oView.getModel("missions");
+
+    // Get missions data
+    var missionsData = missionsModel.getProperty("/results") || [];
+
+    // Flag to avoid multiple alerts
+    if (!this._lastBudgetAlertTime) {
+        this._lastBudgetAlertTime = 0;
+    }
+    var now = new Date().getTime();
+    var showAlert = (now - this._lastBudgetAlertTime) > 5000; // 5 seconds between alerts
+
+    var overBudgetMissions = [];
+    var updatedMissions = [];
+
+    // Group modifBudget data by mission for easier calculation
+    var modifBudgetByMission = {};
+    modifBudgetData.forEach(modif => {
+        var missionId = modif.Mission_e; // Receiver mission
+        var delta = parseFloat(modif.DeltaBudget || 0);
+
+        if (!modifBudgetByMission[missionId]) {
+            modifBudgetByMission[missionId] = 0;
+        }
+        modifBudgetByMission[missionId] += delta;
+    });
+
+    missionsData.forEach(mission => {
+        const missionId = mission.MissionId;
+        
+        // Get the ORIGINAL database BudgetInSTI value (from initial load)
+        // This should only include values from saved database records
+        const originalDatabaseBudgetInSTI = parseFloat(mission.OriginalBudgetInSTI || mission.BudgetInSTI || 0);
+
+        // Calculate budget from table:
+        // 1. NEW lines (isNew === true)
+        // 2. MODIFIED existing lines (ID contains ## or ###)
+        const tableBudgetLines = budgetData && budgetData.length > 0 ?
+            budgetData.filter(b => b.Mission_e === missionId) : [];
+        
+        let tableBudgetTotal = 0;
+        let modifiedExistingBudget = 0;
+        let newBudgetLines = 0;
+        
+        tableBudgetLines.forEach(b => {
+            const budgetValue = parseFloat(b.BudgetAlloue || 0);
+            
+            // Check if this is a new line
+            if (b.isNew === true) {
+                newBudgetLines += budgetValue;
+                tableBudgetTotal += budgetValue;
+            } 
+            // Check if this is a modified existing line (contains ## or ### in ID)
+            else if (b.Mission_p && (b.Mission_p.includes('##') || b.Mission_p.includes('###'))) {
+                modifiedExistingBudget += budgetValue;
+                tableBudgetTotal += budgetValue;
+            }
+            // For other existing lines, they should already be in originalDatabaseBudgetInSTI
+            // so we don't add them again to avoid double counting
+        });
+
+        // Sum budget modifications for this mission
+        const budgetModifications = modifBudgetByMission[missionId] || 0;
+
+        // TOTAL BudgetInSTI = Original Database value + Table budget (new/modified) + Budget modifications
+        const totalBudgetForMission = originalDatabaseBudgetInSTI + tableBudgetTotal + budgetModifications;
+
+        const available = parseFloat(mission.GlobalBudget || 0) - totalBudgetForMission;
+
+        const updatedMission = {
+            ...mission,
+            OriginalBudgetInSTI: originalDatabaseBudgetInSTI, // Preserve the original database value
+            BudgetInSTI: totalBudgetForMission.toFixed(2),
+            AvailableBudget: available.toFixed(2),
+            SubcontractedBudgetPercentage: parseFloat(mission.GlobalBudget || 0) === 0 ?
+                "0%" : ((totalBudgetForMission / parseFloat(mission.GlobalBudget || 0)) * 100).toFixed(2) + "%",
+            // Add detailed tracking
+            BudgetModifications: budgetModifications,
+            NewBudgetLines: newBudgetLines,
+            ModifiedExistingBudget: modifiedExistingBudget,
+            TableBudgetTotal: tableBudgetTotal
+        };
+
+        updatedMissions.push(updatedMission);
+
+        if (available < 0) {
+            overBudgetMissions.push({
+                MissionId: mission.MissionId,
+                description: mission.description,
+                available: available.toFixed(2),
+                totalBudgetInSTI: totalBudgetForMission.toFixed(2),
+                budgetModifications: budgetModifications.toFixed(2),
+                newBudgetLines: newBudgetLines.toFixed(2),
+                modifiedExistingBudget: modifiedExistingBudget.toFixed(2)
+            });
+        }
+    });
+
+    oView.getModel("missions").setProperty("/results", updatedMissions);
+    oView.getModel("missions").refresh(true);
+
+    if (overBudgetMissions.length > 0 && showAlert) {
+        // Update timestamp
+        this._lastBudgetAlertTime = now;
+
+        var message = "ATTENTION : " + overBudgetMissions.length + " mission(s) dépasse(nt) le budget disponible :\n\n";
+
+        overBudgetMissions.forEach((m, index) => {
+            message += `${index + 1}. Mission '${m.description}' (${m.MissionId})\n`;
+            message += `   Budget sous-traité: ${m.totalBudgetInSTI}\n`;
+            message += `   (Dont nouvelles lignes: ${m.newBudgetLines})\n`;
+            message += `   (Dont lignes modifiées: ${m.modifiedExistingBudget})\n`;
+            message += `   Ajustements: ${m.budgetModifications}\n`;
+            message += `   Disponible: ${m.available}\n`;
+            if (index < overBudgetMissions.length - 1) {
+                message += "\n";
+            }
+        });
+
+        sap.m.MessageBox.warning(message, {
+            title: "Attention - Budget dépassé",
+            actions: [sap.m.MessageBox.Action.OK],
+            onClose: function () {
+                // Reset timer after alert closes
+                this._lastBudgetAlertTime = 0;
+            }.bind(this)
+        });
+    }
+
+    this.prepareMissionsTreeData();
+},
+
+            _recalculateMissionBudgets1: function () {
                 var oView = this.getView();
                 var budgetData = oView.getModel("budget").getProperty("/results");
                 var modifBudgetData = oView.getModel("modifBudget").getProperty("/results") || [];
@@ -1513,13 +1663,13 @@ sap.ui.define(
 
                 // Initialize original missions model if it doesn't exist
                 //if (!this._originalMissionsModel) {
-                if (!this._originalMissionsModel || !this._originalMissionsModel.data) {
                     var missionsData = missionsModel.getProperty("/results") || [];
                     this._originalMissionsModel = {
                         data: JSON.parse(JSON.stringify(missionsData)),
                         lastUpdated: new Date().getTime()
                     };
-                }
+                //}
+
 
                 // Now use the stored original data
                 var missionsData = this._originalMissionsModel.data;
