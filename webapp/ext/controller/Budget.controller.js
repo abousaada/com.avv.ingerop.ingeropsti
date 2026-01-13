@@ -542,12 +542,12 @@ sap.ui.define([
                 return oMission ? oMission.Currency : "";
             },
 
-            isModificationLineEditable: function (bEditable, bIsNew, sMissionPairId) {
+            isModificationLineEditable: function (bIsApproved, bEditable, bIsNew, sMissionPairId) {
                 /*const oUIModel = this.getView().getModel("ui");
                 const bEditable = oUIModel ? oUIModel.getProperty("/editable") : false;*/
 
                 // Only editable if in edit mode and it's a new line
-                return bEditable && (bIsNew === true || !sMissionPairId);
+                return !bIsApproved && bEditable && (bIsNew === true || !sMissionPairId);
             },
 
             // When Mission réceptrice is selected

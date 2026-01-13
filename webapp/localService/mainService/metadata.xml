@@ -523,6 +523,7 @@
                 <Property Name="DateCreation" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Date" sap:quickinfo="Field of type DATS"/>
                 <Property Name="DeltaBudget" Type="Edm.Int64" sap:label=""/>
                 <Property Name="Devise" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
+                <Property Name="approved" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Single-Character Flag" sap:heading=""/>
                 <NavigationProperty Name="to_STI" Relationship="ZSTI_SRV.assoc_23F919D7256CD0F71376A3AF75439F44" FromRole="FromRole_assoc_23F919D7256CD0F71376A3AF75439F44" ToRole="ToRole_assoc_23F919D7256CD0F71376A3AF75439F44"/>
             </EntityType>
             <EntityType Name="ZC_STI_WFType" sap:label="Workflow de STI" sap:content-version="1">

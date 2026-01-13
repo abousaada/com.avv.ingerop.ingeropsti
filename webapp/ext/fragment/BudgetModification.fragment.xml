@@ -99,6 +99,7 @@
                             change="onBudgetAdjustmentChange"
                             enabled="{
                                 parts: [
+                                    { path: 'modifBudget>approved' },
                                     { path: 'ui>/editable' },
                                     { path: 'modifBudget>isNew' },
                                     { path: 'modifBudget>MissionPairId' }
@@ -120,6 +121,7 @@
                             press="onDeleteBudgetModificationLine"
                             enabled="{
                                 parts: [
+                                    { path: 'modifBudget>approved' },
                                     { path: 'ui>/editable' },
                                     { path: 'modifBudget>isNew' },
                                     { path: 'modifBudget>MissionPairId' }

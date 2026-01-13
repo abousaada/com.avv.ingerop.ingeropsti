@@ -20,6 +20,41 @@ sap.ui.define(
 
                 sap.ui.getCore().getEventBus().subscribe("budget", "budgetLineDeleted", this._recalculateMissionBudgets, this);
 
+                            const oEditFlow = this._getExtensionAPI().getEditFlow();
+
+                oEditFlow.attachBeforeEdit(this._onBeforeEdit.bind(this));
+
+            },
+
+            _onBeforeEdit: function () {
+                return new Promise((resolve, reject) => {
+
+                    const oDialog = new Dialog({
+                        title: "Confirmation",
+                        content: new Text({
+                            text: "Do you want to edit this document?"
+                        }),
+                        beginButton: new Button({
+                            text: "Yes",
+                            press: function () {
+                                oDialog.close();
+                                resolve(); // ✅ continue Edit
+                            }
+                        }),
+                        endButton: new Button({
+                            text: "No",
+                            press: function () {
+                                oDialog.close();
+                                reject(); // 
+                            }
+                        }),
+                        afterClose: function () {
+                            oDialog.destroy();
+                        }
+                    });
+
+                    oDialog.open();
+                });
             },
 
             beforeSaveExtension: async function (status) {
@@ -107,8 +142,8 @@ sap.ui.define(
                     // Filter to get only new lines
                     const aNewBudgetModifications = aAllBudgetModifications.filter(modif => modif.isNew === true);
                     const aModificationsPayload = [];
-                    if (aNewBudgetModifications.length > 0) {
-                        aNewBudgetModifications.forEach((modif, index) => {
+                    if (aAllBudgetModifications.length > 0) {
+                        aAllBudgetModifications.forEach((modif, index) => {
                             const oModification = {
                                 BUSINESS_NO_E: oPayload.business_no_e || '',
                                 IdFormulaire: oPayload.id_formulaire || '',
@@ -434,6 +469,12 @@ sap.ui.define(
             _showApprovedRowPopup: function () {
                 const that = this;
 
+                const oView = this.getView();
+                const oUIModel = oView.getModel("ui");
+                const oContext = oView.getBindingContext();
+                const oModel = oContext.getModel();
+                const sPath = oContext.getPath();
+
                 const sIsAvenant = oModel.getProperty(sPath + "/is_avenant");
                 const sIsModif = oModel.getProperty(sPath + "/is_modif");
 
@@ -466,7 +507,7 @@ sap.ui.define(
                         }),
                         new sap.m.Button({
                             id: "cancelButton", // ID pour le focus initial
-                            text: "Annuler",
+                            text: "Consulter",
                             type: sap.m.ButtonType.Emphasized, // Bouton emphasized
                             press: function () {
                                 oDialog.close();
