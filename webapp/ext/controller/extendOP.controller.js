@@ -1513,12 +1513,13 @@ sap.ui.define(
 
                 // Initialize original missions model if it doesn't exist
                 //if (!this._originalMissionsModel) {
+                if (!this._originalMissionsModel || !this._originalMissionsModel.data) {
                     var missionsData = missionsModel.getProperty("/results") || [];
                     this._originalMissionsModel = {
                         data: JSON.parse(JSON.stringify(missionsData)),
                         lastUpdated: new Date().getTime()
                     };
-                //}
+                }
 
                 // Now use the stored original data
                 var missionsData = this._originalMissionsModel.data;
