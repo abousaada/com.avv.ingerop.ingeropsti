@@ -535,9 +535,9 @@ sap.ui.define([
                 return oMission ? oMission.Currency : "";
             },
 
-            isModificationLineEditable: function (bIsNew, sMissionPairId) {
-                const oUIModel = this.getView().getModel("ui");
-                const bEditable = oUIModel ? oUIModel.getProperty("/editable") : false;
+            isModificationLineEditable: function (bEditable, bIsNew, sMissionPairId) {
+                /*const oUIModel = this.getView().getModel("ui");
+                const bEditable = oUIModel ? oUIModel.getProperty("/editable") : false;*/
 
                 // Only editable if in edit mode and it's a new line
                 return bEditable && (bIsNew === true || !sMissionPairId);
