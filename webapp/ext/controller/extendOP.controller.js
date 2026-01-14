@@ -252,7 +252,8 @@ sap.ui.define(
             },
 
             _onEnterKeyPressed: async function (oEvent) {
-                await this.onGenerateId();
+                const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
+                if (bIsCreate) { await this.onGenerateId() };
             },
 
             _getExtensionAPI: function () {
@@ -2002,7 +2003,7 @@ sap.ui.define(
                 }
             },
 
-            
+
             _refreshScreenData1: function (oView, status) {
                 try {
                     oView.setBusy(true);
