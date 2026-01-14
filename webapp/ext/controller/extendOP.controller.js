@@ -20,10 +20,6 @@ sap.ui.define(
 
                 sap.ui.getCore().getEventBus().subscribe("budget", "budgetLineDeleted", this._recalculateMissionBudgets, this);
 
-                            const oEditFlow = this._getExtensionAPI().getEditFlow();
-
-                oEditFlow.attachBeforeEdit(this._onBeforeEdit.bind(this));
-
             },
 
             _onBeforeEdit: function () {
@@ -1886,8 +1882,128 @@ sap.ui.define(
                 });
             },
 
-
             _refreshScreenData: function (oView, status) {
+                try {
+                    oView.setBusy(true);
+
+                    const oModel = oView.getModel();
+                    const oContext = oView.getBindingContext();
+
+                    if (!oContext) {
+                        console.warn("No binding context available for refresh");
+                        oView.setBusy(false);
+                        return;
+                    }
+
+                    const sPath = oContext.getPath();
+
+                    // Store current values of important fields before refresh
+                    const fieldsToPreserve = [
+                        "business_no_p",
+                        "business_no_e",
+                        "business_p_ufo",
+                        "business_p_cdp",
+                        "id_formulaire",
+                        "status"
+                    ];
+
+                    const preservedValues = {};
+                    fieldsToPreserve.forEach(field => {
+                        preservedValues[field] = oModel.getProperty(sPath + "/" + field);
+                    });
+
+                    // Store current mission data
+                    const currentMissions = oView.getModel("missions")?.getProperty("/results") || [];
+                    const missionsWithOriginalValues = currentMissions.map(mission => ({
+                        ...mission,
+                        OriginalBudgetInSTI: mission.OriginalBudgetInSTI || parseFloat(mission.BudgetInSTI || 0)
+                    }));
+
+                    // Refresh main model
+                    oModel.refresh(true).then(() => {
+                        // Restore preserved values after refresh
+                        fieldsToPreserve.forEach(field => {
+                            if (preservedValues[field] !== undefined &&
+                                preservedValues[field] !== null &&
+                                preservedValues[field] !== oModel.getProperty(sPath + "/" + field)) {
+                                oModel.setProperty(sPath + "/" + field, preservedValues[field]);
+                            }
+                        });
+
+                        // Refresh secondary data
+                        return Promise.all([
+                            this.getBudget(),
+                            this.getModifBudget(),
+                            this.getMissions(),
+                            this.getWF(),
+                            this.getComments()
+                        ]);
+                    }).then(([budget, modifBudget, missions, wf, comments]) => {
+                        // Update all models
+                        this._updateAllModels(oView, budget, modifBudget, missions, wf, comments, missionsWithOriginalValues);
+
+                        sap.m.MessageToast.show("Data refreshed successfully");
+
+                        this._recalculateMissionBudgets();
+                        this.prepareMissionsTreeData();
+
+                        if (status !== 'DRAFT') {
+                            const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                            oRouter.navTo("ListReport");
+                        }
+
+                    }).catch(error => {
+                        console.error("Error refreshing data:", error);
+                        sap.m.MessageToast.show("Error refreshing data");
+                    }).finally(() => {
+                        oView.setBusy(false);
+                    });
+
+                } catch (error) {
+                    console.error("Error in _refreshScreenData:", error);
+                    oView.setBusy(false);
+                }
+            },
+
+            _updateAllModels: function (oView, budget, modifBudget, missions, wf, comments, missionsWithOriginalValues) {
+                // Helper function to update models
+                const models = [
+                    { name: "budget", data: { results: budget } },
+                    { name: "modifBudget", data: { results: modifBudget } },
+                    { name: "wf", data: { results: wf } }
+                ];
+
+                models.forEach(modelInfo => {
+                    if (oView.getModel(modelInfo.name)) {
+                        oView.getModel(modelInfo.name).setData(modelInfo.data);
+                    }
+                });
+
+                // Handle comments
+                if (oView.getModel("comments")) {
+                    var oGrouped = this._groupCommentLines(comments);
+                    oView.getModel("comments").setData(oGrouped);
+                }
+
+                // Handle missions with preserved original values
+                if (oView.getModel("missions")) {
+                    const updatedMissions = missions.map(mission => {
+                        const preservedMission = missionsWithOriginalValues.find(m =>
+                            m.MissionId === mission.MissionId
+                        );
+                        return {
+                            ...mission,
+                            OriginalBudgetInSTI: preservedMission ?
+                                preservedMission.OriginalBudgetInSTI :
+                                parseFloat(mission.BudgetInSTI || 0)
+                        };
+                    });
+                    oView.getModel("missions").setData({ results: updatedMissions });
+                }
+            },
+
+            
+            _refreshScreenData1: function (oView, status) {
                 try {
                     oView.setBusy(true);
 
