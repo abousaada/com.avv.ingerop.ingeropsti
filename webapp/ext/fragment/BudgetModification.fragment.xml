@@ -95,7 +95,17 @@
 
                         <!-- Budget adjustment input -->
                         <Input
-                            value="{modifBudget>DeltaBudget}"
+                            value="{
+        path: 'modifBudget>DeltaBudget',
+        type: 'sap.ui.model.type.Float',
+        formatOptions: {
+            minFractionDigits: 2,
+            maxFractionDigits: 2,
+            decimalSeparator: ',',
+            groupingEnabled: true,
+            groupingSeparator: ' '
+        }
+    }"
                             change="onBudgetAdjustmentChange"
                             enabled="{
                                 parts: [
@@ -107,7 +117,6 @@
                                 formatter: '.isModificationLineEditable'
                             }"
                             placeholder="Montant +/-"
-                            type="Number"
                             width="100%"
                         />
 
