@@ -5,7 +5,7 @@
     xmlns:layout="sap.ui.layout"
     xmlns:rm="sap.ui.table.rowmodes"
 >
-    <layout:VerticalLayout width="100%" >
+    <layout:VerticalLayout width="100%">
         <!--Toolbar>
             <content>
                 <ToolbarSpacer />
@@ -102,7 +102,17 @@
                     <Label text="Budget global" />
                     <table:template>
                         <ObjectNumber
-                            number="{missions>GlobalBudget}"
+                            number="{
+                path: 'missions>GlobalBudget',
+                type: 'sap.ui.model.type.Float',
+                formatOptions: {
+                    minFractionDigits: 2,
+                    maxFractionDigits: 2,
+                    groupingEnabled: true,
+                    decimalSeparator: ',',
+                    groupingSeparator: ' '
+                }
+            }"
                             unit="EUR"
                             visible="{= ${missions>type} === 'mission'}"
                             state="None"
@@ -115,12 +125,21 @@
                     <Label text="Budget STI" />
                     <table:template>
                         <ObjectNumber
-                            number="{missions>BudgetInSTI}"
+                            number="{
+                path: 'missions>BudgetInSTI',
+                type: 'sap.ui.model.type.Float',
+                formatOptions: {
+                    minFractionDigits: 2,
+                    maxFractionDigits: 2,
+                    groupingEnabled: true,
+                    decimalSeparator: ',',
+                    groupingSeparator: ' '
+                }
+            }"
                             unit="EUR"
                             visible="{= ${missions>type} === 'mission'}"
                             state="None"
                             tooltip="{= 'Original: ' + ${missions>OriginalBudget} + ' EUR | Draft: ' + ${missions>BudgetInSTI} + ' EUR'}"
-
                         />
                     </table:template>
                 </table:Column>
@@ -130,7 +149,17 @@
                     <Label text="Budget disponible" />
                     <table:template>
                         <ObjectNumber
-                            number="{missions>AvailableBudget}"
+                            number="{
+                path: 'missions>AvailableBudget',
+                type: 'sap.ui.model.type.Float',
+                formatOptions: {
+                    minFractionDigits: 2,
+                    maxFractionDigits: 2,
+                    groupingEnabled: true,
+                    decimalSeparator: ',',
+                    groupingSeparator: ' '
+                }
+            }"
                             unit="EUR"
                             visible="{= ${missions>type} === 'mission'}"
                             state="{= parseFloat(${missions>AvailableBudget}) > 0 ? 'Success' : 'Error'}"
@@ -160,7 +189,7 @@
                     <Label text="Total Regroupement" />
                     <table:template>
                         <ObjectNumber
-            number="{= ${missions>type} === 'regroupement' ? ${missions>totalGlobalBudget} : ''}"
+                            number="{= ${missions>type} === 'regroupement' ? ${missions>totalGlobalBudget} : ''}"
                             unit="EUR"
                             visible="{= ${missions>type} === 'regroupement'}"
                             state="None"
@@ -173,14 +202,13 @@
                     <Label text="Total Business" />
                     <table:template>
                         <ObjectNumber
-            number="{= ${missions>type} === 'business' ? ${missions>totalGlobalBudget} : ''}"
+                            number="{= ${missions>type} === 'business' ? ${missions>totalGlobalBudget} : ''}"
                             unit="EUR"
                             visible="{= ${missions>type} === 'business'}"
                             state="None"
                         />
                     </table:template>
                 </table:Column>
-
             </table:columns>
         </table:TreeTable>
     </layout:VerticalLayout>
