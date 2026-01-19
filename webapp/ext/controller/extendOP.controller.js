@@ -493,6 +493,13 @@ sap.ui.define(
                             press: function () {
                                 oDialog.close();
                                 that._createAmendment();
+                                if (oUIModel) {
+                                    oUIModel.setProperty("/editable", true);
+                                    oUIModel.setProperty("/enabled", true);
+                                    oUIModel.setProperty("/showAddAmendment", true);
+                                    oUIModel.setProperty("/showModifBudget", false);
+                                    oUIModel.refresh(true);
+                                }
                             }
                         }),
                         new sap.m.Button({
@@ -500,6 +507,13 @@ sap.ui.define(
                             press: function () {
                                 oDialog.close();
                                 that._modifyBudget();
+                                if (oUIModel) {
+                                    oUIModel.setProperty("/editable", true);
+                                    oUIModel.setProperty("/enabled", true);
+                                    oUIModel.setProperty("/showAddAmendment", false);
+                                    oUIModel.setProperty("/showModifBudget", true);
+                                    oUIModel.refresh(true);
+                                }
                             }
                         }),
                         new sap.m.Button({
@@ -512,8 +526,6 @@ sap.ui.define(
                                 sap.m.MessageToast.show("Action annulée");
 
                                 // Disable editing when cancel is clicked
-                                const oView = that.getView();
-                                const oUIModel = oView.getModel("ui");
                                 if (oUIModel) {
                                     oUIModel.setProperty("/editable", false);
                                     oUIModel.setProperty("/enabled", false);
