@@ -12,15 +12,14 @@ sap.ui.define(
         //return ControllerExtension.extend("com.avv.ingerop.ingeropsti.ext.controller.extendOP", {
         return {
 
-            //override: {
 
             onInit: async function () {
                 this._getExtensionAPI().attachPageDataLoaded(this._onObjectExtMatched.bind(this));
                 await this._setupEnterKeyHandlers();
 
                 sap.ui.getCore().getEventBus().subscribe("budget", "budgetLineDeleted", this._recalculateMissionBudgets, this);
-
             },
+
 
             _onBeforeEdit: function () {
                 return new Promise((resolve, reject) => {
@@ -268,6 +267,146 @@ sap.ui.define(
                 return this._getController().getOwnerComponent();
             },
 
+
+            _hookEditButton: function () {
+                const oView = this.getView();
+
+                const findEditButton = () => {
+                    // Method 1: By ID (standard Fiori Elements ID)
+                    let editButton = oView.byId("edit");
+
+                    // Method 2: By looking for button with text "Edit"
+                    if (!editButton) {
+                        const allButtons = oView.findAggregatedObjects(true,
+                            (oCtrl) => oCtrl.isA("sap.m.Button") &&
+                                (oCtrl.getText() === "Edit" || oCtrl.getText() === "Modifier")
+                        );
+                        if (allButtons.length > 0) {
+                            editButton = allButtons[0];
+                        }
+                    }
+
+                    // Method 3: Look in the header actions
+                    if (!editButton) {
+                        const oObjectPage = oView.byId("objectPage") ||
+                            oView.findAggregatedObjects(true,
+                                (oCtrl) => oCtrl.isA("sap.uxap.ObjectPageLayout"))[0];
+                        if (oObjectPage && oObjectPage.getHeaderTitle()) {
+                            const headerActions = oObjectPage.getHeaderTitle().getActions();
+                            if (headerActions) {
+                                editButton = headerActions.find(action =>
+                                    action.getText() === "Edit" ||
+                                    action.getText() === "Modifier" ||
+                                    action.getId().includes("edit")
+                                );
+                            }
+                        }
+                    }
+
+                    return editButton;
+                };
+
+                // Try to find the button immediately and also periodically
+                let editButton = findEditButton();
+
+                if (editButton) {
+                    this._attachEditButtonHandler(editButton);
+                } else {
+                    // If not found immediately, try again after a delay (button might be created later)
+                    setTimeout(() => {
+                        editButton = findEditButton();
+                        if (editButton) {
+                            this._attachEditButtonHandler(editButton);
+                        }
+                    }, 1000);
+                }
+            },
+
+            _attachEditButtonHandler: function (editButton) {
+                // Remove any existing handlers to avoid duplicates
+                editButton.detachPress();
+
+                // Attach new handler
+                editButton.attachPress((oEvent) => {
+                    console.log("Edit button clicked!");
+
+                    const oView = this.getView();
+                    const oUIModel = oView.getModel("ui");
+                    const bIsCreate = oUIModel ? oUIModel.getProperty("/createMode") : false;
+
+                    // Set editable to true
+                    if (oUIModel) {
+                        oUIModel.setProperty("/editable", true);
+                        oUIModel.refresh(true);
+                    }
+
+                    // Call your function
+                    this._controlButtonVisibility(bIsCreate);
+
+                    sap.m.MessageToast.show("Edit mode activated");
+
+                    // Also hook save and cancel buttons
+                    this._hookSaveCancelButtons();
+                });
+
+                console.log("Edit button handler attached successfully");
+            },
+
+            _hookSaveCancelButtons: function () {
+                const oView = this.getView();
+
+                // Find Save button
+                const saveButton = oView.byId("save") ||
+                    oView.findAggregatedObjects(true,
+                        (oCtrl) => oCtrl.isA("sap.m.Button") &&
+                            (oCtrl.getText() === "Save" || oCtrl.getText() === "Enregistrer")
+                    )[0];
+
+                if (saveButton) {
+                    // Remove existing handler and attach new one
+                    saveButton.detachPress();
+                    saveButton.attachPress((oEvent) => {
+                        const oUIModel = oView.getModel("ui");
+                        const bIsCreate = oUIModel ? oUIModel.getProperty("/createMode") : false;
+
+                        // Reset editable state
+                        if (oUIModel) {
+                            oUIModel.setProperty("/editable", false);
+                            oUIModel.refresh(true);
+                        }
+
+                        // Hide buttons
+                        this._controlButtonVisibility(bIsCreate);
+                    });
+                }
+
+                // Find Cancel button
+                const cancelButton = oView.byId("cancel") ||
+                    oView.findAggregatedObjects(true,
+                        (oCtrl) => oCtrl.isA("sap.m.Button") &&
+                            (oCtrl.getText() === "Cancel" || oCtrl.getText() === "Annuler")
+                    )[0];
+
+                if (cancelButton) {
+                    cancelButton.detachPress();
+                    cancelButton.attachPress((oEvent) => {
+                        const oUIModel = oView.getModel("ui");
+                        const bIsCreate = oUIModel ? oUIModel.getProperty("/createMode") : false;
+
+                        // Reset editable state
+                        if (oUIModel) {
+                            oUIModel.setProperty("/editable", false);
+                            oUIModel.refresh(true);
+                        }
+
+                        // Hide buttons
+                        this._controlButtonVisibility(bIsCreate);
+
+                        sap.m.MessageToast.show("Edit mode cancelled");
+                    });
+                }
+            },
+
             _onObjectExtMatched: async function (e) {
 
                 const oContext = this._getController().getView().getBindingContext();
@@ -308,6 +447,7 @@ sap.ui.define(
                 const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
 
                 this._controlButtonVisibility(bIsCreate);
+                this._hookEditButton();
 
                 if (bIsCreate) {
                     var sNewFormulaireId; // = await this._calculateFormulaireId();
@@ -499,6 +639,9 @@ sap.ui.define(
                                     oUIModel.setProperty("/showAddAmendment", true);
                                     oUIModel.setProperty("/showModifBudget", false);
                                     oUIModel.refresh(true);
+
+
+                                    that._controlButtonVisibility(false);
                                 }
                             }
                         }),
@@ -513,6 +656,8 @@ sap.ui.define(
                                     oUIModel.setProperty("/showAddAmendment", false);
                                     oUIModel.setProperty("/showModifBudget", true);
                                     oUIModel.refresh(true);
+
+                                    that._controlButtonVisibility(false);
                                 }
                             }
                         }),
@@ -532,6 +677,8 @@ sap.ui.define(
                                     oUIModel.setProperty("/showAddAmendment", sIsAvenant);
                                     oUIModel.setProperty("/showModifBudget", sIsModif);
                                     oUIModel.refresh(true);
+                                    
+                                    that._controlButtonVisibility(false);
                                 }
                             }
                         })
@@ -665,6 +812,7 @@ sap.ui.define(
                 return bIsAvnant;
             },
 
+
             _controlButtonVisibility: function (bIsCreate) {
                 try {
                     // Get the Fiori elements controller
@@ -674,6 +822,90 @@ sap.ui.define(
                     // Get the Object Page layout
                     const oObjectPage = oController.byId("objectPage");
                     if (!oObjectPage) return;
+
+                    const oView = this.getView();
+                    const oUIModel = oView.getModel("ui");
+
+                    if (!oUIModel) return;
+
+                    // Get editable state from UI model
+                    const bIsEditable = oUIModel.getProperty("/editable");
+                    // Get enabled state from UI model (based on status)
+                    const bIsEnabled = oUIModel.getProperty("/enabled");
+
+                    // Control both buttons
+                    const aButtons = [
+                        { id: "btnValidateButton", text: "Approuver" },
+                        { id: "btnApproveButton", text: "Valider" }
+                    ];
+
+                    aButtons.forEach(oButtonDef => {
+                        let oButton = null;
+
+                        oButton = oController.byId(oButtonDef.id);
+
+                        if (!oButton) {
+                            const oHeader = oObjectPage.getHeaderTitle();
+                            if (oHeader && oHeader.getActions) {
+                                const aActions = oHeader.getActions();
+                                oButton = aActions.find(action =>
+                                    action.getId().includes(oButtonDef.id) ||
+                                    action.getText() === oButtonDef.text
+                                );
+                            }
+                        }
+                        if (!oButton) {
+                            const aFoundButtons = this.getView().findAggregatedObjects(true,
+                                (oCtrl) => oCtrl.isA("sap.m.Button") &&
+                                    (oCtrl.getId().includes(oButtonDef.id) ||
+                                        oCtrl.getText() === oButtonDef.text)
+                            );
+                            if (aFoundButtons.length > 0) {
+                                oButton = aFoundButtons[0];
+                            }
+                        }
+
+                        // Set visibility for found button
+                        if (oButton) {
+                            // Initially hide all buttons
+                            oButton.setVisible(false);
+
+                            // Only show in read-only mode and NOT in create mode
+                            if (!bIsEditable && !bIsCreate) {
+                                oButton.setVisible(true);
+                            }
+
+                            if (bIsCreate) {
+                                oButton.setEnabled(false);
+                                oButton.setVisible(false);
+                            }
+                        }
+                    });
+
+                } catch (error) {
+                    console.error("Error controlling button visibility:", error);
+                }
+            },
+
+            _controlButtonVisibility1: function (bIsCreate) {
+                try {
+                    // Get the Fiori elements controller
+                    const oController = this._getController();
+                    if (!oController) return;
+
+                    // Get the Object Page layout
+                    const oObjectPage = oController.byId("objectPage");
+                    if (!oObjectPage) return;
+
+                    const oView = this.getView();
+                    const oUIModel = oView.getModel("ui");
+
+                    if (!oUIModel) return;
+
+                    // Get editable state from UI model
+                    const bIsEditable = oUIModel.getProperty("/editable");
+                    // Get enabled state from UI model (based on status)
+                    const bIsEnabled = oUIModel.getProperty("/enabled");
 
                     // Control both buttons
                     const aButtons = [
@@ -714,6 +946,7 @@ sap.ui.define(
                                 oButton.setEnabled(false);
                             }
                         }
+
                     });
 
                 } catch (error) {
