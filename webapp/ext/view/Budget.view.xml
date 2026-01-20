@@ -159,15 +159,7 @@
 
                         <Input
                             value="{
-        path: 'budget>BudgetAlloue',
-        type: 'sap.ui.model.type.Float',
-        formatOptions: {
-            minFractionDigits: 2,
-            maxFractionDigits: 2,
-            decimalSeparator: ',',
-            groupingEnabled: true,
-            groupingSeparator: ' '
-        }
+        path: 'budget>BudgetAlloue'
     }"
                             editable="{
                                 parts: [
@@ -178,7 +170,7 @@
                                 ],
                                 formatter: '.formatCellEditable'
                             }"
-                            placeholder="0,00"
+                            placeholder="0.00"
                         />
 
                         <Text text="{budget>Currency}" />

@@ -101,7 +101,7 @@
         formatOptions: {
             minFractionDigits: 2,
             maxFractionDigits: 2,
-            decimalSeparator: ',',
+            decimalSeparator: '.',
             groupingEnabled: true,
             groupingSeparator: ' '
         }

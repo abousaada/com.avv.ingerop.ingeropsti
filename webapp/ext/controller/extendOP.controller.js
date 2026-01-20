@@ -447,7 +447,7 @@ sap.ui.define(
                 const bIsCreate = this.getView().getModel("ui").getProperty("/createMode");
 
                 this._controlButtonVisibility(bIsCreate);
-                this._hookEditButton();
+                //this._hookEditButton();
 
                 if (bIsCreate) {
                     var sNewFormulaireId; // = await this._calculateFormulaireId();

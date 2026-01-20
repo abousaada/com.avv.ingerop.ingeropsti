@@ -555,6 +555,9 @@
                     </Collection>
                 </Annotation>
             </Annotations>
+            <Annotations Target="ZSTI_SRV.ZC_STI_BUDGType/p_period">
+                <Annotation Term="UI.Hidden"/>
+            </Annotations>
             <Annotations Target="ZSTI_SRV.ZC_STI_MISSIONType">
                 <Annotation Term="UI.LineItem">
                     <Collection>
