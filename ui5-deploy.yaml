@@ -16,7 +16,7 @@ builder:
         target:
           destination: DS4
           url: http://vhnrpds4ci.sap.ingerop.com:44300
-          client: '050'
+          client: '110'
         app:
           name: ZSTI
           description: Application STI
