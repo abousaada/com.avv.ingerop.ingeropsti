@@ -1,8 +1,8 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
     <Table id="urlTable"
            inset="false"
-           mode="None"
-           items="{/Urls}">
+           mode="None">
+           <!--items="{/Urls}">-->
 
         <!-- Columns -->
         <columns>

@@ -375,8 +375,36 @@ sap.ui.define([
 
             },
 
-
             onBudgetTableSelectionChange: function (oEvent) {
+                var aSelectedItems = oEvent.getSource().getSelectedItems();
+                var oUIModel = this.getView().getModel("ui");
+
+                // ALWAYS clear old values first
+                oUIModel.setProperty("/hasSelectedBudgetLine", false);
+                oUIModel.setProperty("/selectedBudgetLine", null);
+
+                if (aSelectedItems.length > 0) {
+                    var oSelectedItem = aSelectedItems[0];
+                    var oBindingContext = oSelectedItem.getBindingContext("budget");
+
+                    if (oBindingContext && oUIModel) {
+                        // Get FRESH data from the binding context
+                        var oSelectedBudgetLine = {
+                            Mission_p: oBindingContext.getProperty("Mission_p"),
+                            Mission_e: oBindingContext.getProperty("Mission_e"),
+                            Currency: oBindingContext.getProperty("Currency"),
+                            Libelle: oBindingContext.getProperty("Libelle"),
+                            Regroupement: oBindingContext.getProperty("Regroupement")
+                        };
+
+                        oUIModel.setProperty("/selectedBudgetLine", oSelectedBudgetLine);
+                        oUIModel.setProperty("/hasSelectedBudgetLine", true);
+                        console.log("Budget line selected (fresh):", oSelectedBudgetLine);
+                    }
+                }
+            },
+
+            onBudgetTableSelectionChange1: function (oEvent) {
                 var aSelectedItems = oEvent.getSource().getSelectedItems();
                 var oUIModel = this.getView().getModel("ui");
 
@@ -395,18 +423,18 @@ sap.ui.define([
                         };
 
                         oUIModel.setProperty("/selectedBudgetLine", oSelectedBudgetLine);
-                        oUIModel.setProperty("/hasSelectedBudgetLine", true); 
+                        oUIModel.setProperty("/hasSelectedBudgetLine", true);
                         console.log("Budget line selected:", oSelectedBudgetLine);
                     }
                 } else {
                     // No selection - clear the properties
                     if (oUIModel) {
                         oUIModel.setProperty("/selectedBudgetLine", null);
-                        oUIModel.setProperty("/hasSelectedBudgetLine", false);  
+                        oUIModel.setProperty("/hasSelectedBudgetLine", false);
                     }
                 }
             },
-    
+
 
             onBudgetRowSelected: function (oEvent) {
                 var oSelectedItem = oEvent.getParameter("row");
@@ -429,6 +457,105 @@ sap.ui.define([
 
 
             onAddBudgetModificationLine: function () {
+                const oView = this.getView();
+                const oUIModel = oView.getModel("ui");
+
+                if (!oUIModel) {
+                    sap.m.MessageBox.error("Modèle UI introuvable");
+                    return;
+                }
+
+                // DEBUG LOG: Check current state
+                console.log("=== DEBUG: onAddBudgetModificationLine called ===");
+                console.log("hasSelectedBudgetLine:", oUIModel.getProperty("/hasSelectedBudgetLine"));
+                console.log("selectedBudgetLine:", oUIModel.getProperty("/selectedBudgetLine"));
+
+                // FIRST: Reset these properties before checking
+                oUIModel.setProperty("/hasSelectedBudgetLine", false);
+                oUIModel.setProperty("/selectedBudgetLine", null);
+
+                // THEN: Get fresh values from the table
+                const oTable = this.byId("budgetTable");
+                if (!oTable) {
+                    MessageBox.error("Tableau budget introuvable");
+                    return;
+                }
+
+                const aSelectedItems = oTable.getSelectedItems();
+
+                if (aSelectedItems.length === 0) {
+                    MessageBox.warning(
+                        "Veuillez d'abord sélectionner une ligne de budget avant d'ajouter une modification.",
+                        { title: "Aucune ligne sélectionnée" }
+                    );
+                    return;
+                }
+
+                // Use the FIRST selected item
+                const oSelectedItem = aSelectedItems[0];
+                const oBindingContext = oSelectedItem.getBindingContext("budget");
+
+                if (!oBindingContext) {
+                    MessageBox.error("Contexte de ligne non disponible");
+                    return;
+                }
+
+                // Get FRESH data directly from the binding context
+                const oSelectedBudgetLine = {
+                    Mission_p: oBindingContext.getProperty("Mission_p"),
+                    Mission_e: oBindingContext.getProperty("Mission_e"),
+                    Currency: oBindingContext.getProperty("Currency"),
+                    Libelle: oBindingContext.getProperty("Libelle"),
+                    Regroupement: oBindingContext.getProperty("Regroupement")
+                };
+
+                console.log("Selected budget line (fresh):", oSelectedBudgetLine);
+
+                // Store in UI model (optional, but good for debugging)
+                oUIModel.setProperty("/selectedBudgetLine", oSelectedBudgetLine);
+                oUIModel.setProperty("/hasSelectedBudgetLine", true);
+
+                // Rest of your existing code...
+                // Check if there are any budget lines to modify
+                var oBudgetModel = this.getView().getModel("budget");
+                var aBudgetLines = oBudgetModel.getProperty("/results") || [];
+
+                if (aBudgetLines.length === 0) {
+                    MessageBox.warning(
+                        "Aucune ligne de budget n'est disponible pour modification.",
+                        { title: "Aucune Ligne de Budget" }
+                    );
+                    return;
+                }
+
+                var oModel = this.getView().getModel("modifBudget");
+                var aData = oModel.getProperty("/results") || [];
+
+                // Create new modification line using the selected budget line
+                var oNewModification = {
+                    DateCreation: this.getCurrentDate(),
+                    Mission_p: oSelectedBudgetLine.Mission_p,
+                    Mission_e: oSelectedBudgetLine.Mission_e || "",
+                    DeltaBudget: "",
+                    Devise: oSelectedBudgetLine.Currency || "",
+                    isNew: true
+                };
+
+                aData.push(oNewModification);
+                oModel.setProperty("/results", aData);
+
+                // Clear table selection after adding
+                oTable.removeSelections();
+
+                // Clear UI model selection
+                oUIModel.setProperty("/hasSelectedBudgetLine", false);
+                oUIModel.setProperty("/selectedBudgetLine", null);
+
+                // Optional: Show success message
+                MessageToast.show("Nouvelle ligne de modification ajoutée pour " + oSelectedBudgetLine.Mission_p);
+            },
+
+            onAddBudgetModificationLine1: function () {
                 const oView = this.getView();
                 const oUIModel = oView.getModel("ui");
 

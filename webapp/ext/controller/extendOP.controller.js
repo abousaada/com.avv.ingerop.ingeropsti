@@ -1,13 +1,26 @@
-sap.ui.define(
-    [
-        "sap/ui/core/mvc/ControllerExtension",
-        "sap/ui/core/mvc/OverrideExecution",
-        "sap/ui/model/json/JSONModel",
-        "sap/m/MessageToast"
-    ],
-    function (
-        ControllerExtension, OverrideExecution, JSONModel, MessageToast
-    ) {
+sap.ui.define([
+    "sap/ui/core/mvc/ControllerExtension",
+    "sap/ui/core/mvc/OverrideExecution",
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageToast",
+    "sap/m/Dialog",
+    "sap/m/Text",
+    "sap/m/Button",
+    "sap/m/MessageBox",
+    "sap/ui/model/Filter",
+    "sap/ui/core/BusyIndicator"
+], function(
+    ControllerExtension,
+    OverrideExecution,
+    JSONModel,
+    MessageToast,
+    Dialog,
+    Text,
+    Button,
+    MessageBox,
+    Filter,
+    BusyIndicator
+) {
         "use strict";
         //return ControllerExtension.extend("com.avv.ingerop.ingeropsti.ext.controller.extendOP", {
         return {
@@ -33,7 +46,7 @@ sap.ui.define(
                             text: "Yes",
                             press: function () {
                                 oDialog.close();
-                                resolve(); // ✅ continue Edit
+                                resolve(); 
                             }
                         }),
                         endButton: new Button({
@@ -147,7 +160,9 @@ sap.ui.define(
                                 Mission_p: modif.Mission_p || '',
                                 DeltaBudget: modif.DeltaBudget || '0',
                                 Devise: modif.Devise,
-                                modif_sec: modif.modif_sec
+                                modif_sec: modif.modif_sec,
+                                approved: modif.approved,
+                                DateAproval: modif.DateAproval
                             };
 
                             aModificationsPayload.push(oModification);
@@ -188,21 +203,26 @@ sap.ui.define(
                                     const newIdFormulaire = updatedSTI.id_formulaire;
                                     oModel.setProperty(sPath + "/id_formulaire", newIdFormulaire);
 
+                                    const newBusiness_no_p = updatedSTI.business_no_p;
+                                    oModel.setProperty(sPath + "/business_no_p", newBusiness_no_p);
+
                                     oView.getModel().refresh(true);
                                     const oUIModel = oView.getModel("ui");
                                     if (oUIModel) {
                                         oUIModel.setProperty("/editable", false);
                                     }
 
-                                    const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
-                                    oRouter.navTo("ListReport");
+                                    //const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                                    //oRouter.navTo("ListReport");
 
                                     that._refreshScreenData(oView, status);
 
                                     oView.setBusy(false);
+
                                 }
                             });
 
+                            //return Promise.reject();
                         }
 
                     } catch (error) {
@@ -218,6 +238,7 @@ sap.ui.define(
                 } finally {
 
                     oView.setBusy(false);
+                    //return Promise.reject();
                 }
 
             },
@@ -323,11 +344,16 @@ sap.ui.define(
             },
 
             _attachEditButtonHandler: function (editButton) {
-                // Remove any existing handlers to avoid duplicates
-                editButton.detachPress();
+                // Store the handler function reference in the button's data
+                const existingHandler = editButton.data("pressHandler");
 
-                // Attach new handler
-                editButton.attachPress((oEvent) => {
+                // Remove existing handler if it exists
+                if (existingHandler) {
+                    editButton.detachPress(existingHandler);
+                }
+
+                // Create the handler function
+                const pressHandler = (oEvent) => {
                     console.log("Edit button clicked!");
 
                     const oView = this.getView();
@@ -347,7 +373,13 @@ sap.ui.define(
 
                     // Also hook save and cancel buttons
                     this._hookSaveCancelButtons();
-                });
+                };
+
+                // Store the handler reference in the button's data
+                editButton.data("pressHandler", pressHandler);
+
+                // Attach new handler
+                editButton.attachPress(pressHandler);
 
                 console.log("Edit button handler attached successfully");
             },
@@ -363,9 +395,16 @@ sap.ui.define(
                     )[0];
 
                 if (saveButton) {
-                    // Remove existing handler and attach new one
-                    saveButton.detachPress();
-                    saveButton.attachPress((oEvent) => {
+                    // Get existing handler
+                    const existingSaveHandler = saveButton.data("pressHandler");
+
+                    // Remove existing handler if it exists
+                    if (existingSaveHandler) {
+                        saveButton.detachPress(existingSaveHandler);
+                    }
+
+                    // Create new handler
+                    const saveHandler = (oEvent) => {
                         const oUIModel = oView.getModel("ui");
                         const bIsCreate = oUIModel ? oUIModel.getProperty("/createMode") : false;
 
@@ -377,7 +416,13 @@ sap.ui.define(
 
                         // Hide buttons
                         this._controlButtonVisibility(bIsCreate);
-                    });
+                    };
+
+                    // Store the handler reference
+                    saveButton.data("pressHandler", saveHandler);
+
+                    // Attach new handler
+                    saveButton.attachPress(saveHandler);
                 }
 
                 // Find Cancel button
@@ -388,8 +433,16 @@ sap.ui.define(
                     )[0];
 
                 if (cancelButton) {
-                    cancelButton.detachPress();
-                    cancelButton.attachPress((oEvent) => {
+                    // Get existing handler
+                    const existingCancelHandler = cancelButton.data("pressHandler");
+
+                    // Remove existing handler if it exists
+                    if (existingCancelHandler) {
+                        cancelButton.detachPress(existingCancelHandler);
+                    }
+
+                    // Create new handler
+                    const cancelHandler = (oEvent) => {
                         const oUIModel = oView.getModel("ui");
                         const bIsCreate = oUIModel ? oUIModel.getProperty("/createMode") : false;
 
@@ -403,7 +456,13 @@ sap.ui.define(
                         this._controlButtonVisibility(bIsCreate);
 
                         sap.m.MessageToast.show("Edit mode cancelled");
-                    });
+                    };
+
+                    // Store the handler reference
+                    cancelButton.data("pressHandler", cancelHandler);
+
+                    // Attach new handler
+                    cancelButton.attachPress(cancelHandler);
                 }
             },
 
@@ -677,7 +736,7 @@ sap.ui.define(
                                     oUIModel.setProperty("/showAddAmendment", sIsAvenant);
                                     oUIModel.setProperty("/showModifBudget", sIsModif);
                                     oUIModel.refresh(true);
-                                    
+
                                     that._controlButtonVisibility(false);
                                 }
                             }
@@ -1067,11 +1126,11 @@ sap.ui.define(
 
             async deepUpsertSTI(data) {
                 //Comments
-                const sComm1 = this.getView().byId("txtComment1").getValue();
-                const sComm2 = this.getView().byId("txtComment2").getValue();
-                const sComm3 = this.getView().byId("txtComment3").getValue();
-                const sComm4 = this.getView().byId("txtComment4").getValue();
-                const sComm5 = this.getView().byId("txtComment5").getValue();
+                const sComm1 = this.getView().byId("txtComment1").getValue()|| "";
+                const sComm2 = this.getView().byId("txtComment2").getValue()|| "";
+                const sComm3 = this.getView().byId("txtComment3").getValue()|| "";
+                const sComm4 = this.getView().byId("txtComment4").getValue()|| "";
+                const sComm5 = this.getView().byId("txtComment5").getValue()|| "";
 
                 // Découper chaque texte
                 const aComm1 = this._splitTextToLines(sComm1, "COMM1");
@@ -2145,7 +2204,113 @@ sap.ui.define(
 
                     // Store current values of important fields before refresh
                     const fieldsToPreserve = [
-                        "business_no_p",
+                        //"business_no_p",
+                        "business_no_e",
+                        "business_p_ufo",
+                        "business_p_cdp",
+                        "id_formulaire",
+                        "status"
+                    ];
+
+                    const preservedValues = {};
+                    fieldsToPreserve.forEach(field => {
+                        preservedValues[field] = oModel.getProperty(sPath + "/" + field);
+                    });
+
+                    // Store current mission data
+                    const currentMissions = oView.getModel("missions")?.getProperty("/results") || [];
+                    const missionsWithOriginalValues = currentMissions.map(mission => ({
+                        ...mission,
+                        OriginalBudgetInSTI: mission.OriginalBudgetInSTI || parseFloat(mission.BudgetInSTI || 0)
+                    }));
+
+                    // FIX: Ensure refresh returns a Promise
+                    const refreshPromise = new Promise((resolve, reject) => {
+                        try {
+                            // Call refresh and handle completion
+                            oModel.refresh(true);
+
+                            // Use setTimeout or attach to model's requestCompleted event
+                            // to ensure refresh is complete before proceeding
+                            oModel.attachRequestCompleted(function onRefreshComplete() {
+                                oModel.detachRequestCompleted(onRefreshComplete);
+                                resolve();
+                            });
+
+                            oModel.attachRequestFailed(function onRefreshFailed(oEvent) {
+                                oModel.detachRequestFailed(onRefreshFailed);
+                                reject(oEvent.getParameters());
+                            });
+
+                        } catch (error) {
+                            reject(error);
+                        }
+                    });
+
+                    // Execute the refresh sequence
+                    refreshPromise.then(() => {
+                        // Restore preserved values after refresh
+                        fieldsToPreserve.forEach(field => {
+                            if (preservedValues[field] !== undefined &&
+                                preservedValues[field] !== null &&
+                                preservedValues[field] !== oModel.getProperty(sPath + "/" + field)) {
+                                oModel.setProperty(sPath + "/" + field, preservedValues[field]);
+                            }
+                        });
+
+                        // Refresh secondary data
+                        return Promise.all([
+                            this.getBudget(),
+                            this.getModifBudget(),
+                            this.getMissions(),
+                            this.getWF(),
+                            this.getComments()
+                        ]);
+                    }).then(([budget, modifBudget, missions, wf, comments]) => {
+                        // Update all models
+                        this._updateAllModels(oView, budget, modifBudget, missions, wf, comments, missionsWithOriginalValues);
+
+                        sap.m.MessageToast.show("Data refreshed successfully");
+
+                        this._recalculateMissionBudgets();
+                        this.prepareMissionsTreeData();
+
+                        if (status !== 'DRAFT') {
+                            const oRouter = sap.ui.core.UIComponent.getRouterFor(oView);
+                            oRouter.navTo("ListReport", {}, true);
+                        }
+
+                    }).catch(error => {
+                        console.error("Error refreshing data:", error);
+                        sap.m.MessageToast.show("Error refreshing data");
+                    }).finally(() => {
+                        oView.setBusy(false);
+                    });
+
+                } catch (error) {
+                    console.error("Error in _refreshScreenData:", error);
+                    oView.setBusy(false);
+                }
+            },
+
+            _refreshScreenData2: function (oView, status) {
+                try {
+                    oView.setBusy(true);
+
+                    const oModel = oView.getModel();
+                    const oContext = oView.getBindingContext();
+
+                    if (!oContext) {
+                        console.warn("No binding context available for refresh");
+                        oView.setBusy(false);
+                        return;
+                    }
+
+                    const sPath = oContext.getPath();
+
+                    // Store current values of important fields before refresh
+                    const fieldsToPreserve = [
+                        //"business_no_p",
                         "business_no_e",
                         "business_p_ufo",
                         "business_p_cdp",
