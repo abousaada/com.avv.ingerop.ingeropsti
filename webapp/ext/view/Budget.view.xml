@@ -6,10 +6,17 @@
     xmlns:layout="sap.ui.layout"
     controllerName="com.avv.ingerop.ingeropsti.ext.controller.Budget"
 >
-    <layout:VerticalLayout width="100%">
+    <layout:VerticalLayout width="100%">       
         <Toolbar>
             <content>
+            <!-- Total sous traitance -->
+            <Label
+            text="Total sous-traitance :"
+            design="Bold"
+            class="sapUiSmallMarginEnd"/>
+        <Text text="{path: 'missions>/results', formatter: '.sumBudgetInSTI'}"/>               
                 <ToolbarSpacer />
+
                 <Button
                     id="addLineBtn"
                     icon="sap-icon://add"

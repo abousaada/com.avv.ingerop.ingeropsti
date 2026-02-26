@@ -81,6 +81,38 @@ sap.ui.define([
             //
             //	}
 
+            sumBudgetInSTI: function (aResults) {
+                if (!Array.isArray(aResults)) {
+                    return "0.00 €";
+                }
+
+                let total = 0;
+
+                aResults.forEach(function (o) {
+                    let v = o && o.BudgetInSTI;
+
+                    if (v === null || v === undefined || v === "") {
+                        return;
+                    }
+
+                    // "1 234,56" -> 1234.56
+                    if (typeof v === "string") {
+                        v = v.replace(/\s/g, "").replace(",", ".");
+                    }
+
+                    const n = Number(v);
+                    if (!Number.isNaN(n)) {
+                        total += n;
+                    }
+                });
+
+                // Format FR : 1 234,56
+                return total.toLocaleString("fr-FR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            },
+
             onAddBudgetLine: async function (oEvent) {
                 const oView = this.getView();
                 const oContext = oView.getBindingContext();
